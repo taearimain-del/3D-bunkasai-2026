@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>衣装係は<strong>衣装の調達・管理・本番中の着替えサポート</strong>を担当する。</p>
+<p>早替えがあるキャラクター（アナ・エルサ）は素早い着替えが必要なため、事前に段取りを練習しておくこと。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>衣装リーダー（調達・管理）</td>
+</tr>
+<tr>
+<td>2〜3人</td>
+<td>着替えサポート・本番中の管理</td>
+</tr>
+</tbody></table>
+<p><strong>目安：3〜4人</strong></p>
+<hr>
+<h2>衣装リスト</h2>
+<div class="char-legend"><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">アナ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>衣装①</th><th>衣装②</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td style="color:#c0305a;font-weight:bold">アナ</td>
+<td>紫のドレス（戴冠式用）</td>
+<td>旅用衣装（普段着風）</td>
+<td>二着必要。ACT3以降で着替え</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">エルサ</td>
+<td>青のドレス（戴冠式用）</td>
+<td>アイスドレス（氷の女王）</td>
+<td>二着必要。ACT3以降で着替え</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td>王子服</td>
+<td class="cast-slot-cell"></td>
+<td>一着でOK</td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td>登山・山男風の衣装</td>
+<td class="cast-slot-cell"></td>
+<td>一着でOK</td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td>雪だるまコスチューム</td>
+<td class="cast-slot-cell"></td>
+<td>一着でOK。白いふわふわ素材で制作</td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td>トナカイ衣装（四つん這いで演じる）</td>
+<td class="cast-slot-cell"></td>
+<td>動きやすいことが最重要</td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td>貴族服（コミカル寄り）</td>
+<td class="cast-slot-cell"></td>
+<td>派手で笑いを取るデザインにする</td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td>岩・森を意識した衣装</td>
+<td class="cast-slot-cell"></td>
+<td>複数人が同じ衣装。簡易でOK</td>
+</tr>
+<tr>
+<td style="color:#505050;font-weight:bold">ナレーター</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>録音の場合は不要。生の場合は黒系の衣装</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>着替えタイミング（早替えあり）</h2>
+<table class="cast-table">
+<thead><tr><th>キャラクター</th><th>着替えシーン</th><th>場所</th><th>所要時間目安</th></tr></thead><tbody>
+<tr>
+<td>アナ</td>
+<td>ACT2〜ACT3 の間（とびら開けて の歌後の暗転中）</td>
+<td>舞台袖</td>
+<td>2〜3分以内</td>
+</tr>
+<tr>
+<td>エルサ</td>
+<td>ACT2〜ACT3 の間（同上）</td>
+<td>舞台袖（別の場所）</td>
+<td>2〜3分以内</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator"><strong>ポイント</strong>：暗転は30秒〜1分程度。着替えはその前に開始できるよう段取りを組む。</blockquote>
+<hr>
+<h2>準備スケジュール（目安）</h2>
+<table class="cast-table">
+<thead><tr><th>時期</th><th>作業内容</th></tr></thead><tbody>
+<tr>
+<td>7月前半</td>
+<td>キャスト決定後、各役者の体型に合わせて衣装を選定</td>
+</tr>
+<tr>
+<td>7月後半〜8月前半</td>
+<td>衣装の調達・手作りを開始</td>
+</tr>
+<tr>
+<td>8月後半</td>
+<td>衣装合わせ（実際に着て動けるか確認）</td>
+</tr>
+<tr>
+<td>9月前半</td>
+<td>最終調整・ほつれ修繕など</td>
+</tr>
+<tr>
+<td>本番前日</td>
+<td>全衣装を舞台袖に搬入・名前ラベルを付ける</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>当日の管理手順</h2>
+<p>本番開始前：</p>
+<ul><li>[ ] 全衣装を役者に渡す or 着替え場所にセットしておく</li><li>[ ] アナ・エルサの二着目を着替え場所に用意する</li><li>[ ] 衣装係全員が着替えサポートの担当を決めておく</li></ul>
+<p>本番中：</p>
+<ul><li>[ ] アナ・エルサの早替えの際に着替えサポートに入る</li><li>[ ] 着替え完了を確認してから舞台監督に伝える</li></ul>
+<p>本番終了後：</p>
+<ul><li>[ ] 全衣装を回収し、借り物は返却する</li></ul>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] アナ・エルサの早替えを実際に時間を計って練習する</li><li>[ ] オラフ・スヴェンの衣装で動きに支障がないか確認</li><li>[ ] ウェーゼルトン公爵の衣装が「笑えるくらい派手」になっているか確認</li></ul>
+</body>
+</html>

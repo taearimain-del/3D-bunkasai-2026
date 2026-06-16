@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>舞台監督は<strong>公演全体の進行管理</strong>を担当する。</p>
+<p>照明・音響・大道具・小道具・衣装・役者、すべての係に指示を出す司令塔的な役割。</p>
+<p>本番中はパニックにならないよう、事前にタイムラインをしっかり把握しておくこと。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>舞台監督（本番中の全指示を担当）</td>
+</tr>
+<tr>
+<td>1人（できれば）</td>
+<td>副監督（タイム計測・メモ担当）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：1〜2人</strong></p>
+<hr>
+<h2>公演全体タイムライン（約40分）</h2>
+<table class="cast-table">
+<thead><tr><th>時刻（目安）</th><th>内容</th><th>確認事項</th></tr></thead><tbody>
+<tr>
+<td>開演10分前</td>
+<td>全係のチェックが完了しているか確認</td>
+<td>照明・音響・小道具・衣装</td>
+</tr>
+<tr>
+<td>開演5分前</td>
+<td>役者を舞台袖に集合させる</td>
+<td>全員が揃っているか</td>
+</tr>
+<tr>
+<td>開演</td>
+<td>客席照明を消す合図を照明係へ→開幕</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約2分後</td>
+<td>ACT1 終了（雪だるまつくろう開始）</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約5分後</td>
+<td>ACT1 終了・暗転合図</td>
+<td>大道具転換・照明に指示</td>
+</tr>
+<tr>
+<td>約5〜10分</td>
+<td>ACT2（戴冠式〜舞踏会）</td>
+<td>手袋着用後の暗転タイミングを照明へ</td>
+</tr>
+<tr>
+<td>約12分後</td>
+<td>ACT2 終了・暗転合図</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約12〜18分</td>
+<td>ACT3（エルサの逃走）</td>
+<td>レット・イット・ゴーの照明合図</td>
+</tr>
+<tr>
+<td>約18分後</td>
+<td>ACT3 終了・暗転合図</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約18〜23分</td>
+<td>ACT4（旅のシーン）</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約23分後</td>
+<td>ACT4 終了・暗転合図</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約23〜30分</td>
+<td>ACT5（エルサの城・トロールの村）</td>
+<td>リプライズ中の照明フラッシュ合図</td>
+</tr>
+<tr>
+<td>約30分後</td>
+<td>ACT5 終了・暗転合図</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>約30〜38分</td>
+<td>ACT6（裏切り・クライマックス）</td>
+<td>ハンスのランタン消し、照明変化のタイミング</td>
+</tr>
+<tr>
+<td>約38分後</td>
+<td>フィナーレ開始</td>
+<td>BGM開始合図を音響係へ</td>
+</tr>
+<tr>
+<td>約40分</td>
+<td>全員でお辞儀→幕</td>
+<td>幕の合図を出す</td>
+</tr>
+<tr>
+<td>終演後</td>
+<td>客席照明を点ける合図→後片付け</td>
+<td>全係に後片付けを指示</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>合図の方法</h2>
+<p>セリフ中は声を出せないため、<strong>手信号</strong>で各係に合図を出す。</p>
+<p>事前に全係員と合図を統一しておくこと。</p>
+<table class="cast-table">
+<thead><tr><th>合図</th><th>意味</th></tr></thead><tbody>
+<tr>
+<td>手を上げる</td>
+<td>「準備してください」</td>
+</tr>
+<tr>
+<td>手を下ろす</td>
+<td>「今すぐ操作してください」</td>
+</tr>
+<tr>
+<td>人差し指を立てる</td>
+<td>「1分前」</td>
+</tr>
+<tr>
+<td>両手を広げる</td>
+<td>「止まれ・ちょっと待って」</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>場面転換の指示フロー</h2>
+<p>暗転が入るたびに以下を確認してから次を進める：</p>
+<p>1. 役者が舞台袖に引っ込んだか確認</p>
+<p>2. 大道具係にセット転換の合図を出す</p>
+<p>3. 転換完了の合図が来たら、照明係に点灯の合図を出す</p>
+<p>4. 役者に「入れ」の合図を出す</p>
+<hr>
+<h2>本番当日のチェックリスト</h2>
+<p>開演前：</p>
+<ul><li>[ ] 全係が集合・準備完了を確認した</li><li>[ ] 役者全員が衣装を着て舞台袖に待機している</li><li>[ ] 照明係が操作パネル前にいる</li><li>[ ] 音響係がPC・マイクを起動済み</li><li>[ ] 小道具がすべて所定の位置にある</li><li>[ ] 大道具（背景・ドアフレーム）が初期配置にある</li></ul>
+<p>本番中：</p>
+<ul><li>[ ] タイム計測を副監督に任せる</li><li>[ ] 各ACTの転換で全係を指揮する</li></ul>
+<hr>
+<h2>トラブル対応</h2>
+<table class="cast-table">
+<thead><tr><th>トラブル</th><th>対応</th></tr></thead><tbody>
+<tr>
+<td>役者がセリフを忘れた</td>
+<td>舞台袖から小声で「ヒント」を出す担当を事前に決める</td>
+</tr>
+<tr>
+<td>照明の操作ミス</td>
+<td>落ち着いて次のキューで修正。本番中は急がない</td>
+</tr>
+<tr>
+<td>音響の曲が出ない</td>
+<td>音響係に両手を使って「止まれ」→待つ</td>
+</tr>
+<tr>
+<td>時間が押している</td>
+<td>演出担当と事前に「削るセリフ」を決めておく</td>
+</tr>
+</tbody></table>
+</body>
+</html>

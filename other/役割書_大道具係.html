@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>大道具係は<strong>セット（背景・大型の舞台装置）の制作・設置・場面転換</strong>と<strong>教室装飾</strong>を担当する。</p>
+<p>公演当日は暗転中に素早くセットを入れ替える必要があるため、転換フローを全員で把握しておくこと。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1〜2人</td>
+<td>制作リーダー（設計・材料調達）</td>
+</tr>
+<tr>
+<td>2〜3人</td>
+<td>制作・塗装作業</td>
+</tr>
+<tr>
+<td>全員（本番）</td>
+<td>場面転換担当（暗転中に素早く動く）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：3〜4人（本番の場面転換には出番のない役者も加わる）</strong></p>
+<hr>
+<h2>制作物リスト</h2>
+<h3>セット</h3>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>使用シーン</th><th>サイズ感</th><th>制作方法（案）</th></tr></thead><tbody>
+<tr>
+<td>背景パネル：氷・雪（青白）</td>
+<td>ACT5 エルサの城</td>
+<td>黒板サイズ程度</td>
+<td>青白い布または大きな画用紙。雪の結晶を貼る</td>
+</tr>
+<tr>
+<td>背景パネル：城内（茶系）</td>
+<td>ACT2 戴冠式・ACT6 室内</td>
+<td>黒板サイズ程度</td>
+<td>段ボールや布で城の壁をイメージして制作</td>
+</tr>
+<tr>
+<td>ドアフレーム</td>
+<td>ACT4 納屋・ACT6 ハンスの部屋</td>
+<td>人が通れる大きさ</td>
+<td>木材または段ボールで枠だけ作る（扉自体はなくてよい）</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator">※ 実際の大きさ・仕様はリハーサル室の広さを確認してから決定する。</blockquote>
+<h3>教室装飾（当日）</h3>
+<table class="cast-table">
+<thead><tr><th>場所</th><th>品目</th><th>制作方法（案）</th></tr></thead><tbody>
+<tr>
+<td>教室入口</td>
+<td>演目名の看板</td>
+<td>大きな紙に手書き or 印刷</td>
+</tr>
+<tr>
+<td>教室入口〜廊下</td>
+<td>雪の結晶デコレーション</td>
+<td>折り紙・画用紙で制作。青・白・水色で統一</td>
+</tr>
+<tr>
+<td>廊下</td>
+<td>開演時刻・次回の開始時刻の案内</td>
+<td>A4で印刷して掲示</td>
+</tr>
+<tr>
+<td>舞台周辺</td>
+<td>キャスト紹介ボード</td>
+<td>役名と役者名を書いたボード</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>本番の場面転換フロー</h2>
+<p>暗転中に速やかに動く。演出または舞台監督の合図（手信号）で動き出すこと。</p>
+<table class="cast-table">
+<thead><tr><th>タイミング</th><th>転換内容</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td>ACT1→ACT2（雪だるまつくろう後）</td>
+<td>戴冠式用の背景・小道具を配置</td>
+<td>大道具係＋役者（ハンス役・公爵役など）</td>
+</tr>
+<tr>
+<td>ACT2→ACT3（とびら開けて後）</td>
+<td>不要なセットを退ける</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT3→ACT4（レット・イット・ゴー後）</td>
+<td>野外シーン用に片付ける</td>
+<td>大道具係＋役者（トロール役）</td>
+</tr>
+<tr>
+<td>ACT4→ACT5（あこがれの夏後）</td>
+<td>氷の城背景パネルを設置</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT5→ACT6（ハンスの部屋へ）</td>
+<td>氷の城パネルを撤去・ドアフレームを設置</td>
+<td>大道具係</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>準備スケジュール（目安）</h2>
+<table class="cast-table">
+<thead><tr><th>時期</th><th>作業内容</th></tr></thead><tbody>
+<tr>
+<td>7月前半</td>
+<td>制作物リストを確定・材料の調達計画を立てる</td>
+</tr>
+<tr>
+<td>7月後半〜8月前半</td>
+<td>背景パネル・ドアフレームの制作</td>
+</tr>
+<tr>
+<td>8月後半</td>
+<td>セットを実際に舞台に置いて通し稽古に合わせる</td>
+</tr>
+<tr>
+<td>9月前半</td>
+<td>教室装飾の制作</td>
+</tr>
+<tr>
+<td>9月7〜9日</td>
+<td>会場入り・セット配置確認・転換の通し練習</td>
+</tr>
+<tr>
+<td>本番前日</td>
+<td>教室装飾を完成させる</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>役者との連携</h2>
+<p>出番の少ない役者が場面転換を手伝う。事前に動きを確認しておくこと。</p>
+<table class="cast-table">
+<thead><tr><th>役者</th><th>手伝えるシーン</th></tr></thead><tbody>
+<tr>
+<td>ハンス役</td>
+<td>ACT1→2 転換（自分の登場シーンの直前）</td>
+</tr>
+<tr>
+<td>ウェーゼルトン役</td>
+<td>ACT3以降の転換</td>
+</tr>
+<tr>
+<td>トロール役</td>
+<td>ACT1〜4の転換（登場前）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各セットが暗転中に1分以内で転換できるか確認</li><li>[ ] ドアフレームが倒れないよう補強しておく</li><li>[ ] 背景パネルの固定方法（立て掛け・壁への取り付け等）を決めておく</li><li>[ ] 転換中に音を立てないよう練習する</li></ul>
+</body>
+</html>

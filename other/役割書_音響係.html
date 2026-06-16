@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>音響係は<strong>BGM・歌唱音源・マイクの管理</strong>をすべて担当する。</p>
+<p>歌唱シーンの曲出しミスは本番に直結するため、事前に音源ファイルを整理し、何度も通し練習すること。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>PC操作（曲の再生・停止）</td>
+</tr>
+<tr>
+<td>1人</td>
+<td>マイク管理・音量調整</td>
+</tr>
+</tbody></table>
+<p><strong>目安：2人</strong></p>
+<hr>
+<h2>準備物チェックリスト</h2>
+<ul><li>[ ] 歌唱音源（7曲 + フィナーレBGM）をPCに準備・再生テスト済み</li><li>[ ] 音源ファイルは再生順にフォルダ番号付きで整理する（例：01_雪だるまつくろう.mp3）</li><li>[ ] スピーカー（学校備品）の接続・音量確認</li><li>[ ] マイクの動作確認・予備電池の準備</li><li>[ ] このキューシートを印刷して手元に持つ</li><li>[ ] ゲネプロ前にすべての曲を通しで確認する</li></ul>
+<hr>
+<h2>歌唱キューシート</h2>
+<blockquote class="narrator">演出担当の合図（手信号など）で再生開始する。歌が終わったら速やかに停止。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>タイミング（台本）</th><th>曲名</th><th>尺</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>ACT1 後半</td>
+<td>雪だるまつくろう</td>
+<td>約3分</td>
+<td>歌唱後、暗転→場面転換</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ACT2 前半（生まれてはじめて）</td>
+<td>生まれてはじめて</td>
+<td>約2分半</td>
+<td>二番の歌詞から</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ACT2 後半</td>
+<td>とびら開けて</td>
+<td>約2分</td>
+<td>歌唱後、暗転→場面転換</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ACT3 後半</td>
+<td>レット・イット・ゴー ～ありのままで～</td>
+<td>約4分</td>
+<td>歌唱後、暗転</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ACT4 後半</td>
+<td>あこがれの夏</td>
+<td>約2分</td>
+<td>歌唱後、即暗転</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ACT5 中盤</td>
+<td>生まれてはじめて（リプライズ）</td>
+<td>約2分半</td>
+<td>終盤でアナが撃たれる演出あり（照明係と連携）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ACT5 後半</td>
+<td>愛さえあれば</td>
+<td>約3分</td>
+<td>曲終わりにアナが座り込む</td>
+</tr>
+<tr>
+<td>8</td>
+<td>フィナーレ</td>
+<td>BGM（選曲中）</td>
+<td>—</td>
+<td>キャスト紹介中に流す。選曲後に更新</td>
+</tr>
+</tbody></table>
+<p><strong>歌唱合計：約19分（BGMを除く）</strong></p>
+<hr>
+<h2>マイク管理</h2>
+<table class="cast-table">
+<thead><tr><th>タイミング</th><th>対応内容</th></tr></thead><tbody>
+<tr>
+<td>開幕前</td>
+<td>全マイクの音量・電池をチェック</td>
+</tr>
+<tr>
+<td>舞台裏ナレーター使用時</td>
+<td>舞台裏マイクの音量を上げておく</td>
+</tr>
+<tr>
+<td>役者交代時（A→B）</td>
+<td>マイクの受け渡しがある場合は事前に段取りを決める</td>
+</tr>
+<tr>
+<td>本番終了後</td>
+<td>マイクの電源を切り、学校に返却</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>役者との連携</h2>
+<ul><li>出番の少ない役者（オラフ役・ナレーター役など）が音響補助に入ることがある</li><li>音響操作は必ず音響係メンバーが行う</li></ul>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各曲の開始タイミングを演出担当と合わせる</li><li>[ ] 歌唱音源の音量が客席全体に届くか確認</li><li>[ ] マイクのハウリング（ピーという音）が起きないか確認</li><li>[ ] 曲を間違えて再生した場合のリカバリー方法を決めておく</li></ul>
+</body>
+</html>

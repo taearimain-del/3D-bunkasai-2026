@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>照明係は<strong>公演中のすべての照明操作</strong>を担当する。</p>
+<p>演出担当の合図に従い、台本の 💡 マークのタイミングで照明を切り替える。</p>
+<p>ミスると観客にバレるため、事前のリハーサルで操作を徹底的に練習すること。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>メイン操作（学校の照明パネルを担当）</td>
+</tr>
+<tr>
+<td>1人</td>
+<td>演出補助・タイミング確認（台本を手元に持つ）</td>
+</tr>
+<tr>
+<td>1人（余裕があれば）</td>
+<td>スポットライト担当（ある場合のみ）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：2〜3人</strong></p>
+<hr>
+<h2>準備物チェックリスト</h2>
+<ul><li>[ ] 照明パネルの場所・操作方法を事前に確認する</li><li>[ ] 色フィルター（青・水色・オレンジなど）が用意できるか学校に確認する</li><li>[ ] このキューシートを印刷して手元に持つ</li><li>[ ] ゲネプロ前にすべてのキューを通し練習する</li></ul>
+<hr>
+<h2>照明カラーイメージ</h2>
+<table class="cast-table">
+<thead><tr><th>場面</th><th>照明イメージ</th></tr></thead><tbody>
+<tr>
+<td>通常の室内・野外シーン</td>
+<td>暖かいオレンジ・黄色系（白昼光でも可）</td>
+</tr>
+<tr>
+<td>氷の城・魔法シーン</td>
+<td>冷たい青・水色系</td>
+</tr>
+<tr>
+<td>ハンス裏切り告白</td>
+<td>暗め・冷たい青（通常より暗くする）</td>
+</tr>
+<tr>
+<td>春の到来・フィナーレ</td>
+<td>最も明るい暖色</td>
+</tr>
+<tr>
+<td>暗転（場面転換）</td>
+<td>完全消灯</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>キューシート（照明タイミング一覧）</h2>
+<blockquote class="narrator"><strong>合図の出し方</strong>：演出担当が手を上げたら「切り替え準備」、手を下ろしたら「操作」。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>タイミング</th><th>操作内容</th></tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>開幕</td>
+<td>客席の照明を消す→舞台を暗転→徐々に明るく（夜の子ども部屋）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ACT1：アナが魔法に当たる瞬間</td>
+<td>一瞬だけ白くフラッシュ→すぐ暗転</td>
+</tr>
+<tr>
+<td>3</td>
+<td>『雪だるまつくろう』終わり</td>
+<td>暗転（場面転換・役者が配置につく）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ACT2 開始</td>
+<td>点灯（通常の明るさ）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ACT2：戴冠式</td>
+<td>正面から白または淡い黄色（厳かな雰囲気）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ACT2：手袋着用後</td>
+<td>消灯（小道具の受け渡し・エルサとアナが配置に）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ACT2：舞踏会</td>
+<td>点灯（暖かいオレンジ・黄色系）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>『とびら開けて』終わり</td>
+<td>暗転（場面転換）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>ACT3 開始</td>
+<td>点灯</td>
+</tr>
+<tr>
+<td>10</td>
+<td>ACT3：エルサの魔法が暴走する瞬間</td>
+<td>青白い照明を短く点滅させてドラマチックに演出</td>
+</tr>
+<tr>
+<td>11</td>
+<td>『レット・イット・ゴー』中盤〜終盤</td>
+<td>青白い照明に切り替え（氷の城の完成イメージ）</td>
+</tr>
+<tr>
+<td>12</td>
+<td>『レット・イット・ゴー』終わり</td>
+<td>暗転</td>
+</tr>
+<tr>
+<td>13</td>
+<td>ACT4 開始</td>
+<td>点灯（明るい昼間の野外）</td>
+</tr>
+<tr>
+<td>14</td>
+<td>『あこがれの夏』終わり</td>
+<td>暗転（場面転換）</td>
+</tr>
+<tr>
+<td>15</td>
+<td>ACT5 開始：エルサの城到着</td>
+<td>冷たい青・水色系の照明（神秘的な氷の城）</td>
+</tr>
+<tr>
+<td>16</td>
+<td>ACT5：『生まれてはじめて（リプライズ）』中盤</td>
+<td>エルサの感情高まるにつれ青い照明を不安定に点滅</td>
+</tr>
+<tr>
+<td>17</td>
+<td>ACT5：アナに魔法が当たる瞬間</td>
+<td>白くフラッシュ→元の青照明に戻す</td>
+</tr>
+<tr>
+<td>18</td>
+<td>ACT5：トロールの村</td>
+<td>青系から橙・緑系にやや暖かく切り替え</td>
+</tr>
+<tr>
+<td>19</td>
+<td>ACT5 終わり（ハンスの部屋へ）</td>
+<td>暗転（場面転換）</td>
+</tr>
+<tr>
+<td>20</td>
+<td>ACT6 開始：ハンスの部屋</td>
+<td>点灯（暖かい照明・ランタンが灯っているイメージ）</td>
+</tr>
+<tr>
+<td>21</td>
+<td>ACT6：ハンスがランタンを消して退場</td>
+<td>照明を暗く・冷たい青に切り替え（悪役告白の強調）</td>
+</tr>
+<tr>
+<td>22</td>
+<td>ACT6：オラフがランタンを灯す</td>
+<td>やや暖かい照明に戻す</td>
+</tr>
+<tr>
+<td>23</td>
+<td>ACT6：クライマックス（ハンスが剣を振りかざす）</td>
+<td>ドラマチックな照明（白または強い光）</td>
+</tr>
+<tr>
+<td>24</td>
+<td>ACT6：アナが凍る瞬間</td>
+<td>青白くフリーズさせるイメージで一瞬暗くする</td>
+</tr>
+<tr>
+<td>25</td>
+<td>ACT6：氷が解ける・春の到来</td>
+<td>明るく暖色（オレンジ・黄色系）に切り替え</td>
+</tr>
+<tr>
+<td>26</td>
+<td>フィナーレ</td>
+<td>最も明るい暖かい照明</td>
+</tr>
+<tr>
+<td>27</td>
+<td>幕が下りる</td>
+<td>舞台の照明を消す→客席の照明を点ける</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>役者との連携</h2>
+<ul><li>出番のないシーンの役者（ハンス役・ウェーゼルトン役など）が照明補助に入ることがある</li><li>照明操作は必ず照明係メンバーが行う。役者が代わりに操作しない</li></ul>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各キューのタイミングを演出担当と合わせる</li><li>[ ] 暗転の速さを統一する（急すぎず・遅すぎず）</li><li>[ ] 色フィルターの実際の見え方を客席から確認する</li><li>[ ] キュー抜けが起きた場合のリカバリー方法を決めておく</li></ul>
+</body>
+</html>

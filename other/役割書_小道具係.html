@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>3年D組 文化祭 アナと雪の女王</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>小道具係は<strong>本番に使うすべての小道具の管理・出し入れ</strong>を担当する。</p>
+<p>役者に渡し忘れると本番で演技が止まるため、チェックリストで毎回確認すること。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>小道具リーダー（チェックリスト管理）</td>
+</tr>
+<tr>
+<td>1〜2人</td>
+<td>各シーンの出し入れ担当</td>
+</tr>
+</tbody></table>
+<p><strong>目安：2〜3人</strong></p>
+<hr>
+<h2>小道具リスト</h2>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>数量</th><th>使用シーン</th><th>調達方法</th></tr></thead><tbody>
+<tr>
+<td>杖（王権の杖）</td>
+<td>1本</td>
+<td>ACT2 戴冠式（エルサが持つ）</td>
+<td>手作りまたは購入</td>
+</tr>
+<tr>
+<td>玉（王権の玉）</td>
+<td>1個</td>
+<td>ACT2 戴冠式（エルサが持つ）</td>
+<td>手作りまたは購入</td>
+</tr>
+<tr>
+<td>エルサの白手袋</td>
+<td>1双</td>
+<td>ACT2 戴冠式（手袋をはめる演技）</td>
+<td>手芸店</td>
+</tr>
+<tr>
+<td>人参</td>
+<td>1本</td>
+<td>ACT4 オラフの鼻に刺す</td>
+<td>本物 or フェイク（安全のため模造品推奨）</td>
+</tr>
+<tr>
+<td>ロープ</td>
+<td>1本</td>
+<td>ACT4 クリストフへ渡す</td>
+<td>ホームセンター</td>
+</tr>
+<tr>
+<td>金槌</td>
+<td>1本</td>
+<td>ACT4 クリストフへ渡す</td>
+<td>家から持参 or ホームセンター</td>
+</tr>
+<tr>
+<td>ハンスの剣（模造）</td>
+<td>1本</td>
+<td>ACT6 クライマックス</td>
+<td>玩具コーナー or 手作り</td>
+</tr>
+<tr>
+<td>ランタン（手提げ灯）</td>
+<td>1個</td>
+<td>ACT6 ハンスの部屋</td>
+<td>100均 or 手作り（電池式でOK）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>小道具の出し入れキュー</h2>
+<table class="cast-table">
+<thead><tr><th>タイミング</th><th>対応内容</th></tr></thead><tbody>
+<tr>
+<td>ACT2 開幕前（暗転中）</td>
+<td>杖・玉・白手袋をエルサ役の手が届く位置にセット</td>
+</tr>
+<tr>
+<td>戴冠式終わり（手袋着用後）</td>
+<td>担当者が素早く杖・玉を舞台裏に回収</td>
+</tr>
+<tr>
+<td>ACT4 開幕前（暗転中）</td>
+<td>ロープ・金槌・人参をアナ役の手の届く位置に準備</td>
+</tr>
+<tr>
+<td>ACT4：人参を渡すシーン</td>
+<td>アナ役が人参をオラフの顔に刺した後、スヴェン役が狙う小道具として機能</td>
+</tr>
+<tr>
+<td>ACT6 開幕前（暗転中）</td>
+<td>ランタン（点灯した状態）をハンスの部屋にセット</td>
+</tr>
+<tr>
+<td>ACT6：ハンスが剣を引き抜くシーン</td>
+<td>事前にハンス役が所持しているか確認しておく</td>
+</tr>
+<tr>
+<td>本番終了後</td>
+<td>全小道具を回収し、リストと照合してチェック</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>当日の確認手順</h2>
+<p>本番開始前に必ず全員でチェックすること：</p>
+<ul><li>[ ] 杖・玉がACT2の配置位置にある</li><li>[ ] 白手袋がエルサ役に渡っている（または決められた場所にある）</li><li>[ ] 人参・ロープ・金槌がACT4の配置位置にある</li><li>[ ] ランタンの電池が入っている・点灯確認済み</li><li>[ ] ハンスの剣がハンス役に渡っている</li></ul>
+<hr>
+<h2>役者との連携</h2>
+<p>出番の少ない役者が小道具の受け渡しを手伝うことがある。</p>
+<table class="cast-table">
+<thead><tr><th>役者</th><th>手伝えること</th></tr></thead><tbody>
+<tr>
+<td>ハンス役（ACT1・4・5中）</td>
+<td>舞台袖での小道具の準備補助</td>
+</tr>
+<tr>
+<td>オラフ役（ACT3中）</td>
+<td>小道具の確認作業補助</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各小道具の受け渡しタイミングをリハーサルで確認する</li><li>[ ] 暗転中に素早く設置できる「配置場所」を固定する</li><li>[ ] ランタンの消し方・つけ方をハンス役・オラフ役と事前に練習する</li><li>[ ] 予備品が必要かどうかを確認する（人参は消耗品なので複数用意すること）</li></ul>
+</body>
+</html>
