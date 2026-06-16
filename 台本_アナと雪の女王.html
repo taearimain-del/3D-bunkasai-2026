@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台本 — アナと雪の女王</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap');
+
+  :root {
+    --ana:    #1a6fc4;
+    --elsa:   #7b3fa0;
+    --hans:   #1a6641;
+    --kristoff: #8B4513;
+    --olaf:   #d97706;
+    --sven:   #6B4226;
+    --duke:   #9b1c1c;
+    --troll:  #2d6a2d;
+    --narrator: #374151;
+    --servant: #555;
+    --bg:     #fafaf7;
+    --paper:  #ffffff;
+    --border: #d1c9b8;
+    --light-cue: #fffbeb;
+    --music-cue: #f0f9ff;
+    --time-cue:  #f0fdf4;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Serif JP', 'Yu Mincho', serif;
+    background: var(--bg);
+    color: #1a1a1a;
+    line-height: 1.9;
+    font-size: 15px;
+  }
+
+  .page-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 48px 56px;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    min-height: 100vh;
+  }
+
+  /* ===== ヘッダー ===== */
+  .doc-header {
+    text-align: center;
+    border-bottom: 3px double #333;
+    padding-bottom: 24px;
+    margin-bottom: 32px;
+  }
+  .doc-header .label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #666;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 6px;
+  }
+  .doc-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+  .doc-header .subtitle {
+    font-size: 13px;
+    color: #555;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  /* ===== セクション ===== */
+  h2.section-title {
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #444;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin: 32px 0 16px;
+  }
+
+  /* ===== キャスト表 ===== */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 8px;
+  }
+  th {
+    background: #f3f0eb;
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+  td {
+    border: 1px solid var(--border);
+    padding: 7px 10px;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #faf9f6; }
+  .role-name { font-weight: 700; }
+
+  /* ===== スタッフメモ ===== */
+  .staff-notes {
+    background: #f9f8f5;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: #444;
+  }
+  .staff-notes li {
+    list-style: none;
+    padding: 2px 0;
+  }
+  .staff-notes li::before {
+    content: "▸ ";
+    color: #999;
+  }
+
+  /* ===== 幕区切り ===== */
+  hr.act-divider {
+    border: none;
+    border-top: 2px solid #333;
+    margin: 36px 0;
+  }
+
+  /* ===== 幕タイトル ===== */
+  h2.act-title {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin: 0 0 4px;
+    background: #f3f0eb;
+    border-left: 4px solid #555;
+    padding: 8px 14px;
+  }
+  .act-meta {
+    font-size: 12px;
+    color: #888;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 4px;
+    padding-left: 4px;
+  }
+  .cast-in-act {
+    font-size: 12px;
+    color: #555;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 20px;
+    padding-left: 4px;
+  }
+  .cast-in-act strong { font-size: 12px; }
+
+  /* ===== 場面タイトル ===== */
+  h3.scene-title {
+    font-size: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    color: #444;
+    margin: 24px 0 12px;
+    padding-left: 10px;
+    border-left: 3px solid #bbb;
+  }
+
+  /* ===== セリフ ===== */
+  p.line {
+    margin: 6px 0;
+    padding-left: 2px;
+  }
+  .char-name {
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-right: 2px;
+    font-size: 14px;
+  }
+  .char-ana     { color: var(--ana); }
+  .char-elsa    { color: var(--elsa); }
+  .char-hans    { color: var(--hans); }
+  .char-kristoff{ color: var(--kristoff); }
+  .char-olaf    { color: var(--olaf); }
+  .char-sven    { color: var(--sven); }
+  .char-duke    { color: var(--duke); }
+  .char-troll   { color: var(--troll); }
+  .char-servant { color: var(--servant); }
+  .char-priest  { color: var(--servant); }
+  .char-both    { color: #333; }
+
+  /* ===== ト書き ===== */
+  p.stage-direction {
+    color: #666;
+    font-style: italic;
+    font-size: 13.5px;
+    margin: 8px 0;
+    padding: 0 0 0 16px;
+    border-left: 2px solid #ddd;
+  }
+
+  /* ===== ナレーター ===== */
+  blockquote.narrator {
+    background: #f5f3ee;
+    border-left: 4px solid #aaa;
+    padding: 12px 16px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--narrator);
+    border-radius: 0 4px 4px 0;
+  }
+  blockquote.narrator .narrator-label {
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: #555;
+  }
+
+  /* ===== キュー ===== */
+  p.cue {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin: 12px 0;
+    display: inline-block;
+    width: 100%;
+  }
+  p.cue.music-cue  { background: var(--music-cue);  border: 1px solid #bae6fd; color: #075985; }
+  p.cue.light-cue  { background: var(--light-cue);  border: 1px solid #fde68a; color: #92400e; }
+  p.cue.light-note { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; font-weight: 400; font-size: 12px; padding: 6px 14px; }
+  p.cue.time-cue   { background: var(--time-cue);   border: 1px solid #bbf7d0; color: #14532d; }
+
+  /* ===== フィナーレ ===== */
+  .finale-note {
+    text-align: center;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px;
+    color: #666;
+    margin: 20px 0 8px;
+    letter-spacing: 1px;
+  }
+
+  /* ===== フッター ===== */
+  .doc-footer {
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    font-size: 11px;
+    color: #aaa;
+    font-family: 'Noto Sans JP', sans-serif;
+    text-align: center;
+  }
+
+  /* ===== 凡例 ===== */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 8px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 4px; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; flex-shrink: 0;
+  }
+
+  /* ===== 印刷 ===== */
+  @media print {
+    body { background: white; font-size: 13px; }
+    .page-wrap { border: none; padding: 20px 32px; max-width: 100%; }
+    hr.act-divider { page-break-after: avoid; }
+    h2.act-title { page-break-before: auto; }
+    blockquote.narrator, p.cue { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- ===== ヘッダー ===== -->
+  <header class="doc-header">
+    <div class="label">文化祭 舞台公演 台本</div>
+    <h1>アナと雪の女王</h1>
+    <div class="subtitle">上演時間：約30分 ／ クラス：3年D組</div>
+  </header>
+
+  <!-- ===== キャスト表 ===== -->
+  <h2 class="section-title">キャスト一覧</h2>
+
+  <div class="legend">
+    <span class="legend-item"><span class="legend-dot" style="background:var(--ana)"></span>アナ</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--elsa)"></span>エルサ</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--hans)"></span>ハンス</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--kristoff)"></span>クリストフ</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--olaf)"></span>オラフ</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--sven)"></span>スヴェン</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--duke)"></span>ウェーゼルトン公爵</span>
+    <span class="legend-item"><span class="legend-dot" style="background:var(--troll)"></span>トロール</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>役名</th><th>Aグループ</th><th>Bグループ</th><th>備考</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="role-name" style="color:var(--ana)">アナ</td><td>（　）</td><td>（　）</td><td>主役・出番多い</td></tr>
+      <tr><td class="role-name" style="color:var(--elsa)">エルサ</td><td>（　）</td><td>（　）</td><td>主役・出番多い</td></tr>
+      <tr><td class="role-name" style="color:var(--hans)">ハンス</td><td>（　）</td><td>（　）</td><td></td></tr>
+      <tr><td class="role-name" style="color:var(--kristoff)">クリストフ</td><td>（　）</td><td>（　）</td><td></td></tr>
+      <tr><td class="role-name" style="color:var(--olaf)">オラフ</td><td>（　）</td><td>（　）</td><td>コミカルな演技を意識</td></tr>
+      <tr><td class="role-name" style="color:var(--sven)">スヴェン</td><td>（　）</td><td>（　）</td><td>四つん這いで演じる</td></tr>
+      <tr><td class="role-name" style="color:var(--duke)">ウェーゼルトン公爵</td><td>（　）</td><td>（　）</td><td>コミカルな演技を意識</td></tr>
+      <tr><td class="role-name" style="color:var(--troll)">トロール</td><td>（　）</td><td>※Aと兼任可</td><td>複数人で担当</td></tr>
+      <tr><td class="role-name">ナレーター</td><td>（　）</td><td>（　）</td><td></td></tr>
+      <tr><td class="role-name" style="color:var(--servant)">家来 / 司祭役</td><td>（　）</td><td>※Aと兼任可</td><td>舞台裏から声のみも可</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ===== スタッフメモ ===== -->
+  <h2 class="section-title">演出・スタッフ メモ</h2>
+  <div class="staff-notes">
+    <ul>
+      <li>ト書き（斜体・グレー）はセリフではない。混同しないこと</li>
+      <li>照明・音響のタイミングは別紙キューシートを参照</li>
+      <li>小道具（杖・玉・手袋・人参など）の管理を徹底すること</li>
+      <li>歌唱前後の照明操作は演出担当が合図を出す</li>
+      <li>場面転換でセリフを削る場合は脚本担当に連絡</li>
+      <li>演出の詳細はリハーサルで随時調整する</li>
+    </ul>
+  </div>
+
+  <!-- ===== ACT 1 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 1　幼い日の姉妹</h2>
+  <div class="act-meta">開幕〜約2分</div>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、エルサ、ナレーター</div>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    昔、アレンデールという王国にアナとエルサという仲の良い姉妹がいました。姉のエルサは、氷の魔法を操る不思議な力を持っていました。
+  </blockquote>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「エルサ。ねぇエルサ起きて。一緒に遊ぼうよ～。」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「だめよアナ、もう寝ないと…。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「え～？パパとママは寝てるし、私たちは起きてるじゃない！…そうだ、雪だるま！雪だるまを作ろう？」</p>
+
+  <p class="stage-direction">（二人は立ち上がり、エルサが魔法を見せる。そして雪だるまを作った。）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「やあ、僕はオラフ。ぎゅ～って抱きしめて。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「オラフ～！ねえ、もっと魔法見せて！」</p>
+
+  <p class="stage-direction">（徐々にエスカレートしていく魔法。そしてエルサの魔法がアナに直撃する―）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「アナ…？アナ！」</p>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    アナはトロールの力でエルサの魔法の記憶を消し、一命を取り留めることができました。一方、エルサは能力を抑えるため、城に閉じこもるようになりました。
+  </blockquote>
+
+  <p class="cue time-cue">⏱ ここまで約1〜2分</p>
+  <p class="cue music-cue">🎵 歌唱『雪だるまつくろう』（約3分）</p>
+
+  <!-- ===== ACT 2 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 2　戴冠式とハンスとの出会い</h2>
+  <div class="act-meta">〜約10分</div>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、エルサ、ハンス、家来/司祭、ウェーゼルトン公爵、ナレーター</div>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    三年後、エルサが王位を継ぐ戴冠式が行われます。
+  </blockquote>
+
+  <p class="cue light-cue">💡 家来役が舞台裏から呼びかける（または舞台上に出て声をかけてもよい）</p>
+
+  <p class="line"><span class="char-name char-servant">家来</span>「王女！アナ王女！お目覚めください！今日はエルサ女王の戴冠式でございます！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「え…たいかんしき…？―そうだ戴冠式！やっとエルサに会える！」</p>
+  <p class="cue light-note">💡 このやり取りは舞台裏で行う。</p>
+
+  <p class="cue music-cue">🎵 歌唱『生まれてはじめて』（約2分半）　※二番の歌詞から。歌の最後でハンスとぶつかる。</p>
+
+  <h3 class="scene-title">〔ハンスとの出会い〕</h3>
+
+  <p class="line"><span class="char-name char-hans">ハンス</span>「大丈夫？怪我はないかい？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「ええ私は大丈夫よ、こちらこそごめんなさい。」</p>
+  <p class="line"><span class="char-name char-hans">ハンス</span>「よかった。僕はサザンアイルのハンス王子です。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「アレンデールのアナ王女です。」</p>
+  <p class="line"><span class="char-name char-hans">ハンス</span>「王女様！？私のご無礼をどうかお許しください！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「えっ！ああいや全然！私って結構ドジだしおっちょこちょいだし。姉のエルサじゃなくてよかったわね。…いけない！もうすぐ戴冠式が始まっちゃう！私もう行かなきゃ！さようなら、また会えるといいわね！」</p>
+
+  <h3 class="scene-title">〔戴冠式〕</h3>
+
+  <p class="line"><span class="char-name char-priest">司祭</span>「アレンデールのエルサ女王です。」</p>
+  <p class="stage-direction">（エルサは国王の印である杖と玉を持つ。言い終わると同時に素早く杖と玉を置き、手袋をはめる。）</p>
+  <p class="cue light-cue">💡 手袋を着用したら舞台の照明を消す。担当者が素早く小道具を預かり舞台裏へ。エルサは中央で待機し、アナはその隣に並ぶ。照明を付けて舞踏会のシーンへ。</p>
+
+  <h3 class="scene-title">〔舞踏会〕</h3>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「久しぶりね、アナ。元気？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「もちろん元気よ！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「よかった。そのドレスもとても素敵よ。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「ありがとう。でもエルサのほうがもっともーっと素敵！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「ふふ、ありがとう。…ところで、なんだか甘い香りがしない？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「このにおい…」</p>
+  <p class="line"><span class="char-name char-both">アナ・エルサ</span>「チョコレートだ！」</p>
+  <p class="line"><span class="char-name char-duke">ウェーゼルトン公爵</span>「女王様、貿易を通してつながりの深い私と是非ダンスを！」</p>
+  <p class="cue light-note">💡 公爵のコミカルな演技はどれだけふざけてもよし。時間にだけは注意。</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「ええと…」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「あー、エルサはダンスが苦手なのよ～だからやめておいたほうが」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「え、ええ、そうなのよ。だからアナが代わりに踊るわ。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「そうそう！代わりに私がーってなんで私！？」</p>
+  <p class="line"><span class="char-name char-duke">ウェーゼルトン公爵</span>「ふむ、承知いたしましたぞ。では行きましょうか王女！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「なんでぇ～！」</p>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    踊り終えたアナはハンスと再会し、庭で互いの境遇が似ていることを知り、二人の距離が近づいていきます。
+  </blockquote>
+
+  <p class="cue music-cue">🎵 歌唱『とびら開けて』（約2分）</p>
+  <p class="cue light-cue">💡 歌唱後、舞台の照明を消す。二人は横に移動して待機。エルサが配置についたら照明を付けて次の場面へ。</p>
+
+  <!-- ===== ACT 3 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 3　エルサの逃走</h2>
+  <div class="act-meta">〜約18分</div>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、エルサ、ハンス、ウェーゼルトン公爵</div>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「エルサ、ちょっといい？この人はハンス、今日偶然知り合ったの。それでね、私たち結婚することにしたの！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「結婚？駄目よ、出会ったばかりの人となんて…」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「心から愛し合っていればできるわ！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「愛のことなんかわかっていないでしょう？とにかく駄目よ。」</p>
+
+  <p class="stage-direction">（会場を去ろうとするエルサをアナが止めようとし、エルサの手袋を取る。）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「なんでそんなに反対するの！なにをそんなに怖がっているのよ…！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「やめて…！」</p>
+
+  <p class="stage-direction">（手袋のついていない手でアナを振り払ったとき、床に氷が現れる。）</p>
+
+  <p class="line"><span class="char-name char-duke">ウェーゼルトン公爵</span>「…魔法だ！この国は危険だ！女王を捕まえろ！逃がすな！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「エルサ！…こうなったのは私のせい。私が追いかける。ハンスはこの国をお願い！」</p>
+  <p class="line"><span class="char-name char-hans">ハンス</span>「わかったよ、アナ！」</p>
+
+  <p class="cue music-cue">🎵 歌唱『レット・イット・ゴー ～ありのままで～』（約4分）</p>
+  <p class="cue time-cue">⏱ ここまで約16〜18分</p>
+
+  <!-- ===== ACT 4 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 4　クリストフ・オラフとの旅</h2>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、クリストフ、スヴェン、オラフ</div>
+
+  <p class="stage-direction">（アナが納屋の扉を開ける。）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「急にごめんなさい、ノースマウンテンまで道案内をしてほしいの」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「無理だね、今ロープもかな金づち鎚も持ってないんだ。あとめんどくさい。」</p>
+
+  <p class="stage-direction">（アナは無言でロープと金鎚を押し付ける。スヴェンには人参を渡す。）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「ノースマウンテンに連れて行きなさい。私ならこの冬を終わらせられる」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「なんで女王は国を凍らせたんだ？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「その日のうちにあったばかりの人と婚約したからすごく怒っちゃって」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「そんな男と婚約したのか？知らない奴には気を付けなきゃダメだろ。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「知らない人じゃないもん…待って、あれって…雪だるま？」</p>
+
+  <h3 class="scene-title">〔オラフ登場〕</h3>
+
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「やあみんな、僕はオラフ！ぎゅ～って抱きしめて！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「オラフ！？」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「そう、僕はオラフ！君は？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「私はアナよ」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「アナ！じゃあそこのロバみたいな顔の人は？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「スヴェンよ。」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「スヴェン！じゃあそのトナカイさんは？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「スヴェンよ。」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「おい」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「へええ、どっちもスヴェンっていう名前なんだねぇ！覚えやすくていいね！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「うーん、何か足りないわね…あっ、これだわ！」</p>
+
+  <p class="stage-direction">（アナがオラフの顔に人参を刺す。スヴェンが人参に反応して飛びかかろうとする。クリストフが必死に押さえる。）</p>
+
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「わあ！ちょうどお鼻がほしかったんだ～！このほうがずっといいよ！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「ねえオラフ、エルサがあなたを作ったんだよね？」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「うん！なんで？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「エルサがどこにいるか知ってる？」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「うん！なんで？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「そこに連れて行ってほしいの」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「うん！なんで？」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「あー！俺が連れてってやるよ！夏を取り戻したいんだ！」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「夏！？はぁ～、なんでかわからないけど、僕ずぅーっと夏にあこがれてたんだよ～。お日様が光って、太陽は熱々で～。」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「そうなのか？暑さとは縁がなさそうだけどな」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「そうさ？でも時々目をつぶって考えるんだ。暑い夏が来たらどんな感じなんだろうなぁって！」</p>
+
+  <p class="cue music-cue">🎵 歌唱『あこがれの夏』（約2分）</p>
+  <p class="cue light-cue">💡 歌い終わった瞬間に照明を消し、次の場面へ移行。</p>
+
+  <!-- ===== ACT 5 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 5　エルサの城・トロールの村</h2>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、エルサ、クリストフ、スヴェン、オラフ、トロール、ナレーター</div>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    アナたちはようやくエルサのいる城にたどり着きました。
+  </blockquote>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「…エルサ？私よ、アナよ。」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「…アナ？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「わあ…なんだか変わったね…あっ、もちろんいい意味で！それにここ、すごくきれい…。」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「ありがとう。私にこんなことができるなんてね。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「…私、エルサに謝りたくて来たの。お城でのこと、本当にごめんなさい。」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「いいのよ、謝らなくていいの。だからもう帰りなさい。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「エルサも一緒に帰りましょう？」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「いいえ、私はここにいる。一人でいれば、誰も傷付けないで済む。それにあなたを守りたいの。」</p>
+
+  <p class="cue music-cue">🎵 歌唱『生まれてはじめて（リプライズ）』（約2分半）</p>
+
+  <p class="stage-direction">（クリストフ、オラフ、スヴェンが三人へ駆け寄る。）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「嘘、また、私…」</p>
+
+  <p class="stage-direction">（エルサが城の後ろへ逃げる〔舞台裏へ〕。）</p>
+
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「おいアナ、大丈夫か！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「大丈夫、平気よ」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「おい、なんか髪が白くなってないか？エルサにやられたんじゃないのか？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「ほんとだわ。」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「俺の友人に会いに行こう。同じようなものを治しているのを見たことがある。」</p>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    クリストフはアナをトロールの村へ連れていきます。その間にも、アナの体は次第に凍っていました。
+  </blockquote>
+
+  <h3 class="scene-title">〔トロールの村〕</h3>
+
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「紹介するよ、俺の家族だ。おい、みんな！」</p>
+  <p class="line"><span class="char-name char-troll">トロール</span>「わ、クリストフだ！」「クリストフが帰ってきた！」「女の子を連れてるぞ！」「クリストフにぴったりだ！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「違うの、私たちそういう関係じゃなくて」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「そうだ。別の目的が…」</p>
+
+  <p class="cue music-cue">🎵 歌唱『愛さえあれば』（約3分）</p>
+
+  <p class="stage-direction">（曲が終わった瞬間、アナが座り込む。）</p>
+
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「アナ！」</p>
+  <p class="line"><span class="char-name char-troll">トロール</span>「この子から魔法の力を感じる。このままでは命が危ない。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「え…」</p>
+  <p class="line"><span class="char-name char-troll">トロール</span>「君の姉さんの氷のかけらが心に刺さっている。そのままにしておけば永遠に凍りついてしまう。凍った心を解かせるのは真実の愛だけだ。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「真実の愛…？」</p>
+  <p class="line"><span class="char-name char-troll">トロール</span>「大好きな人のキスじゃない？」</p>
+  <p class="line"><span class="char-name char-kristoff">クリストフ</span>「…！今すぐハンスのところに連れて行くぞ！」</p>
+
+  <!-- ===== ACT 6 ===== -->
+  <hr class="act-divider">
+  <h2 class="act-title">ACT 6　ハンスの裏切り・真実の愛</h2>
+  <div class="cast-in-act"><strong>【登場人物】</strong>アナ、エルサ、ハンス、オラフ、クリストフ、スヴェン、ナレーター</div>
+
+  <blockquote class="narrator">
+    <span class="narrator-label">ナレーター</span>
+    ハンスのもとへたどり着いたアナは、エルサとの出来事、真実の愛があれば助かるということを話しました。
+  </blockquote>
+
+  <p class="line"><span class="char-name char-hans">ハンス</span>「僕が王になるためにはどこかの王女と結婚するしかない。君は愛に飢えていたから、出会ってすぐに結婚を決めただけだ。僕たちが結婚した後エルサには事故に遭ってもらうつもりだった。」</p>
+
+  <p class="stage-direction">（そう言いながら暖炉の灯を消し、部屋を出ていく。）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「そんな、全部嘘だったなんて…そんな計画、上手くいくはずないわ。」</p>
+  <p class="line"><span class="char-name char-hans">ハンス</span>「大丈夫、もう上手くいったさ」</p>
+
+  <p class="stage-direction">（アナの部屋が凍り始めたとき、オラフがドアを開けて入ってきた。）</p>
+
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「アナ！あ、暖炉の灯が消えてる！」</p>
+
+  <p class="stage-direction">（暖炉に火を灯し、アナを温めた。）</p>
+
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「ハンスのキスはどうなったの？」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「私が間違ってた。ハンスは運命の人じゃなかった。」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「愛っていうのは自分より人のことを大切にすることだよ」</p>
+
+  <p class="stage-direction">（その時、窓の外からクリストフが来るのが見えた。）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「…クリストフのところへ行きたいの」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「…わかった！クリストフが運命の人なんだね！はやくいこう！」</p>
+
+  <h3 class="scene-title">〔クライマックス〕</h3>
+
+  <p class="line"><span class="char-name char-hans">ハンス</span>「このまま逃げるのか？」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「妹をお願い」</p>
+  <p class="line"><span class="char-name char-hans">ハンス</span>「アナは僕の腕の中で息を引き取った。君がアナの心を凍らせて殺したんだ。すべて君のせいだ。」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「そんな、嘘…アナが…」</p>
+
+  <p class="stage-direction">（ハンスが剣を引き抜き振りかざしたその時―）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「やめて！」</p>
+
+  <p class="stage-direction">（その瞬間アナの体は完全に凍り、剣を受け止めた。）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「いや、いやよ、そんな…私を助けるためになんということをするの…」</p>
+
+  <p class="stage-direction">（エルサが抱きつき涙を流した、その時―アナの氷が解けた。）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「アナ…！アナ！？よかった…！」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「大切な人だからよ、エルサ」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「真実の愛が凍り付いた心を解かしたんだ！」</p>
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「愛が氷を解かす？…そうよ、愛よ！」</p>
+
+  <p class="stage-direction">（これに気づいたエルサは、魔法で国中の氷を解かした。青空と春の光がアレンデール王国に戻ってくる。）</p>
+  <p class="cue light-cue">💡 照明を明るく・暖色に切り替える。春の演出。</p>
+
+  <p class="stage-direction">（そしてアナのもとへやってきたハンスに―）</p>
+
+  <p class="line"><span class="char-name char-ana">アナ</span>「心が凍っているのはあなたのほうだったわね！」</p>
+
+  <p class="stage-direction">（そう言い放ち、顔面を殴った。ハンスは退場。）</p>
+
+  <h3 class="scene-title">〔フィナーレ〕</h3>
+
+  <p class="stage-direction">（クリストフ、オラフ、スヴェンが駆け寄り、全員が舞台中央に集まる。）</p>
+
+  <p class="line"><span class="char-name char-elsa">エルサ</span>「アナ、一緒に帰りましょう。」</p>
+  <p class="line"><span class="char-name char-ana">アナ</span>「うん！」</p>
+  <p class="line"><span class="char-name char-olaf">オラフ</span>「なんか…これが愛ってやつ？」</p>
+
+  <p class="stage-direction">（全員が舞台中央に並ぶ。）</p>
+
+  <p class="cue music-cue">🎵 BGMが流れ始める</p>
+  <p class="finale-note">— BGMとともにキャスト紹介。全員でお辞儀して幕。—</p>
+
+  <!-- ===== フッター ===== -->
+  <hr class="act-divider" style="margin-top:40px">
+  <footer class="doc-footer">
+    演出の詳細はリハーサルで随時調整すること。場面転換の時間によってセリフを削る場合は、必ずキャスト・脚本担当に事前に連絡すること。
+  </footer>
+
+</div>
+</body>
+</html>
