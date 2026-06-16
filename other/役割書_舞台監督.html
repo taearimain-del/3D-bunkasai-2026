@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>台本：アナと雪の女王 完全版</title>
+<title>役割書</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -209,7 +209,8 @@ blockquote.narrator {
 
 /* ===== CUES ===== */
 p.cue {
-  font-size: 10pt;
+  font-size: 11pt;
+  font-weight: 700;
   padding: 6px 12px;
   margin: 8px 0;
   border-radius: 3px;
@@ -218,21 +219,51 @@ p.cue {
 p.light-cue {
   background: #fffbeb;
   border: 1px solid #f0cc70;
-  border-left: 4px solid #e0a020;
+  border-left: 6px solid #e0a020;
   color: #5a3800;
 }
 p.music-cue {
   background: #f0f8f4;
   border: 1px solid #80c8a0;
-  border-left: 4px solid #30a060;
+  border-left: 6px solid #30a060;
   color: #174025;
-  font-weight: 500;
 }
 p.time-cue {
   background: #f4f4f2;
   border: 1px solid #ccc;
-  border-left: 4px solid #999;
+  border-left: 6px solid #999;
   color: #555;
+  font-weight: 400;
+}
+p.daidogu-cue {
+  background: #fdf4e7;
+  border: 1px solid #c8842a;
+  border-left: 6px solid #a06010;
+  color: #4a2800;
+}
+p.shodogu-cue {
+  background: #f2eefd;
+  border: 1px solid #9060c0;
+  border-left: 6px solid #6040a0;
+  color: #2a0a50;
+}
+p.onkyo-cue {
+  background: #e6f6f5;
+  border: 1px solid #3aaa9a;
+  border-left: 6px solid #108070;
+  color: #083830;
+}
+p.isho-cue {
+  background: #fde8f0;
+  border: 1px solid #d060a0;
+  border-left: 6px solid #b04080;
+  color: #4a0a28;
+}
+p.kantoku-cue {
+  background: #eaecf4;
+  border: 1px solid #4050b8;
+  border-left: 6px solid #2030a0;
+  color: #0a1040;
 }
 
 /* ===== VERSION BADGE ===== */
@@ -247,7 +278,6 @@ p.time-cue {
 }
 .badge-full   { background: #4a7cc0; color: #fff; }
 .badge-yakusha { background: #6a3080; color: #fff; }
-.badge-staff  { background: #c07020; color: #fff; }
 
 /* ===== FOOTER NOTE ===== */
 .footer-note {
@@ -259,31 +289,21 @@ p.time-cue {
   border-top: 1px solid #ddd;
 }
 
-/* ===== STAFF MODE emphasis ===== */
-body.staff-mode p.light-cue {
-  font-size: 11pt;
+/* ===== YAKUWARI TITLE ===== */
+.yakuwari-dept {
+  font-size: 32pt;
   font-weight: 700;
-  border-left-width: 6px;
-}
-body.staff-mode p.music-cue {
-  font-size: 11pt;
-  font-weight: 700;
-  border-left-width: 6px;
-}
-body.staff-mode p.time-cue {
-  font-size: 11pt;
+  color: #1a3a6a;
+  text-align: center;
+  padding: 24px 0 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
 }
 </style>
 </head>
 <body>
-<span class="version-badge badge-full">【完全版】</span>
-<div class="title-block">
-  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
-  <div class="title-main">アナと雪の女王</div>
-  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
-</div>
-<hr class="title-divider">
-<h2>役割書 — 3年D組 文化祭 アナと雪の女王</h2>
+<div class="yakuwari-dept">舞台監督</div>
+<h2>役割書 — 舞台監督</h2>
 <hr>
 <h2>概要・責任範囲</h2>
 <p>舞台監督は<strong>公演全体の進行を管理する司令塔</strong>。</p>

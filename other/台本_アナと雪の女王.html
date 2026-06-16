@@ -209,7 +209,8 @@ blockquote.narrator {
 
 /* ===== CUES ===== */
 p.cue {
-  font-size: 10pt;
+  font-size: 11pt;
+  font-weight: 700;
   padding: 6px 12px;
   margin: 8px 0;
   border-radius: 3px;
@@ -218,21 +219,51 @@ p.cue {
 p.light-cue {
   background: #fffbeb;
   border: 1px solid #f0cc70;
-  border-left: 4px solid #e0a020;
+  border-left: 6px solid #e0a020;
   color: #5a3800;
 }
 p.music-cue {
   background: #f0f8f4;
   border: 1px solid #80c8a0;
-  border-left: 4px solid #30a060;
+  border-left: 6px solid #30a060;
   color: #174025;
-  font-weight: 500;
 }
 p.time-cue {
   background: #f4f4f2;
   border: 1px solid #ccc;
-  border-left: 4px solid #999;
+  border-left: 6px solid #999;
   color: #555;
+  font-weight: 400;
+}
+p.daidogu-cue {
+  background: #fdf4e7;
+  border: 1px solid #c8842a;
+  border-left: 6px solid #a06010;
+  color: #4a2800;
+}
+p.shodogu-cue {
+  background: #f2eefd;
+  border: 1px solid #9060c0;
+  border-left: 6px solid #6040a0;
+  color: #2a0a50;
+}
+p.onkyo-cue {
+  background: #e6f6f5;
+  border: 1px solid #3aaa9a;
+  border-left: 6px solid #108070;
+  color: #083830;
+}
+p.isho-cue {
+  background: #fde8f0;
+  border: 1px solid #d060a0;
+  border-left: 6px solid #b04080;
+  color: #4a0a28;
+}
+p.kantoku-cue {
+  background: #eaecf4;
+  border: 1px solid #4050b8;
+  border-left: 6px solid #2030a0;
+  color: #0a1040;
 }
 
 /* ===== VERSION BADGE ===== */
@@ -247,7 +278,6 @@ p.time-cue {
 }
 .badge-full   { background: #4a7cc0; color: #fff; }
 .badge-yakusha { background: #6a3080; color: #fff; }
-.badge-staff  { background: #c07020; color: #fff; }
 
 /* ===== FOOTER NOTE ===== */
 .footer-note {
@@ -259,19 +289,15 @@ p.time-cue {
   border-top: 1px solid #ddd;
 }
 
-/* ===== STAFF MODE emphasis ===== */
-body.staff-mode p.light-cue {
-  font-size: 11pt;
+/* ===== YAKUWARI TITLE ===== */
+.yakuwari-dept {
+  font-size: 32pt;
   font-weight: 700;
-  border-left-width: 6px;
-}
-body.staff-mode p.music-cue {
-  font-size: 11pt;
-  font-weight: 700;
-  border-left-width: 6px;
-}
-body.staff-mode p.time-cue {
-  font-size: 11pt;
+  color: #1a3a6a;
+  text-align: center;
+  padding: 24px 0 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
 }
 </style>
 </head>
@@ -280,7 +306,7 @@ body.staff-mode p.time-cue {
 <div class="title-block">
   <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
   <div class="title-main">アナと雪の女王</div>
-  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+  <div class="title-sub">上演時間：約40分 ／ クラス：3年D組</div>
 </div>
 <hr class="title-divider">
 <h2>アナと雪の女王</h2>
@@ -360,7 +386,7 @@ body.staff-mode p.time-cue {
 <div class="act-chars">【登場人物】アナ、エルサ、ナレーター</div>
 <div class="act-meta">開幕〜約2分</div>
 </div>
-<p>🎬 <strong>舞台監督:</strong> 全係の準備完了を確認してから「開演」の合図を出す。照明係に客席照明を消すよう指示。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 全係の準備完了を確認してから「開演」の合図を出す。照明係に客席照明を消すよう指示。</p>
 <p class="cue light-cue">💡 開幕：客席の照明を消し、舞台は暗転。徐々に明るく（夜の子ども部屋のイメージ）。</p>
 <blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>昔、アレンデールという王国にアナとエルサという仲の良い姉妹がいました。姉のエルサは、氷の魔法を操る不思議な力を持っていました。</blockquote>
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「エルサ。ねぇエルサ起きて。一緒に遊ぼうよ～。」</p>
@@ -375,11 +401,11 @@ body.staff-mode p.time-cue {
 <blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>アナはトロールの力でエルサの魔法の記憶を消し、一命を取り留めることができました。一方、エルサは能力を抑えるため、城に閉じこもるようになりました。</blockquote>
 <p class="cue time-cue">⏱ ここまで約1〜2分</p>
 <p class="cue music-cue">🎵 <strong>歌唱『雪だるまつくろう』</strong>（約3分）</p>
-<p>🔊 <strong>音響:</strong> 『雪だるまつくろう』を再生。歌い終わりに合わせてフェードアウト。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『雪だるまつくろう』を再生。歌い終わりに合わせてフェードアウト。</p>
 <p class="cue light-cue">💡 歌の終わりで暗転→次の場面（戴冠式）の役者・小道具が配置につく→照明を付ける。</p>
-<p>🎨 <strong>大道具:</strong> 暗転中にセットを戴冠式の配置へ変更（ドアフレームがある場合はACT2の位置に設置）。</p>
-<p>📦 <strong>小道具:</strong> 暗転中に杖・玉をエルサの登場位置にセット。白手袋をエルサ役に渡しておく。</p>
-<p>🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットを戴冠式の配置へ変更（ドアフレームがある場合はACT2の位置に設置）。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中に杖・玉をエルサの登場位置にセット。白手袋をエルサ役に渡しておく。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 2　戴冠式とハンスとの出会い</div>
 <div class="act-chars">【登場人物】アナ、エルサ、ハンス、家来/司祭、ウェーゼルトン公爵、ナレーター</div>
@@ -391,7 +417,7 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「え…たいかんしき…？―そうだ戴冠式！やっとエルサに会える！」</p>
 <p class="cue light-cue">💡 このやり取りは舞台裏で行う。</p>
 <p class="cue music-cue">🎵 <strong>歌唱『生まれてはじめて』</strong>（約2分半）</p>
-<p>🔊 <strong>音響:</strong> 『生まれてはじめて』を再生（二番から）。ハンスとぶつかる直前にフェードアウト。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『生まれてはじめて』を再生（二番から）。ハンスとぶつかる直前にフェードアウト。</p>
 <p>二番の歌詞から。歌の最後でハンスとぶつかる。</p>
 <h3>〔ハンスとの出会い〕</h3>
 <p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「大丈夫？怪我はないかい？」</p>
@@ -405,7 +431,7 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#6a4530">司祭</span>「アレンデールのエルサ女王です。」</p>
 <p class="stage-direction">（エルサは国王の印である杖と玉を持つ。言い終わると同時に素早く杖と玉を置き、手袋をはめる。）</p>
 <p class="cue light-cue">💡 手袋を着用したら舞台の照明を消す。エルサは中央で待機し、アナはその隣に並ぶ。照明を付けて舞踏会のシーンへ。</p>
-<p>📦 <strong>小道具:</strong> 照明が消えた瞬間に杖と玉を素早く回収し舞台裏へ（エルサがはけなくていいよう係が入って回収する）。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 照明が消えた瞬間に杖と玉を素早く回収し舞台裏へ（エルサがはけなくていいよう係が入って回収する）。</p>
 <h3>〔舞踏会〕</h3>
 <p class="cue light-cue">💡 舞踏会：暖かいオレンジ・黄色系の照明でパーティーの雰囲気。</p>
 <p class="dialog"><span class="char-name" style="color:#2070b0">エルサ</span>「久しぶりね、アナ。元気？」</p>
@@ -425,11 +451,11 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「なんでぇ～！」</p>
 <blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>踊り終えたアナはハンスと再会し、庭で互いの境遇が似ていることを知り、二人の距離が近づいていきます。</blockquote>
 <p class="cue music-cue">🎵 <strong>歌唱『とびら開けて』</strong>（約2分）</p>
-<p>🔊 <strong>音響:</strong> 『とびら開けて』を再生。歌い終わりに合わせて止める。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『とびら開けて』を再生。歌い終わりに合わせて止める。</p>
 <p class="cue light-cue">💡 歌唱後、舞台の照明を消す。二人は横に移動して待機。エルサが配置についたら照明を付けて次の場面へ。</p>
-<p>🎨 <strong>大道具:</strong> 暗転中にセットをACT3（野外・逃走シーン）の配置へ変更。戴冠式のドアフレームを撤去またはACT3の位置へ移動。</p>
-<p>👗 <strong>衣装:</strong> 暗転中にアナ・エルサの早替えをサポート（舞台袖）。アナ→旅用衣装、エルサ→アイスドレスへ。着替え完了を舞台監督に知らせる。</p>
-<p>🎬 <strong>舞台監督:</strong> 大道具の転換完了・衣装係からの着替え完了報告を両方確認してから照明・役者入場の合図を出す。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT3（野外・逃走シーン）の配置へ変更。戴冠式のドアフレームを撤去またはACT3の位置へ移動。</p>
+<p class="cue isho-cue">👗 <strong>衣装:</strong> 暗転中にアナ・エルサの早替えをサポート（舞台袖）。アナ→旅用衣装、エルサ→アイスドレスへ。着替え完了を舞台監督に知らせる。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具の転換完了・衣装係からの着替え完了報告を両方確認してから照明・役者入場の合図を出す。</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 3　エルサの逃走</div>
 <div class="act-chars">【登場人物】アナ、エルサ、ハンス、ウェーゼルトン公爵</div>
@@ -448,11 +474,11 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「エルサ！…こうなったのは私のせい。私が追いかける。ハンスはこの国をお願い！」</p>
 <p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「わかったよ、アナ！」</p>
 <p class="cue music-cue">🎵 <strong>歌唱『レット・イット・ゴー ～ありのままで～』</strong>（約4分）</p>
-<p>🔊 <strong>音響:</strong> 『レット・イット・ゴー』を再生。エルサの歌い終わりに合わせて止める。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『レット・イット・ゴー』を再生。エルサの歌い終わりに合わせて止める。</p>
 <p class="cue light-cue">💡 レット・イット・ゴー：歌が進むにつれて青白い照明に切り替える（氷の城が完成するイメージ）。解放感のあるシーンなので歌の後半は明るく輝かせる。歌い終わったら暗転。</p>
-<p>🎨 <strong>大道具:</strong> 暗転中にセットをACT4（納屋のある野外）の配置へ変更。ドアフレームをACT4（納屋の扉）の位置に設置。</p>
-<p>📦 <strong>小道具:</strong> 暗転中にロープ・金鎚・人参をアナが手に取れる位置にセット。</p>
-<p>🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT4（納屋のある野外）の配置へ変更。ドアフレームをACT4（納屋の扉）の位置に設置。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中にロープ・金鎚・人参をアナが手に取れる位置にセット。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
 <p class="cue time-cue">⏱ ここまで約16〜18分</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 4　クリストフ・オラフとの旅</div>
@@ -494,10 +520,10 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「そうなのか？暑さとは縁がなさそうだけどな」</p>
 <p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「そうさ？でも時々目をつぶって考えるんだ。暑い夏が来たらどんな感じなんだろうなぁって！」</p>
 <p class="cue music-cue">🎵 <strong>歌唱『あこがれの夏』</strong>（約2分）</p>
-<p>🔊 <strong>音響:</strong> 『あこがれの夏』を再生。オラフの歌い終わりに合わせて止める。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『あこがれの夏』を再生。オラフの歌い終わりに合わせて止める。</p>
 <p class="cue light-cue">💡 歌い終わった瞬間に照明を消し、次の場面へ移行。</p>
-<p>🎨 <strong>大道具:</strong> 暗転中にセットをACT5（エルサの氷の城）の配置へ変更（青白い背景パネルを前面に出す）。ACT4の納屋ドアフレームを撤去。</p>
-<p>🎬 <strong>舞台監督:</strong> 大道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT5（エルサの氷の城）の配置へ変更（青白い背景パネルを前面に出す）。ACT4の納屋ドアフレームを撤去。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 5　エルサの城・トロールの村</div>
 <div class="act-chars">【登場人物】アナ、エルサ、クリストフ、スヴェン、オラフ、トロール、ナレーター</div>
@@ -513,7 +539,7 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「エルサも一緒に帰りましょう？」</p>
 <p class="dialog"><span class="char-name" style="color:#2070b0">エルサ</span>「いいえ、私はここにいる。一人でいれば、誰も傷付けないで済む。それにあなたを守りたいの。」</p>
 <p class="cue music-cue">🎵 <strong>歌唱『生まれてはじめて（リプライズ）』</strong>（約2分半）</p>
-<p>🔊 <strong>音響:</strong> 『生まれてはじめて（リプライズ）』を再生。歌の終盤、エルサの感情が高まる場面で音量を絞り照明フラッシュを目立たせる。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『生まれてはじめて（リプライズ）』を再生。歌の終盤、エルサの感情が高まる場面で音量を絞り照明フラッシュを目立たせる。</p>
 <p class="cue light-cue">💡 リプライズ中盤〜終盤にかけて、エルサの感情が高まるにつれ青い照明を不安定に点滅させる。アナに魔法が当たる瞬間：白くフラッシュ。歌が終わったら照明を元に戻す。</p>
 <p class="stage-direction">（歌の終盤、エルサの魔法がアナに直撃する。歌が終わり、アナがよろめいてその場にくずおれる。）</p>
 <p class="stage-direction">（クリストフ、オラフ、スヴェンが駆け寄る。）</p>
@@ -533,7 +559,7 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#c0305a">アナ</span>「違うの、私たちそういう関係じゃなくて」</p>
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「そうだ。別の目的が…」</p>
 <p class="cue music-cue">🎵 <strong>歌唱『愛さえあれば』</strong>（約3分）</p>
-<p>🔊 <strong>音響:</strong> 『愛さえあれば』を再生。歌い終わりに合わせて止める。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『愛さえあれば』を再生。歌い終わりに合わせて止める。</p>
 <p class="stage-direction">（曲が終わった瞬間、アナが座り込む。）</p>
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「アナ！」</p>
 <p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「この子から魔法の力を感じる。このままでは命が危ない。」</p>
@@ -543,9 +569,9 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「大好きな人のキスじゃない？」</p>
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「…！今すぐハンスのところに連れて行くぞ！」</p>
 <p class="cue light-cue">💡 暗転→次の場面（ハンスの部屋）の役者が配置につく→照明を付ける。</p>
-<p>🎨 <strong>大道具:</strong> 暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネルへ）。</p>
-<p>📦 <strong>小道具:</strong> 暗転中にランタン（電池式・あらかじめ点灯済み）を部屋の隅の所定位置にセット。ハンスの剣をハンス役に手渡しておく。</p>
-<p>🎬 <strong>舞台監督:</strong> 大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネルへ）。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中にランタン（電池式・あらかじめ点灯済み）を部屋の隅の所定位置にセット。ハンスの剣をハンス役に手渡しておく。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 6　ハンスの裏切り・真実の愛</div>
 <div class="act-chars">【登場人物】アナ、エルサ、ハンス、オラフ、クリストフ、スヴェン、ナレーター</div>
@@ -600,10 +626,10 @@ body.staff-mode p.time-cue {
 <p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「ねえ、愛ってさ…夏みたいなもんだったんだね。よくわかんないけど、あったかいんだ。」</p>
 <p class="stage-direction">（全員が舞台中央に並ぶ。）</p>
 <p class="cue music-cue">🎵 <strong>BGMが流れ始める</strong></p>
-<p>🔊 <strong>音響:</strong> フィナーレBGMを再生。キャスト紹介・全員お辞儀が終わったら徐々にフェードアウト。</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> フィナーレBGMを再生。キャスト紹介・全員お辞儀が終わったら徐々にフェードアウト。</p>
 <p class="stage-direction">（BGMとともにキャスト紹介。全員でお辞儀して幕。）</p>
 <p class="cue light-cue">💡 幕が下りたら照明を消し、客席の照明を戻す。</p>
-<p>🎬 <strong>舞台監督:</strong> 終演の合図を出す。全係に後片付けを指示する。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 終演の合図を出す。全係に後片付けを指示する。</p>
 <hr>
 <p class="cue light-cue">💡 演出の詳細はリハーサルで随時調整すること。備考欄は参考程度でよい。場面転換の時間によってセリフを削る場合は、必ずキャスト・脚本担当に事前に連絡すること。</p>
 </body>
