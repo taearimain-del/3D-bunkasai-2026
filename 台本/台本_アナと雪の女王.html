@@ -277,17 +277,43 @@
     display: inline-block; flex-shrink: 0;
   }
 
-  /* ===== 印刷 ===== */
+  /* ===== 印刷・ページ番号 ===== */
+  @page {
+    size: A4;
+    margin: 20mm 18mm 22mm 18mm;
+  }
+
   @media print {
     body { background: white; font-size: 13px; }
-    .page-wrap { border: none; padding: 20px 32px; max-width: 100%; }
+    .page-wrap { border: none; padding: 0; max-width: 100%; }
     hr.act-divider { page-break-after: avoid; }
-    h2.act-title { page-break-before: auto; }
-    blockquote.narrator, p.cue { page-break-inside: avoid; }
+    h2.act-title { page-break-before: auto; break-inside: avoid; }
+    blockquote.narrator, p.cue { page-break-inside: avoid; break-inside: avoid; }
+
+    /* ページ番号フッター */
+    .page-number-footer {
+      display: block;
+      position: fixed;
+      bottom: 6mm;
+      right: 0;
+      width: 100%;
+      text-align: right;
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 11px;
+      color: #888;
+      padding-right: 2mm;
+    }
+    .page-number-footer::after {
+      content: "アナと雪の女王 台本";
+    }
   }
+
+  /* 画面では非表示 */
+  .page-number-footer { display: none; }
 </style>
 </head>
 <body>
+<div class="page-number-footer"></div>
 <div class="page-wrap">
 
   <!-- ===== ヘッダー ===== -->
