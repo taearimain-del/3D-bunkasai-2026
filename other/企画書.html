@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
+body {
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-size: 10.5pt;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 20px 24px 30px;
+  background: #fff;
+}
+
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
+.title-divider {
+  border: none;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
+}
+
+/* ===== SECTION HEADINGS ===== */
+h2 {
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
+}
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
+
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
+
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
+p.stage-direction {
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.9;
+}
+
+/* ===== CUES ===== */
+p.cue {
+  font-size: 10pt;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 4px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 4px solid #30a060;
+  color: #174025;
+  font-weight: 500;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 4px solid #999;
+  color: #555;
+}
+
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
+.badge-staff  { background: #c07020; color: #fff; }
+
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== STAFF MODE emphasis ===== */
+body.staff-mode p.light-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.music-cue {
+  font-size: 11pt;
+  font-weight: 700;
+  border-left-width: 6px;
+}
+body.staff-mode p.time-cue {
+  font-size: 11pt;
+}
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約30分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>アナと雪の女王</h2>
+<p><strong>クラス：3年D組　／　作成日：2026年6月16日</strong></p>
+<hr>
+<h2>1. 演目概要</h2>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>演目名</td>
+<td>アナと雪の女王</td>
+</tr>
+<tr>
+<td>原作</td>
+<td>ウォルト・ディズニー・アニメーション・スタジオ</td>
+</tr>
+<tr>
+<td>上演時間</td>
+<td>約30分</td>
+</tr>
+<tr>
+<td>クラス</td>
+<td>3年D組</td>
+</tr>
+<tr>
+<td>学内発表</td>
+<td>2026年9月11日（金）</td>
+</tr>
+<tr>
+<td>一般公開</td>
+<td>2026年9月12日（土）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. あらすじ</h2>
+<p>アレンデール王国に暮らす姉妹、<span class="char-name" style="color:#2070b0">エルサ</span>と<span class="char-name" style="color:#c0305a">アナ</span>。姉のエルサは氷の魔法を持ち、幼い頃にアナを誤って傷つけてしまったことを機に、自らを城に閉じ込めて育ちました。</p>
+<p>長年の孤独の末に行われた戴冠式の日、アナとエルサは久しぶりに顔を合わせます。しかしアナが出会ったばかりのハンス王子との婚約を告げると、二人は言い争いとなり、エルサの魔法が暴走——国全体が真冬に閉ざされてしまいます。</p>
+<p>エルサを追うアナは、山男のクリストフ、トナカイのスヴェン、そして雪だるまのオラフと出会い、山の奥へと旅に出ます。エルサとの再会を果たすも、凍らされた心を抱えたまま残されたアナは、やがて「真実の愛」という言葉に出会い、命をかけた選択を迫られます。</p>
+<p><strong>姉妹の絆と「本当の愛とは何か」</strong>を描いた、感動のファンタジー。</p>
+<hr>
+<h2>3. 演出方針</h2>
+<h3>テーマ</h3>
+<p>「愛は自分よりも相手を大切にすること」をメインテーマに据え、笑いと感動のバランスを大切にした演出を目指す。</p>
+<h3>歌唱シーン（計6曲）</h3>
+<table class="cast-table">
+<thead><tr><th>タイミング</th><th>曲名</th><th>尺</th></tr></thead><tbody>
+<tr>
+<td>ACT 1 後半</td>
+<td>雪だるまつくろう</td>
+<td>約3分</td>
+</tr>
+<tr>
+<td>ACT 2 前半</td>
+<td>生まれてはじめて</td>
+<td>約2分半</td>
+</tr>
+<tr>
+<td>ACT 2 後半</td>
+<td>とびら開けて</td>
+<td>約2分</td>
+</tr>
+<tr>
+<td>ACT 3 後半</td>
+<td>レット・イット・ゴー ～ありのままで～</td>
+<td>約4分</td>
+</tr>
+<tr>
+<td>ACT 4 後半</td>
+<td>あこがれの夏</td>
+<td>約2分</td>
+</tr>
+<tr>
+<td>ACT 5 中盤</td>
+<td>生まれてはじめて（リプライズ）</td>
+<td>約2分半</td>
+</tr>
+<tr>
+<td>ACT 5 後半</td>
+<td>愛さえあれば</td>
+<td>約3分</td>
+</tr>
+<tr>
+<td>フィナーレ</td>
+<td>BGM（選曲中）</td>
+<td class="cast-slot-cell"></td>
+</tr>
+</tbody></table>
+<h3>照明・音響方針</h3>
+<ul><li>場面転換は照明の ON/OFF で行い、暗転中に役者・小道具を素早く配置する</li><li>ラスト（氷が溶けるシーン）は暖色照明に切り替えて春の到来を演出</li><li>歌唱前後の照明タイミングは演出担当の合図に従う</li><li>詳細はキューシート（台本スタッフ用）を参照</li></ul>
+<h3>コミカル演技について</h3>
+<ul><li>オラフ・ウェーゼルトン公爵・スヴェンは積極的にコミカルな演技を取り入れる</li><li>笑いを取りながらも時間超過に注意する</li></ul>
+<hr>
+<h2>4. キャスト一覧</h2>
+<blockquote class="narrator">※ 配役未定欄は決定後に更新すること</blockquote>
+<div class="char-legend"><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">アナ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>担当者（A）</th><th>担当者（B）</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td style="color:#c0305a;font-weight:bold">アナ</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>主役・出番多い</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">エルサ</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>主役・出番多い</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td></td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td></td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>コミカルな演技を意識</td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>四つん這いで演じる</td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>コミカルな演技を意識</td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>複数人で担当</td>
+</tr>
+<tr>
+<td style="color:#505050;font-weight:bold">ナレーター</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td></td>
+</tr>
+<tr>
+<td style="color:#6a4530;font-weight:bold">家来 / 司祭役</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+<td>舞台裏から声のみも可</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. スタッフ構成</h2>
+<blockquote class="narrator">※ 担当者は決定後に記入</blockquote>
+<table class="cast-table">
+<thead><tr><th>役割</th><th>担当者</th><th>主な業務</th></tr></thead><tbody>
+<tr>
+<td>演出</td>
+<td class="cast-slot-cell"></td>
+<td>全体演出・照明合図・リハーサル進行</td>
+</tr>
+<tr>
+<td>脚本</td>
+<td class="cast-slot-cell"></td>
+<td>台本管理・セリフ修正の窓口</td>
+</tr>
+<tr>
+<td>照明</td>
+<td class="cast-slot-cell"></td>
+<td>照明操作・キューシート管理</td>
+</tr>
+<tr>
+<td>音響</td>
+<td class="cast-slot-cell"></td>
+<td>BGM・歌唱音源・マイク管理</td>
+</tr>
+<tr>
+<td>衣装</td>
+<td class="cast-slot-cell"></td>
+<td>衣装調達・着替えサポート</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td class="cast-slot-cell"></td>
+<td>小道具の管理・場面転換補助</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td class="cast-slot-cell"></td>
+<td>幕の開閉・場転の指示出し</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. 必要機材・小道具</h2>
+<h3>舞台・音響機材</h3>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>数量</th><th>調達先</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>マイク（ワイヤレス）</td>
+<td>適宜</td>
+<td>学校備品</td>
+<td>台数は役者数に応じて</td>
+</tr>
+<tr>
+<td>スピーカー</td>
+<td class="cast-slot-cell"></td>
+<td>学校備品</td>
+<td></td>
+</tr>
+<tr>
+<td>PC（音源再生用）</td>
+<td>1台</td>
+<td>持ち込み</td>
+<td></td>
+</tr>
+<tr>
+<td>照明機器</td>
+<td class="cast-slot-cell"></td>
+<td>学校備品</td>
+<td></td>
+</tr>
+</tbody></table>
+<h3>衣装</h3>
+<div class="char-legend"><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">アナ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>必要衣装</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td style="color:#c0305a;font-weight:bold">アナ</td>
+<td>紫のドレス（戴冠式）→ 旅用衣装</td>
+<td>二着必要</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">エルサ</td>
+<td>青のドレス（戴冠式）→ アイスドレス</td>
+<td>二着必要</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td>王子服</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td>登山風衣装</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td>雪だるまコスチューム</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td>トナカイ衣装</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td>貴族服（コミカル寄り）</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td>岩・森を意識した衣装</td>
+<td class="cast-slot-cell"></td>
+</tr>
+</tbody></table>
+<h3>小道具</h3>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>数量</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td>杖（王権の杖）</td>
+<td>1</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>玉（王権の玉）</td>
+<td>1</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>エルサの手袋（白）</td>
+<td>1双</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>人参</td>
+<td>1本</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>ロープ</td>
+<td>1本</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>金槌</td>
+<td>1本</td>
+<td>小道具係</td>
+</tr>
+<tr>
+<td>ハンスの剣（模造）</td>
+<td>1本</td>
+<td>小道具係</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>7. 予算計画</h2>
+<blockquote class="narrator">※ 金額は見積もり。クラス費から支出。</blockquote>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>予算（円）</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>衣装・布地代</td>
+<td class="cast-slot-cell"></td>
+<td>手作り or レンタルで要相談</td>
+</tr>
+<tr>
+<td>小道具・材料費</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>印刷費（台本・企画書）</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>雑費</td>
+<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>**合計**</td>
+<td>**—**</td>
+<td class="cast-slot-cell"></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. 練習スケジュール</h2>
+<table class="cast-table">
+<thead><tr><th>期間</th><th>内容</th><th>目標</th></tr></thead><tbody>
+<tr>
+<td>6月（〜6/30）</td>
+<td>キャスト・スタッフ決定、台本配布、読み合わせ</td>
+<td>全員が台本の流れを把握</td>
+</tr>
+<tr>
+<td>7月（夏休み前半）</td>
+<td>個人練習・セリフ覚え、グループ稽古</td>
+<td>主要シーンのセリフ暗記</td>
+</tr>
+<tr>
+<td>7月（夏休み後半）</td>
+<td>集中稽古（動きの確認）、歌唱合わせ</td>
+<td>動きとセリフの連動</td>
+</tr>
+<tr>
+<td>8月（前半）</td>
+<td>部分通し稽古・照明・音響合わせ</td>
+<td>場面転換をスムーズに</td>
+</tr>
+<tr>
+<td>8月（後半）</td>
+<td>衣装合わせ・通し稽古</td>
+<td>衣装着用での動き確認</td>
+</tr>
+<tr>
+<td>9月1日〜5日</td>
+<td>最終通し稽古・修正</td>
+<td>全体の完成度を上げる</td>
+</tr>
+<tr>
+<td>9月7日〜9日</td>
+<td>会場入り・場所確認・ゲネプロ</td>
+<td>本番同様の流れを体験</td>
+</tr>
+<tr>
+<td>**9月11日（金）**</td>
+<td>**★ 本番（学内発表）**</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>**9月12日（土）**</td>
+<td>**★ 本番（一般公開）**</td>
+<td class="cast-slot-cell"></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>9. 注意事項・ルール</h2>
+<p>1. <strong>セリフ変更は脚本担当に必ず連絡すること</strong>（勝手に変えない）</p>
+<p>2. <strong>小道具は毎回稽古後に所定の場所へ戻す</strong></p>
+<p>3. <strong>衣装は各自で大切に扱い、汚損・紛失しないよう注意</strong></p>
+<p>4. <strong>遅刻・欠席は必ず事前に演出に連絡する</strong></p>
+<p>5. <strong>本番当日は集合時刻の60分前までに会場入りすること</strong></p>
+<hr>
+<p><em>文化祭実行委員・担任先生への提出が必要な場合は、上記に加えてクラス担任の承認印を得ること。</em></p>
+</body>
+</html>
