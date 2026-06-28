@@ -5,136 +5,140 @@
 <title>台本：アナと雪の女王 完全版</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-@page { size: A4 landscape; margin: 18mm 20mm 22mm 20mm; }
+@page { size: A4 landscape; margin: 18mm 22mm 22mm 22mm; }
 html {
   writing-mode: vertical-rl;
 }
 body {
-  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
-  font-size: 10.5pt;
-  line-height: 2.4;
-  color: #1a1a1a;
-  background: #fff;
-  padding: 0;
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',serif;
+  font-size: 11pt;
+  line-height: 2.8;
+  color: #0a0a0a;
+  background: #fefef8;
 }
 
-/* ===== 横書きに戻す要素（スタッフ注意書きは縦書きのまま）===== */
-table.cast-table, .char-legend,
+/* 役名：黒ゴシック体で統一（カラーを上書き）*/
+span.char-name {
+  color: #0a0a0a !important;
+  font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+  font-weight: 700;
+  font-size: 9.5pt;
+}
+
+/* ===== 横書きに戻す要素（キャスト表・キューのみ）===== */
+table.cast-table, .char-legend, p.cast-note,
+.version-badge, .footer-note,
+.act-meta, .act-chars,
+.title-block, hr,
 p.cue, p.light-cue, p.music-cue, p.time-cue,
 p.daidogu-cue, p.shodogu-cue, p.onkyo-cue,
-p.isho-cue, p.kantoku-cue,
-.version-badge, .footer-note, p.cast-note,
-.title-block, hr, .act-meta, .act-chars {
+p.isho-cue, p.kantoku-cue {
   writing-mode: horizontal-tb;
   display: block;
 }
 
-/* ===== タイトル ===== */
+/* ===== タイトル（横書き帯）===== */
 .title-block {
   text-align: center;
-  padding: 10px 16px;
-  margin-bottom: 12px;
-  border-bottom: 3px double #4a7cc0;
+  padding: 14px 20px;
+  margin-bottom: 10px;
+  border-bottom: 3px solid #0a0a0a;
+  border-top: 3px solid #0a0a0a;
 }
-.title-label { font-size: 9pt; letter-spacing: 0.3em; color: #888; display: block; }
-.title-main { font-size: 22pt; font-weight: 700; color: #1a3a6a; letter-spacing: 0.15em; line-height: 1.6; margin: 6px 0; display: block; }
-.title-sub { font-size: 9pt; color: #555; letter-spacing: 0.1em; display: block; }
+.title-label {
+  font-size: 8.5pt; letter-spacing: 0.5em; color: #555;
+  display: block; margin-bottom: 6px;
+  font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+}
+.title-main {
+  font-size: 24pt; font-weight: 700; color: #0a0a0a;
+  letter-spacing: 0.25em; display: block; line-height: 1.4;
+}
+.title-sub {
+  font-size: 9pt; color: #555; letter-spacing: 0.15em;
+  display: block; margin-top: 5px;
+  font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
+}
 .title-divider { display: none; }
 
 /* ===== 見出し ===== */
 h2 {
-  font-size: 13pt; font-weight: 700; color: #1a3a6a;
-  padding: 10px 6px;
-  margin: 0 0 8px 16px;
-  border-right: 5px solid #4a7cc0;
-  background: linear-gradient(to left, #f0f4fa, #fff);
-  letter-spacing: 0.08em;
+  font-size: 12pt; font-weight: 700; color: #0a0a0a;
+  padding: 10px 5px; margin: 0 0 8px 14px;
+  border-right: 4px solid #0a0a0a;
+  background: none; letter-spacing: 0.1em;
 }
 h3 {
-  font-size: 11pt; font-weight: 700; color: #446;
-  padding: 6px 4px;
-  margin: 0 0 6px 10px;
-  border-right: 3px solid #99aacc;
+  font-size: 10.5pt; font-weight: 700; color: #222;
+  padding: 6px 4px; margin: 0 0 6px 8px;
+  border-right: 2px solid #555;
 }
-hr { writing-mode: horizontal-tb; border: none; border-top: 1px solid #d0d0d0; margin: 12px 0; }
+hr { writing-mode: horizontal-tb; border: none; border-top: 1px solid #888; margin: 10px 0; }
 
 /* ===== ACTヘッダー ===== */
-.act-header { margin: 8px 0 10px 20px; break-before: auto; }
+.act-header { margin: 6px 0 10px 18px; }
 .act-title {
   writing-mode: vertical-rl;
-  font-size: 13pt; font-weight: 700; color: #1a3a6a;
-  padding: 10px 7px;
-  border-right: 5px solid #4a7cc0;
-  border-top: 2px solid #4a7cc0;
-  background: #f0f4fa;
-  letter-spacing: 0.08em;
-  display: block;
-  margin-bottom: 6px;
+  font-size: 13pt; font-weight: 700; color: #0a0a0a;
+  padding: 12px 5px;
+  border-right: 4px solid #0a0a0a;
+  border-top: 1px solid #0a0a0a;
+  letter-spacing: 0.14em; display: block; margin-bottom: 5px;
+  background: none;
 }
-.act-meta { font-size: 8.5pt; color: #888; margin: 3px 4px; }
-.act-chars { font-size: 9.5pt; font-weight: 700; color: #444; margin: 0 4px 8px; }
+.act-meta { font-size: 8pt; color: #666; margin: 3px 4px; }
+.act-chars { font-size: 9pt; color: #333; font-weight: 700; margin: 0 4px 8px; }
 
 /* ===== キャスト表 ===== */
-table.cast-table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 6px 0; }
-table.cast-table th { background: #eef2f8; border: 1px solid #c0c8d8; padding: 4px 7px; font-weight: 700; text-align: left; color: #334; }
-table.cast-table td { border: 1px solid #c8ccd8; padding: 3px 7px; vertical-align: middle; }
-td.cast-slot-cell { min-width: 70px; background: #fafaf6; border-bottom: 2px solid #888 !important; }
-.char-legend { font-size: 9pt; margin: 6px 0 8px; line-height: 1.9; }
-.char-legend .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
-p.cast-note { font-size: 9pt; color: #999; margin: 4px 0; font-style: italic; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9pt; }
+table.cast-table th { background: #e0e0e0; border: 1px solid #888; padding: 4px 8px; font-weight: 700; color: #0a0a0a; }
+table.cast-table td { border: 1px solid #bbb; padding: 3px 8px; vertical-align: middle; color: #0a0a0a; }
+td.cast-slot-cell { min-width: 70px; border-bottom: 2px solid #0a0a0a !important; }
+.char-legend { font-size: 8.5pt; margin: 5px 0 8px; line-height: 1.8; }
+.char-legend .dot { display: inline-block; width: 7px; height: 7px; border-radius: 0; margin-right: 3px; vertical-align: middle; background: #444 !important; }
+.char-legend span { color: #0a0a0a !important; }
+p.cast-note { font-size: 8.5pt; color: #666; margin: 4px 0; }
 
-/* ===== スタッフ注意書き ===== */
-.staff-notes { background: #f6f6f4; border: 1px solid #d0ccc4; border-radius: 3px; padding: 8px 12px; margin: 0 0 8px 10px; }
+/* ===== スタッフ注意書き（縦書き）===== */
+.staff-notes { background: #f5f5f0; border-right: 3px solid #555; padding: 8px 10px; margin: 0 0 8px 8px; }
 .staff-notes ul { list-style: none; padding: 0; margin: 0; }
-.staff-notes li { font-size: 9.5pt; color: #333; padding: 2px 0; line-height: 1.8; }
-.staff-notes li::before { content: '▸'; color: #888; margin-right: 6px; font-size: 8.5pt; }
+.staff-notes li { font-size: 9.5pt; color: #1a1a1a; padding: 2px 0; line-height: 2.4; }
+.staff-notes li::before { content: '◆'; color: #555; margin-right: 4px; font-size: 8pt; }
 
 /* ===== セリフ・ト書き ===== */
-p.dialog { margin: 0 3px 5px; line-height: 2.4; }
-span.char-name { font-weight: 700; }
+p.dialog { margin: 0 2px 6px; line-height: 2.8; }
 p.stage-direction {
-  color: #777; font-size: 9.5pt; font-style: italic;
-  margin: 0 3px 5px 10px;
-  padding-right: 8px;
-  border-right: 2px solid #ddd;
-  line-height: 2.0;
+  color: #444; font-size: 9pt; font-style: normal;
+  margin: 0 2px 5px 8px; padding-right: 6px;
+  border-right: 1px solid #bbb; line-height: 2.4;
 }
 
 /* ===== ナレーター ===== */
 blockquote.narrator {
-  background: #f5f4f0;
-  border-right: 4px solid #aaa;
-  border-top: 1px solid #d4d0c8;
-  border-bottom: 1px solid #d4d0c8;
-  padding: 7px 12px;
-  margin: 0 0 8px 8px;
-  font-size: 10pt; color: #333; line-height: 2.2;
+  border-right: 3px solid #555;
+  border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;
+  padding: 6px 10px; margin: 0 0 8px 6px;
+  font-size: 10pt; color: #1a1a1a; line-height: 2.6;
+  background: #f8f8f4;
 }
 
-/* ===== キュー（コンパクト縦書き内横組み）===== */
-p.cue {
-  font-size: 9pt; font-weight: 700;
-  padding: 3px 8px;
-  margin: 2px 0 6px 6px;
-  border-radius: 3px;
-  line-height: 1.6;
-  display: block;
-}
-p.light-cue { background: #fffbeb; border: 1px solid #e8c050; border-left: 4px solid #e0a020; color: #5a3800; }
-p.music-cue { background: #f0f8f4; border: 1px solid #70c090; border-left: 4px solid #30a060; color: #174025; }
-p.time-cue { background: #f4f4f2; border: 1px solid #ccc; border-left: 4px solid #999; color: #555; font-weight: 400; }
-p.daidogu-cue { background: #fdf4e7; border: 1px solid #c07820; border-left: 4px solid #a06010; color: #4a2800; }
-p.shodogu-cue { background: #f2eefd; border: 1px solid #8050b8; border-left: 4px solid #6040a0; color: #2a0a50; }
-p.onkyo-cue { background: #e6f6f5; border: 1px solid #30a09a; border-left: 4px solid #108070; color: #083830; }
-p.isho-cue { background: #fde8f0; border: 1px solid #c04898; border-left: 4px solid #a03878; color: #4a0a28; }
-p.kantoku-cue { background: #eaecf4; border: 1px solid #3848b0; border-left: 4px solid #2030a0; color: #0a1040; }
+/* ===== キュー（横書き小ボックス）===== */
+p.cue { font-size: 8.5pt; font-weight: 700; padding: 2px 7px; margin: 2px 0 4px 5px; border-radius: 1px; line-height: 1.5; }
+p.light-cue { background: #fffbe8; border: 1px solid #c09010; border-left: 3px solid #907000; color: #382600; }
+p.music-cue { background: #eef6ee; border: 1px solid #508050; border-left: 3px solid #207040; color: #082010; }
+p.time-cue { background: #f2f2f2; border: 1px solid #999; border-left: 3px solid #666; color: #444; font-weight: 400; }
+p.daidogu-cue { background: #fdf0e0; border: 1px solid #a05808; border-left: 3px solid #784008; color: #301600; }
+p.shodogu-cue { background: #f0eeff; border: 1px solid #6848a0; border-left: 3px solid #483080; color: #1a0838; }
+p.onkyo-cue { background: #e4f4f4; border: 1px solid #288888; border-left: 3px solid #106060; color: #042828; }
+p.isho-cue { background: #fce8f0; border: 1px solid #a04888; border-left: 3px solid #883070; color: #380626; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #2838a0; border-left: 3px solid #182898; color: #060c38; }
 
 /* ===== バッジ・フッター ===== */
-.version-badge { display: inline-block; font-size: 9pt; padding: 2px 9px; border-radius: 4px; margin-bottom: 6px; font-weight: 700; }
-.badge-full { background: #4a7cc0; color: #fff; }
-.badge-yakusha { background: #6a3080; color: #fff; }
-.footer-note { font-size: 8pt; color: #999; text-align: center; margin-top: 16px; padding-top: 6px; border-top: 1px solid #ddd; }
-.yakuwari-dept { writing-mode: horizontal-tb; font-size: 22pt; font-weight: 700; color: #1a3a6a; text-align: center; padding: 16px 0 6px; letter-spacing: 0.1em; }
+.version-badge { display: inline-block; font-size: 8pt; padding: 1px 8px; border: 1px solid #444; margin-bottom: 6px; font-weight: 700; border-radius: 1px; }
+.badge-full { background: #0a0a0a; color: #fafaf8; }
+.badge-yakusha { background: #333; color: #fafaf8; }
+.footer-note { font-size: 7.5pt; color: #888; text-align: center; margin-top: 12px; padding-top: 6px; border-top: 1px solid #ccc; }
+.yakuwari-dept { writing-mode: horizontal-tb; font-size: 20pt; font-weight: 700; color: #0a0a0a; text-align: center; padding: 14px 0 6px; letter-spacing: 0.12em; line-height: 1.4; }
 </style>
 </head>
 <body>
