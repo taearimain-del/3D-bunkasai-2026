@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>台本：アナと雪の女王 完全版</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 24mm 28mm 28mm 28mm; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',Arial,sans-serif;
+  font-size: 10pt;
+  line-height: 1.9;
+  color: #111;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：モノクロ・ミニマル */
+.title-block { text-align: center; margin-bottom: 32px; padding-bottom: 0; }
+.title-label { font-size: 8pt; letter-spacing: 0.6em; color: #aaa; margin-bottom: 16px; display: block; text-transform: uppercase; }
+.title-main { font-size: 36pt; font-weight: 900; color: #111; letter-spacing: 0.04em; line-height: 1.15; margin: 10px 0 14px; display: block; }
+.title-sub { font-size: 9.5pt; color: #666; letter-spacing: 0.2em; display: block; }
+.title-divider { border: none; border-top: 2px solid #111; margin: 20px 0 0; }
+
+/* 見出し：太線のみ */
+h2 {
+  font-size: 9pt; font-weight: 700; color: #444;
+  margin: 34px 0 14px; padding: 0 0 6px 0;
+  border-bottom: 1px solid #ccc;
+  background: none; letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+h3 { font-size: 10pt; font-weight: 700; color: #222; margin: 20px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px solid #eee; padding-bottom: 4px; letter-spacing: 0.1em; }
+hr { border: none; border-top: 1px solid #e0e0e0; margin: 26px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 9px; font-weight: 700; text-align: left; color: #111; }
+table.cast-table td { border: 1px solid #ddd; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #fafafa; border-bottom: 2px solid #222 !important; }
+p.cast-note { font-size: 8.5pt; color: #999; margin: 6px 0 0; }
+.staff-notes { background: #f8f8f8; border-left: 3px solid #222; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #333; padding: 2px 0; line-height: 1.9; }
+.staff-notes li::before { content: '—'; color: #888; margin-right: 8px; }
+
+/* ACTヘッダー：横線 + 中央テキスト */
+.act-header { margin: 40px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 11pt; font-weight: 900; color: #111;
+  padding: 0;
+  background: none; border: none;
+  letter-spacing: 0.25em;
+  display: block;
+  margin-bottom: 4px;
+}
+.act-header::before {
+  content: '';
+  display: block;
+  border-top: 2px solid #111;
+  margin-bottom: 10px;
+}
+.act-header::after {
+  content: '';
+  display: block;
+  border-top: 1px solid #bbb;
+  margin-top: 10px;
+}
+.act-meta { font-size: 8pt; color: #888; margin: 2px 0; letter-spacing: 0.1em; }
+.act-chars { font-size: 9pt; color: #444; margin: 2px 0 0; }
+
+/* セリフ：キャラ名を中央揃え大文字で独立 */
+p.dialog { margin: 8px auto 2px; max-width: 500px; line-height: 1.9; }
+span.char-name {
+  display: block;
+  text-align: center;
+  font-weight: 900;
+  font-size: 9.5pt;
+  letter-spacing: 0.2em;
+  margin-bottom: 2px;
+}
+p.stage-direction {
+  color: #555; font-size: 9.5pt; font-style: italic;
+  margin: 6px auto 6px;
+  max-width: 520px;
+  padding: 0 60px;
+  border-left: none;
+  line-height: 1.8;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f8f8f8; border-left: 3px solid #888;
+  padding: 8px 18px; margin: 12px auto;
+  max-width: 540px;
+  font-size: 9.5pt; color: #333; line-height: 1.9;
+}
+
+/* キュー */
+p.cue { font-size: 9.5pt; font-weight: 700; padding: 4px 10px; margin: 6px 0; border-radius: 0; line-height: 1.7; }
+p.light-cue { background: #fffbeb; border: 1px solid #e8c050; border-left: 4px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #70b880; border-left: 4px solid #287848; color: #0a2818; }
+p.time-cue { background: #f6f6f6; border: 1px solid #bbb; border-left: 4px solid #888; color: #444; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 4px solid #904810; color: #3a2000; }
+p.shodogu-cue { background: #f2eeff; border: 1px solid #8858b0; border-left: 4px solid #583888; color: #240840; }
+p.onkyo-cue { background: #e8f6f2; border: 1px solid #38a098; border-left: 4px solid #106860; color: #062820; }
+p.isho-cue { background: #fce8f0; border: 1px solid #c85898; border-left: 4px solid #983068; color: #420820; }
+p.kantoku-cue { background: #eeeff8; border: 1px solid #3848b0; border-left: 4px solid #1e30a0; color: #080e3a; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 8.5pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.08em; }
+.badge-full { background: #111; color: #fff; }
+.badge-yakusha { background: #555; color: #fff; }
+.footer-note { font-size: 7.5pt; color: #aaa; text-align: center; margin-top: 32px; padding-top: 8px; border-top: 1px solid #e0e0e0; letter-spacing: 0.1em; }
+.yakuwari-dept { font-size: 28pt; font-weight: 900; color: #111; text-align: center; padding: 22px 0 10px; letter-spacing: 0.15em; line-height: 1.3; }
+</style>
+</head>
+<body>
+<span class="version-badge badge-full">【完全版】</span>
+<div class="title-block">
+  <div class="title-label">文 化 祭　舞 台 公 演　台 本</div>
+  <div class="title-main">アナと雪の女王</div>
+  <div class="title-sub">上演時間：約40分 ／ クラス：3年D組</div>
+</div>
+<hr class="title-divider">
+<h2>アナと雪の女王</h2>
+<p><strong>上演時間：約40分 ／ クラス：3年D組　※ 暫定版（2026-06-28）</strong></p>
+<hr>
+<h2>キャスト一覧</h2>
+<blockquote class="narrator">※ 担当者は暫定。A/B班の割り当ては後日確定。</blockquote>
+<div class="char-legend"><span class="dot" style="background:#d44d75"></span><span style="color:#d44d75;font-weight:bold;margin-right:14px">子供アナ</span><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">夏アナ</span><span class="dot" style="background:#7a1030"></span><span style="color:#7a1030;font-weight:bold;margin-right:14px">冬アナ</span><span class="dot" style="background:#5095cc"></span><span style="color:#5095cc;font-weight:bold;margin-right:14px">子供エルサ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">大人エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>担当（暫定）</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td style="color:#d44d75;font-weight:bold">子供アナ</td>
+<td>ひなた・ゆな</td>
+<td>ACT1のみ。幼少期のアナ</td>
+</tr>
+<tr>
+<td style="color:#c0305a;font-weight:bold">夏アナ</td>
+<td>未定</td>
+<td>ACT2〜4。戴冠式〜納屋まで</td>
+</tr>
+<tr>
+<td style="color:#7a1030;font-weight:bold">冬アナ</td>
+<td>りえ・あおい</td>
+<td>ACT5〜6。エルサ城〜クライマックス</td>
+</tr>
+<tr>
+<td style="color:#5095cc;font-weight:bold">子供エルサ</td>
+<td>未定</td>
+<td>ACT1のみ。幼少期のエルサ</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">大人エルサ</td>
+<td>あん・ここな</td>
+<td>ACT2〜6（通し）。衣装：マント→アイスドレス</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td>りゅう・しゅうた</td>
+<td>デュエット1曲あり。ACT6で剣を使う</td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td>たつや・せいじ</td>
+<td>愛さえあれば（トロールと）に参加</td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td>みらい・うらら</td>
+<td>コミカルな演技を意識</td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td>あいり・Kyo</td>
+<td>四つん這いで演じる</td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td>あゆま・こたに</td>
+<td>コミカルな演技を意識</td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td>ゆみか・けんしん・くるみ・かれん・まお・はると</td>
+<td>6人。A/B班分け後日確定</td>
+</tr>
+<tr>
+<td style="color:#505050;font-weight:bold">ナレーター</td>
+<td>志内・こうすけ・ゆうな・わかな</td>
+<td>4人。録音でも可。A/B班分け後日確定</td>
+</tr>
+<tr>
+<td style="color:#6a4530;font-weight:bold">家来 / 司祭役</td>
+<td>やまと・せら</td>
+<td>舞台裏から声のみも可</td>
+</tr>
+</tbody></table>
+<p class="cast-note">※ 配役は後日確定予定です。随時更新します。</p>
+<hr>
+<h2>演出・スタッフ メモ</h2>
+<ul><li>ト書き（イタリック）はセリフではない。混同しないこと</li><li>照明・音響のタイミングは別紙キューシート（役割書_照明係）を参照</li><li>小道具（杖・玉・手袋・人参・ランタンなど）の管理を徹底すること</li><li>歌唱前後の照明操作は舞台監督が合図を出す</li><li>場面転換でセリフを削る場合は舞台監督に連絡</li><li>演出の詳細はリハーサルで随時調整する</li></ul>
+<hr>
+<div class="act-header"><div class="act-title">ACT 1　幼い日の姉妹</div>
+<div class="act-chars">【登場人物】子供アナ、子供エルサ、ナレーター</div>
+<div class="act-meta">開幕〜約2分</div>
+</div>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 全係の準備完了を確認してから「開演」の合図を出す。照明係に客席照明を消すよう指示。</p>
+<p class="cue light-cue">💡 開幕：客席の照明を消し、舞台は暗転。徐々に明るく（夜の子ども部屋のイメージ）。</p>
+<p class="stage-direction">（舞台：簡素な子ども部屋。舞台上手と下手にそれぞれ椅子または低いベンチを「ベッド」として置く。子供エルサは上手のベッドで眠り、子供アナは下手のベッドで毛布にくるまって眠っている。照明がゆっくりと明るくなると、子供アナが寝返りを打ち、むくりと上半身を起こす。眠そうに目をこすり、そっとエルサのベッドを見やる。）</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>昔、アレンデールという王国にアナとエルサという仲の良い姉妹がいました。姉のエルサは、氷の魔法を操る不思議な力を持っていました。</blockquote>
+<p class="stage-direction">（子供アナはベッドを抜け出し、下手から上手へ忍び足で横切る。途中で一度立ち止まり、廊下の様子を窺ってから、小走りで子供エルサのベッドに近づいてその体を揺り起こす。）</p>
+<p class="dialog"><span class="char-name" style="color:#d44d75">子供アナ</span>「エルサ。ねぇエルサ起きて。一緒に遊ぼうよ～。」</p>
+<p class="dialog"><span class="char-name" style="color:#5095cc">子供エルサ</span>「だめよアナ、もう寝ないと…。」</p>
+<p class="stage-direction">（子供エルサは眠そうに子供アナを手で追い払おうとするが、子供アナはしつこく揺さぶり続ける。）</p>
+<p class="dialog"><span class="char-name" style="color:#d44d75">子供アナ</span>「え～？パパとママは寝てるし、私たちは起きてるじゃない！…そうだ、雪だるま！雪だるまを作ろう？」</p>
+<p class="stage-direction">（子供エルサの目がぱっと開く。二人はお互いに顔を見合わせてにやりとし、手をつないで舞台中央へ駆け出す。子供エルサは両手を広げたり、くるっと回したりして雪を降らせる魔法を表現する。続いて二人で雪玉を積み重ねるパントマイムで雪だるまを作る演技をする。※ACT1のオラフは、子供エルサが作った雪だるまにしゃがんで向き合い、声色を変えてオラフのセリフを言うだけでよい（オラフ役の役者は不要。ACT4から役者が登場する）。）</p>
+<p class="dialog"><span class="char-name" style="color:#5095cc">子供エルサ</span>「やあ、僕はオラフ。ぎゅ～って抱きしめて。」</p>
+<p class="dialog"><span class="char-name" style="color:#d44d75">子供アナ</span>「オラフ～！ねえ、もっと魔法見せて！」</p>
+<p class="stage-direction">（子供エルサが子供アナの手をとり、二人でぐるぐると舞台を走り回る。魔法がどんどんエスカレートし、子供エルサは笑いながら大きな動きで氷を生み出す演技を続ける。そして大きく手を振り上げた瞬間、誤って子供アナの方向へ魔法が飛ぶ。子供アナは驚いた表情で「当たった」演技をし、その場にくずおれる。）</p>
+<p class="cue light-cue">💡 子供アナが魔法に当たる瞬間：一瞬だけ舞台を白くフラッシュ→すぐ暗転。</p>
+<p class="stage-direction">（子供エルサは一瞬凍りついたように立ちすくむ。次の瞬間われに返り、子供アナへ飛ぶように駆け寄り、その体を両手で抱き起こす。声を震わせながら子供アナの顔を覗き込み、自分の手とアナを交互に見て必死に呼びかける。）</p>
+<p class="dialog"><span class="char-name" style="color:#5095cc">子供エルサ</span>「アナ…？アナ！」</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>アナはトロールの力でエルサの魔法の記憶を消し、一命を取り留めることができました。一方、エルサは能力を抑えるため、城に閉じこもるようになりました。</blockquote>
+<p class="stage-direction">（子供エルサはゆっくりと立ち上がり、震える手を見つめたまま下手の袖へ消えていく。子供アナも静かに上手へはけ、舞台がいったん無人になる。）</p>
+<p class="cue time-cue">⏱ ここまで約1〜2分</p>
+<p class="cue music-cue">🎵 <strong>歌唱『雪だるまつくろう』</strong>（約3分）／歌：<span class="char-name" style="color:#d44d75">子供アナ</span></p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『雪だるまつくろう』を再生。歌い終わりに合わせてフェードアウト。</p>
+<p class="stage-direction">（子供アナが下手から戻ってきて、ドアをノックする仕草をしながら「雪だるまつくろう」を歌う。歌い終わり、子供アナは肩を落として上手へはける。）</p>
+<p class="cue light-cue">💡 歌の終わりで暗転→次の場面（戴冠式）の役者・小道具が配置につく→照明を付ける。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットを戴冠式の配置へ変更（茶系背景パネルを城内の壁として後方に配置）。※ドアフレームはACT4でのみ使用するため、ここでは設置しない。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中に杖・玉を大人エルサの登場位置にセット。白手袋を大人エルサ役に渡しておく。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。</p>
+<hr>
+<div class="act-header"><div class="act-title">ACT 2　戴冠式とハンスとの出会い</div>
+<div class="act-chars">【登場人物】夏アナ、大人エルサ、ハンス、家来/司祭、ウェーゼルトン公爵、ナレーター</div>
+<div class="act-meta">〜約10分</div>
+</div>
+<p class="cue light-cue">💡 暗転から明るく（城の広間。朝の清々しい光のイメージ）。</p>
+<p class="stage-direction">（舞台：茶系背景パネルが城内の豪華な壁を表す。舞台はまだ無人。遠くから鐘の音と人々の喧騒が聞こえてくる雰囲気で、徐々に照明が明るくなる。）</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>三年後、エルサが王位を継ぐ戴冠式が行われます。</blockquote>
+<p class="cue light-cue">💡 家来役が舞台裏から呼びかける（または舞台上に出て声をかけてもよい）</p>
+<p class="dialog"><span class="char-name" style="color:#6a4530">家来</span>「王女！アナ王女！お目覚めください！今日はエルサ女王の戴冠式でございます！」</p>
+<p class="stage-direction">（下手の袖から夏アナが小走りで飛び出してくる。まだ寝ぼけ眼をこすりながら走り、舞台中央で「戴冠式！」と気づいた表情に変わる。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「え…たいかんしき…？―そうだ戴冠式！やっとエルサに会える！」</p>
+<p class="cue light-cue">💡 このやり取りは舞台裏で行う。</p>
+<p class="cue music-cue">🎵 <strong>歌唱『生まれてはじめて』</strong>（約2分半）／歌：<span class="char-name" style="color:#c0305a">夏アナ</span>（※原曲はエルサのパートもあり。入れる場合は演出で調整）</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『生まれてはじめて』を再生（二番から）。ハンスとぶつかる直前にフェードアウト。</p>
+<p class="stage-direction">（夏アナは舞台上をスキップするように歩き回りながら歌う。久しぶりに開いた城の外の景色に感激し、広場を眺めたり、行き交う人々に手を振ったりしながら弾むように動く。歌の終盤、舞台端から歩いてきたハンスと前を見ずに歩いた夏アナが正面から軽くぶつかる。）</p>
+<h3>〔ハンスとの出会い〕</h3>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「大丈夫？怪我はないかい？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「ええ私は大丈夫よ、こちらこそごめんなさい。」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「よかった。僕はサザンアイルズのハンス王子です。」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「アレンデールのアナ王女です。」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「王女様！？私のご無礼をどうかお許しください！」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「えっ！ああいや全然！私って結構ドジだしおっちょこちょいだし。姉のエルサじゃなくてよかったわね。…いけない！もうすぐ戴冠式が始まっちゃう！私もう行かなきゃ！さようなら、また会えるといいわね！」</p>
+<p class="stage-direction">（夏アナは人混みをかき分けるように小走りで舞台袖へ消えていく。ハンスはその背中をやや呆気に取られた顔で見送り、すぐに柔らかく微笑む。招待客の流れに合わせて舞台の上手側へ移動し、戴冠式の開始を待つ。）</p>
+<h3>〔戴冠式〕</h3>
+<p class="cue light-cue">💡 戴冠式：正面から白または淡い黄色の照明（厳かな雰囲気）。</p>
+<p class="stage-direction">（配置：司祭は舞台中央、大人エルサはその正面に立ち一礼。夏アナはやや後方または上手寄りで見守る。家来役は舞台奥または袖に数人。茶系背景パネルが城内の厳かな雰囲気を表す。大人エルサは白手袋をはめた両手を体の前で重ね、緊張した面持ちで正面を向いている。）</p>
+<p class="dialog"><span class="char-name" style="color:#6a4530">司祭</span>「アレンデールのエルサ女王です。」</p>
+<p class="stage-direction">（大人エルサは両手で杖と玉を受け取り、深く一礼する。すぐに杖と玉を傍らに置き直し、急いで手袋をはめ直す。焦りを滲ませた演技で。その手が微かに震えている。）</p>
+<p class="cue light-cue">💡 手袋を着用したら舞台の照明を消す。大人エルサは中央で待機し、夏アナはその隣に並ぶ。照明を付けて舞踏会のシーンへ。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 照明が消えた瞬間に杖と玉を素早く回収し舞台裏へ（大人エルサがはけなくていいよう係が入って回収する）。</p>
+<p class="stage-direction">（消灯中に司祭と家来役は舞台袖へはける。再び照明が付くと、同じ広間が賑やかなパーティーの様子に変わる。大人エルサと夏アナが隣り合って立っており、周囲を行き交う招待客を演じる役者が動きを出してもよい。）</p>
+<h3>〔舞踏会〕</h3>
+<p class="cue light-cue">💡 舞踏会：暖かいオレンジ・黄色系の照明でパーティーの雰囲気。</p>
+<p class="stage-direction">（大人エルサは中央で姿勢よく立っているが、どこか居心地悪そうに小さく手袋に触れている。夏アナが大人エルサに近づき、久しぶりの再会に顔を輝かせる。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「久しぶりね、アナ。元気？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「もちろん元気よ！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「よかった。そのドレスもとても素敵よ。」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「ありがとう。でもエルサのほうがもっともーっと素敵！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「ふふ、ありがとう。…ところで、なんだか甘い香りがしない？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「このにおい…」</p>
+<p class="stage-direction">（二人はくんくんと鼻を動かして香りをたどり、はっと顔を見合わせて同時に目を輝かせる。）</p>
+<p class="dialog"><span class="char-name" style="color:#333">夏アナ・大人エルサ</span>「チョコレートだ！」</p>
+<p class="stage-direction">（その瞬間、招待客の中からウェーゼルトン公爵がもみ手をしながら大げさな足取りで大人エルサに割り込んでくる。）</p>
+<p class="dialog"><span class="char-name" style="color:#604898">ウェーゼルトン公爵</span>「女王様、貿易を通してつながりの深い私と是非ダンスを！」</p>
+<p class="cue light-cue">💡 公爵のコミカルな演技はどれだけふざけてもよし。時間にだけは注意。</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「ええと…」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「あー、エルサはダンスが苦手なのよ～だからやめておいたほうが」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「え、ええ、そうなのよ。だからアナが代わりに踊るわ。」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「そうそう！代わりに私がーってなんで私！？」</p>
+<p class="dialog"><span class="char-name" style="color:#604898">ウェーゼルトン公爵</span>「ふむ、承知いたしましたぞ。では行きましょうか王女殿下！」</p>
+<p class="stage-direction">（ウェーゼルトン公爵が夏アナの手を強引につかみ、ぐいぐいと引っ張る。夏アナは抵抗しながらもずるずると引きずられていく。大人エルサは申し訳なさそうに見ているが、助けに行く気配はない。コミカルな演技を存分に発揮してよい。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「なんでぇ～！」</p>
+<p class="stage-direction">（ウェーゼルトン公爵は夏アナを振り回すようにぎこちないステップで踊る。夏アナはふらふらにされながらも、隙を見て公爵の手を振りほどき、よろめいて舞台の反対側へ逃げる。公爵はしばらく気づかず一人で踊り続け、相手がいないことに気づいてきょろきょろと探す。その滑稽な様子に夏アナは舞台袖でこっそり笑う。）</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>踊り終えた夏アナはハンスと再会し、庭で互いの境遇が似ていることを知り、二人の距離が近づいていきます。</blockquote>
+<p class="stage-direction">（ハンスと夏アナが舞台の一角で向き合う。最初はぎこちなく距離を置いているが、話が弾むにつれて自然と距離が縮まっていく。歌いながら徐々に距離を縮め、見つめ合ったり手をつないだりする演技を入れる。）</p>
+<p class="cue music-cue">🎵 <strong>歌唱『とびら開けて』</strong>（約2分）／歌：<strong>夏アナ・ハンス</strong>（デュエット）</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『とびら開けて』を再生。歌い終わりに合わせて止める。</p>
+<p class="stage-direction">（歌い終わり、二人は顔を見合わせて微笑む。夏アナは嬉しさで落ち着かない様子で、ハンスと手をつないだまま舞台の端へ移動する。）</p>
+<p class="cue light-cue">💡 歌唱後、舞台の照明を消す。夏アナ・ハンスは横に移動して待機。大人エルサが配置についたら照明を付けて次の場面へ。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中に不要な小道具を片付ける。舞踏会から逃走シーンへの切り替えは照明で行う（茶系背景パネルはそのまま使用）。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
+<hr>
+<div class="act-header"><div class="act-title">ACT 3　エルサの逃走</div>
+<div class="act-chars">【登場人物】夏アナ、大人エルサ、ハンス、ウェーゼルトン公爵</div>
+<div class="act-meta">〜約18分</div>
+</div>
+<p class="stage-direction">（舞台：舞踏会の続き。大人エルサは中央やや奥で表情を固くして立っている。夏アナとハンスは下手寄りから二人で楽しそうに話しながら歩いてきて、大人エルサに気づいて近づく。ウェーゼルトン公爵は上手端で、二人の会話を盗み聞きするように様子をうかがっている。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「エルサ、ちょっといい？この人はハンス、今日偶然知り合ったの。それでね、私たち結婚することにしたの！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「結婚？駄目よ、出会ったばかりの人となんて…」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「心から愛し合っていればできるわ！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「愛のことなんかわかっていないでしょう？とにかく駄目よ。」</p>
+<p class="stage-direction">（大人エルサが立ち去ろうと背を向けたとき、夏アナがとっさに大人エルサの腕をつかむ。大人エルサは引き止められ、動きを止める。夏アナはゆっくりとした、感情のこもった動作で大人エルサの手袋を引き抜く。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「なんでそんなに反対するの！なにをそんなに怖がっているのよ…！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「やめて…！」</p>
+<p class="stage-direction">（大人エルサが素手の手で夏アナを振り払う。床に氷が広がるのは、大人エルサが足元を恐れる演技＋照明の青白いフラッシュで表現する。実際に何かを床に置く必要はない。大人エルサは自分の手を見て恐怖に震え、後退りする。）</p>
+<p class="cue light-cue">💡 大人エルサの魔法が暴走する瞬間：青白いライトを短く点滅させてドラマチックに演出。その後やや暗く・冷たい照明のまま次の流れへ。</p>
+<p class="stage-direction">（ウェーゼルトン公爵は大げさにのけぞり、後ずさりしながら叫ぶ。コミカルに、しかし声はしっかり大きく。周囲の招待客（いれば）も恐れて後退りする。）</p>
+<p class="dialog"><span class="char-name" style="color:#604898">ウェーゼルトン公爵</span>「…魔法だ！この国は危険だ！女王を捕まえろ！逃がすな！」</p>
+<p class="stage-direction">（夏アナはエルサと公爵の間に立ち、混乱した視線を両者に向ける。一瞬迷ってから、大人エルサを追うことを決意する。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「エルサ！…こうなったのは私のせい。私が追いかける。ハンスはこの国をお願い！」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「わかったよ、アナ！」</p>
+<p class="stage-direction">（ウェーゼルトン公爵は家来をけしかけながら上手の袖へ退場する。夏アナは下手へ走り出す。ハンスは一瞬夏アナの背中を見送ってから、国を任された覚悟を決めた顔で上手へ向かう。大人エルサはすでに下手の袖へ消えており、舞台がいったん無人になる。）</p>
+<p class="stage-direction">（間を置いて、大人エルサが上手から再登場。ノースマウンテンの山頂に一人立っているイメージ。マントを羽織ったまま。誰もいないことを確かめるように後ろを振り返り、大きく息を吸う。おそるおそる素手の両手を目の前にかざして見つめ、ゆっくりと指を開く。誰も傷つけない、誰にも縛られない。その事実にじわじわと気づき、表情が少しずつ晴れていく。）</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 大人エルサ再登場の直後、歌『レット・イット・ゴー』の歌い出しに合わせて、後方から白・水色の布やパネルを展開して雪山・氷の城を表現する。歌の間ずっと出しておく。</p>
+<p class="cue music-cue">🎵 <strong>歌唱『レット・イット・ゴー ～ありのままで～』</strong>（約4分）／歌：<span class="char-name" style="color:#2070b0">大人エルサ</span></p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『レット・イット・ゴー』を再生。大人エルサの歌い終わりに合わせて止める。</p>
+<p class="cue light-cue">💡 歌が始まったら照明を青白くしていく。歌の後半（解放のクライマックス）では一気に明るく輝かせる。</p>
+<p class="stage-direction">（歌い始めは静かに、腕を体に沿わせたまま歌う。サビに向かうにつれて動きが大きくなり、舞台を自在に使って歌う。歌の中盤【約2分経過・「ありのまま〜」のフレーズに入る手前あたり】で、大人エルサは高らかに両腕を広げ、身にまとっていたマントを一気に脱ぎ捨てる。下に着ていたアイスドレスが現れる。その場でひと回転して見せ、そのまま歌い続ける。）</p>
+<p class="cue light-cue">💡 大人エルサがマントを脱いでアイスドレスを見せた瞬間、照明を最も明るく・青白く輝かせる（氷の宮殿完成のイメージ）。歌い終わったら暗転。</p>
+<p class="stage-direction">（暗転 ― 夏アナはこの暗転中に舞台袖で旅用衣装に早替えすること。ACT4開幕までに必ず済ませる。）</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中に白・水色パネルを撤去し、ACT4（納屋のある野外）の配置へ変更。ドアフレームをACT4（納屋の扉）の位置に設置。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中にロープ・金づち・人参を夏アナが手に取れる位置にセット。</p>
+<p class="cue isho-cue">👗 <strong>衣装:</strong> 暗転中に夏アナが旅用衣装に早替え（舞台袖）。着替え完了を舞台監督に知らせる。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具の転換完了・衣装係からの夏アナの着替え完了報告を両方確認してから照明・役者入場の合図を出す。</p>
+<p class="cue time-cue">⏱ ここまで約16〜18分</p>
+<hr>
+<div class="act-header"><div class="act-title">ACT 4　クリストフ・オラフとの旅</div>
+<div class="act-chars">【登場人物】夏アナ、クリストフ、スヴェン、オラフ</div>
+<div class="act-meta">〜約24分</div>
+</div>
+<p class="cue light-cue">💡 暗転から明るく（昼間の野外のイメージ）。</p>
+<p class="stage-direction">（舞台：ドアフレームを舞台中央やや奥に設置。ドアフレームの向こう側が「納屋の中」を表す。クリストフはフレームの内側（奥側）で壁にもたれるように立ち、退屈そうにしている。スヴェンはその横で四つん這いになり、何か（わらなど）を噛んでいる。舞台手前（下手寄り）には何もない空き地で、これが「外」を表す。夏アナが旅用衣装で舞台の下手袖から小走りで登場し、ドアフレームのところで立ち止まってノックする。）</p>
+<p class="stage-direction">（夏アナが納屋の扉を開ける。クリストフは面倒くさそうに振り返る。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「急にごめんなさい、ノースマウンテンまで道案内をしてほしいの」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「無理だね、今ロープも金づちも持ってないんだ。あとめんどくさい。」</p>
+<p class="stage-direction">（夏アナは無言でロープと金づちをクリストフの胸元に押しつける。クリストフは一瞬言葉を失う。夏アナが続いてスヴェンの前に人参を差し出すと、スヴェンの目がぱっと輝いて飛びかかろうとする。クリストフが慌ててスヴェンを片腕で押さえながら、苦い顔で夏アナを見る。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「ノースマウンテンに連れて行きなさい。私ならこの冬を終わらせられる」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「なんで女王は国を凍らせたんだ？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「その日のうちにあったばかりの人と婚約したからすごく怒っちゃって」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「そんな男と婚約したのか？知らない奴には気を付けなきゃダメだろ。」</p>
+<p class="stage-direction">（クリストフが呆れたように首を振る。夏アナはばつが悪そうに目をそらしかけたとき、舞台の奥に何かが動く気配を感じる。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「知らない人じゃないもん…待って、あれって…雪だるま？」</p>
+<h3>〔オラフ登場〕</h3>
+<p class="stage-direction">（舞台の袖、または物陰からオラフがひょっこりと姿を現す。まだ鼻〔人参〕はついていない。手足をぎこちなく揺らしながら、よちよちとした足取りで三人に近づいてくる。クリストフは眉をひそめ、夏アナは驚いた顔でオラフを指差す。スヴェンはオラフを見て頭を傾ける。）</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「やあみんな、僕はオラフ！ぎゅ～って抱きしめて！」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「オラフ！？」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「そう、僕はオラフ！君は？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「私はアナよ」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「アナ！じゃあそこのロバみたいな顔の人は？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「スヴェンよ。」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「スヴェン！じゃあそのトナカイさんは？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「スヴェンよ。」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「おい」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「へええ、どっちもスヴェンっていう名前なんだねぇ！覚えやすくていいね！」</p>
+<p class="stage-direction">（クリストフが額に手をあてて深いため息をつく。スヴェンはオラフの顔をきょとんとした目で見ている。）</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「うーん、何か足りないわね…あっ、これだわ！」</p>
+<p class="stage-direction">（夏アナは先ほどスヴェンに見せた人参を取り出し、オラフの顔に鼻として刺す〔人参は1本のみ使い回す〕。スヴェンが人参に気づいて飛びかかろうとするのをクリストフが必死に押さえる。）</p>
+<p class="stage-direction">（その後もスヴェンはオラフの鼻を狙ってチャンスを伺い続け、クリストフは片手でスヴェンを押さえながら話に加わる。）</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「わあ！ちょうどお鼻がほしかったんだ～！このほうがずっといいよ！」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「ねえオラフ、エルサがあなたを作ったんだよね？」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「うん！なんで？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「エルサがどこにいるか知ってる？」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「うん！なんで？」</p>
+<p class="dialog"><span class="char-name" style="color:#c0305a">夏アナ</span>「そこに連れて行ってほしいの」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「うん！なんで？」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「あー！俺が教えてやるよ！夏を取り戻したいんだ！」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「夏！？はぁ～、なんでかわからないけど、僕ずぅーっと夏にあこがれてたんだよ～。お日様が光って、太陽は熱々で～。」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「そうなのか？暑さとは縁がなさそうだけどな」</p>
+<p class="stage-direction">（クリストフとスヴェンが顔を見合わせる。夏アナはオラフのこだわりに呆れながらも何だか楽しそうだ。）</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「そうさ？でも時々目をつぶって考えるんだ。暑い夏が来たらどんな感じなんだろうなぁって！」</p>
+<p class="cue music-cue">🎵 <strong>歌唱『あこがれの夏』</strong>（約2分）／歌：<span class="char-name" style="color:#b09000">オラフ</span></p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『あこがれの夏』を再生。オラフの歌い終わりに合わせて止める。</p>
+<p class="stage-direction">（オラフが歌い終わり、満足そうに胸を張る。夏アナ・クリストフ・スヴェンは顔を見合わせて苦笑し、それでもうなずく。4人でドアフレームを離れ、ノースマウンテンへ向けて歩き出す動作をしながら、照明が暗くなるのに合わせて上手へはけていく。）</p>
+<p class="cue light-cue">💡 歌い終わった瞬間に照明を消し、次の場面へ移行。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT5（エルサの氷の城）の配置へ変更（青白い背景パネルを前面に出す）。ACT4の納屋ドアフレームを撤去。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具の転換完了を確認してから照明・役者入場の合図を出す。</p>
+<hr>
+<div class="act-header"><div class="act-title">ACT 5　エルサの城・トロールの村</div>
+<div class="act-chars">【登場人物】冬アナ、大人エルサ、クリストフ、スヴェン、オラフ、トロール、ナレーター</div>
+<div class="act-meta">〜約34分</div>
+</div>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>アナたちはようやくエルサのいる城にたどり着きました。</blockquote>
+<p class="cue light-cue">💡 エルサの氷の城：冷たい青・水色系の照明に切り替える（寒く神秘的な雰囲気）。</p>
+<p class="stage-direction">（舞台：ACT3「レット・イット・ゴー」と同じ青白いパネルを背景として使い回す。大人エルサは舞台奥中央にひとりで立ち、腕を組んで遠くを見ている。アイスドレスの裾が静かに揺れる。しばらくして、下手から冬アナが登場する。後ろからクリストフ・オラフ・スヴェンも続くが、冬アナを行かせるため入口付近で足を止め、後方で見守る。冬アナだけがゆっくりとした足取りで大人エルサに近づいていく。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「…エルサ？私よ、アナよ。」</p>
+<p class="stage-direction">（大人エルサがゆっくりと振り返る。信じられないような表情。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「…アナ？」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「わあ…なんだか変わったね…あっ、もちろんいい意味で！それにここ、すごくきれい…。」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「ありがとう。私にこんなことができるなんてね。」</p>
+<p class="stage-direction">（大人エルサは少し表情を和らげるが、すぐにまた引き締める。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「…私、エルサに謝りたくて来たの。お城でのこと、本当にごめんなさい。」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「いいのよ、謝らなくていいの。だからもう帰りなさい。」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「エルサも一緒に帰りましょう？」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「いいえ、私はここにいる。一人でいれば、誰も傷付けないで済む。それにあなたを守りたいの。」</p>
+<p class="stage-direction">（冬アナは一歩前に出る。大人エルサは後退りしない。二人の距離が縮まったまま、静かに向き合う。）</p>
+<p class="cue music-cue">🎵 <strong>歌唱『生まれてはじめて（リプライズ）』</strong>（約2分半）／歌：<strong>冬アナ・大人エルサ</strong>（デュエット）</p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『生まれてはじめて（リプライズ）』を再生。歌の終盤、大人エルサの感情が高まる場面で音量を絞り照明フラッシュを目立たせる。</p>
+<p class="cue light-cue">💡 リプライズ中盤〜終盤にかけて、大人エルサの感情が高まるにつれ青い照明を不安定に点滅させる。冬アナに魔法が当たる瞬間：白くフラッシュ。歌が終わったら照明を元に戻す。</p>
+<p class="stage-direction">（歌の終盤、大人エルサの感情がこみあげてくる。腕を大きく振り上げた瞬間、制御できなかった魔法が冬アナの方向へ飛ぶ。冬アナはよろめき、その場に膝をついてくずおれる。）</p>
+<p class="stage-direction">（後方で見守っていたクリストフ・オラフ・スヴェンが一斉に駆け寄る。大人エルサは自分がしたことを悟り、自分の手を見て凍りついたように立ちすくむ。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「嘘、また、私…」</p>
+<p class="stage-direction">（大人エルサは悲痛な表情のまま、踵を返してゆっくりと奥へ消えていく。）</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「おい冬アナ、大丈夫か！」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「大丈夫、平気よ」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「おい、なんか髪が白くなってないか？エルサにやられたんじゃないのか？」</p>
+<p class="stage-direction">（冬アナが自分の毛先を手でつかんでみると、白く変色している。クリストフは険しい顔で冬アナの額に触れ、その冷たさに眉をしかめる。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「ほんとだわ。」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「俺の友人に会いに行こう。同じようなものを治しているのを見たことがある。」</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>クリストフはアナをトロールの村へ連れていきます。その間にも、アナの体は次第に凍っていました。</blockquote>
+<p class="stage-direction">（クリストフが弱った冬アナに肩を貸す。冬アナはゆっくりと立ち上がり、クリストフに寄りかかりながら歩き出す。スヴェンは心配そうに二人の隣をぴったりくっついて進む。オラフが先頭に立ち、のんきに鼻歌でも歌いそうな足取りで歩く。〔安全のため、四つん這いのスヴェン役には冬アナの体重をかけない。冬アナを支えるのは主にクリストフ。〕）</p>
+<h3>〔トロールの村〕</h3>
+<p class="cue light-cue">💡 トロールの村：青系の照明からやや暖かい緑・橙系に戻す。</p>
+<p class="stage-direction">（舞台の両袖からトロール役が2〜3人ずつ登場し、一行を取り囲む。特定のセットは不要。クリストフたちが舞台中央に立つと、トロールたちが好奇心旺盛に近づいてくる。クリストフは冬アナをそっとその場に座らせる。）</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「紹介するよ、俺の家族だ。おい、みんな！」</p>
+<p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「わ、クリストフだ！」「クリストフが帰ってきた！」「女の子を連れてるぞ！」「クリストフにぴったりだ！」</p>
+<p class="stage-direction">（トロールたちが冬アナの周りを取り囲んでわいわいと騒ぐ。冬アナは気恥ずかしそうにしながらも、トロールたちに愛嬌よく応える。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「違うの、私たちそういう関係じゃなくて」</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「そうだ。別の目的が…」</p>
+<p class="cue music-cue">🎵 <strong>歌唱『愛さえあれば』</strong>（約3分）／歌：<strong>トロール・クリストフ</strong></p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> 『愛さえあれば』を再生。歌い終わりに合わせて止める。</p>
+<p class="stage-direction">（歌の進行とともに、冬アナは時折身を震わせ、手をさすったり息を白く吐くしぐさで少しずつ衰弱していく芝居を見せる。凍結が進んでいることを観客に伝える。クリストフは歌いながらも、目の端で冬アナの様子を気にしている。）</p>
+<p class="stage-direction">（曲が終わった瞬間、冬アナが力尽きてその場に倒れ込む。一同が息をのむ。）</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「冬アナ！」</p>
+<p class="stage-direction">（最年長のトロールが進み出て、冬アナの体をそっと診る。）</p>
+<p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「この子から魔法の力を感じる。このままでは命が危ない。」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「え…」</p>
+<p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「君の姉さんの氷のかけらが心に刺さっている。そのままにしておけば永遠に凍りついてしまう。凍った心を解かせるのは真実の愛だけだ。」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「真実の愛…？」</p>
+<p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「大好きな人のキスじゃない？」</p>
+<p class="stage-direction">（クリストフは冬アナの顔を見つめ、一瞬複雑な表情を浮かべる。それからすっと立ち上がり、冬アナを抱き起こす。）</p>
+<p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「…！今すぐハンスのところに連れて行くぞ！」</p>
+<p class="cue light-cue">💡 暗転→次の場面（ハンスの部屋）の役者が配置につく→照明を付ける。</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネルへ）。教室の机1台と椅子を執務机として舞台中央やや奥に配置する（机の前にハンスが座れる向きで）。※机・椅子の搬入・撤収はクライマックス前の暗転も含め大道具係が一貫して担当。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中に以下をセット：①机の上に書類・地図風の紙数枚・羽ペン風の小道具を並べる。②ランタン（電池式・点灯済み）を机の横または部屋の隅に、オラフがすぐ点け直せる向き・位置で置く。③ハンスの剣は小道具係が預かっておく（着席して書き物をするACT6冒頭では帯剣しない）。机・椅子の配置とハンスの着席が済んだ状態で照明点灯。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。</p>
+<hr>
+<div class="act-header"><div class="act-title">ACT 6　ハンスの裏切り・真実の愛</div>
+<div class="act-chars">【登場人物】冬アナ、大人エルサ、ハンス、オラフ、クリストフ、スヴェン、ナレーター</div>
+<div class="act-meta">〜約40分</div>
+</div>
+<p class="cue light-cue">💡 ハンスの部屋：暖かい照明（ランタンが灯っているイメージ）。</p>
+<p class="stage-direction">（舞台：教室の机が執務机として舞台中央やや奥に置かれている。机の上には書類・地図風の紙・羽ペン風の小道具。机の横にランタンが灯り、茶系背景パネルが城の室内を表す。ハンスは机の前の椅子に腰かけ、日記か書類に何かを書き込んでいる。）</p>
+<p class="stage-direction">（冬アナが息を切らせながら駆け込んでくる。ハンスは驚いて立ち上がる。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「ハンス…！助けて。エルサの魔法が体に刺さって、このままじゃ凍ってしまう。真実の愛のキスが必要なの…！」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「アナ…大丈夫か？」</p>
+<p class="stage-direction">（ハンスは冬アナへ近づき、心配そうな表情で顔を覗き込む。キスをしようとするように顔を寄せる。だが寸前で動きを止め、すっと身を引く。優しげだった表情が消え、冷たい笑みに変わる。冬アナから一歩、また一歩と離れていく。）</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「僕が王になるためにはどこかの王女と結婚するしかない。君は愛に飢えていたから、出会ってすぐに結婚を決めただけだ。僕たちが結婚した後エルサには事故に遭ってもらうつもりだった。」</p>
+<p class="cue light-cue">💡 ハンスが告白を終えた直後、ランタンを消しながら部屋を出る演出に合わせて、照明を暗く・冷たい青に切り替える（悪役告白の強調）。</p>
+<p class="stage-direction">（そう言いながら部屋の隅のランタンを消し、冷たい目で冬アナを一瞥してから扉の方向へ出ていく。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「そんな、全部嘘だったなんて…そんな計画、上手くいくはずないわ。」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「大丈夫、もう上手くいったさ」</p>
+<p class="stage-direction">（ハンスの足音が遠ざかる。部屋が暗く冷え込み、冬アナはゆっくりと床にくずおれる。手足の先から少しずつ凍っていくような演技を見せる。しばらくして、舞台袖からオラフが勢いよく駆け込んでくる。すぐに倒れた冬アナと消えたランタンに気づく。）</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「アナ！あ、ランタンが消えてる！」</p>
+<p class="stage-direction">（オラフが慌ててランタンに駆け寄り、点け直す。冬アナのそばに寄り添い、小さな手でその手を握る。）</p>
+<p class="cue light-cue">💡 オラフがランタンを灯した瞬間：照明をやや暖かく戻す。</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「ハンスのキスはどうなったの？」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「私が間違ってた。ハンスは運命の人じゃなかった。」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「愛っていうのは自分より人のことを大切にすることだよ」</p>
+<p class="stage-direction">（冬アナはオラフの言葉に目を細める。その時、オラフが舞台袖（部屋の出入口に見立てた方向）から外の様子をうかがうと、吹雪の中をこちらへ向かってくるクリストフの姿が見えた。オラフははっとして冬アナを振り返る。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「…クリストフのところへ行きたいの」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「…わかった！クリストフが運命の人なんだね！はやくいこう！」</p>
+<p class="stage-direction">（オラフが冬アナの手を引いて立ち上がらせ、外へ向かって走り出す。冬アナはよろめきながらも足を動かす。）</p>
+<p class="stage-direction">（冬アナが外へ飛び出すと、クリストフとスヴェンがちょうど駆けつけてきた。クリストフは冬アナの様子に一瞬驚き、すぐに支えようと手を差し伸べる。）</p>
+<p class="stage-direction">（短い暗転。大道具係が机・椅子を舞台袖へ素早く撤収する。茶系背景パネルは残したまま、城の外壁として転用する。この間にハンスは舞台袖で剣を受け取り、上手にスタンバイする。）</p>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中に机・椅子を舞台袖へ撤収。茶系背景パネルはそのまま残す（城の外壁として転用）。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> この暗転中に、舞台袖でハンス役へ剣を手渡す（クライマックスでの登場に間に合わせる）。</p>
+<h3>〔クライマックス〕</h3>
+<p class="cue light-cue">💡 クライマックス：ドラマチックな照明（白または強い光）。</p>
+<p class="stage-direction">（暗転前に外で合流した冬アナ・クリストフ・スヴェン・オラフの4人が、暗転明けに下手から駆け込んでくる。吹雪を演じるように顔をかばいながら走る。配置：大人エルサは舞台中央で項垂れたように立っている。ハンスが上手から剣を手に静かに登場し、大人エルサの背後へ回る。）</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「このまま逃げるのか？」</p>
+<p class="stage-direction">（大人エルサはゆっくりと振り返り、剣を持つハンスを見る。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「妹をお願い」</p>
+<p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「アナは僕の腕の中で息を引き取った。君がアナの心を凍らせて殺したんだ。すべて君のせいだ。」</p>
+<p class="stage-direction">（大人エルサは崩れ落ちるように膝をつく。顔を手で覆い、肩を震わせる。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「そんな、嘘…アナが…」</p>
+<p class="stage-direction">（ハンスが剣を引き抜き、大きく振りかざしたその時―）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「やめて！」</p>
+<p class="stage-direction">（冬アナはエルサをかばうように二人の間へ飛び込み、ハンスに向かって手をかざす。その瞬間、冬アナの全身が足元から一気に凍りつき、白い氷の像となる。振り下ろされた剣は凍った冬アナの腕に当たって弾かれ、ハンスは衝撃でよろめいて尻もちをつく。）</p>
+<p class="cue light-cue">💡 冬アナが凍る瞬間：舞台全体を青白くフリーズさせるイメージで一瞬だけ明度を落とす。</p>
+<p class="stage-direction">（しばしの静寂。大人エルサはゆっくりと顔を上げ、目の前に凍った冬アナが立っているのを見る。信じられないような顔で立ち上がり、冬アナのそばへ歩み寄る。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「いや、いやよ、そんな…私を助けるためになんということをするの…」</p>
+<p class="stage-direction">（大人エルサは凍りついた冬アナにすがりつき、その肩を抱いて肩を震わせて涙を流す。しばしの静寂の後、冬アナの体を覆っていた氷が、足元からゆっくりと解けていく。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「アナ…！アナ！？よかった…！」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「大切な人だからよ、エルサ」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「真実の愛が凍り付いた心を解かしたんだ！」</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「愛が氷を解かす？…そうよ、愛よ！」</p>
+<p class="stage-direction">（これに気づいた大人エルサは、天に向けて腕を広げ、魔法で国中の氷を解かす。青空と春の光がアレンデール王国に戻ってくる。）</p>
+<p class="cue light-cue">💡 照明を明るく・暖色（オレンジ・黄色系）に切り替える。春の到来の演出。</p>
+<p class="stage-direction">（動揺して這いつくばっていたハンスがゆっくり立ち上がりかけたところへ、冬アナが歩み寄る。）</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「心が凍っているのはあなたのほうだったわね！」</p>
+<p class="stage-direction">（冬アナが拳を振り抜くと同時に、ハンスは大きくのけぞって尻もちをつく〔安全のため実際には当てず、冬アナの動きとハンスのリアクションで見せる〕。ハンスは情けなく這うようにして舞台袖へ退場する。）</p>
+<h3>〔フィナーレ〕</h3>
+<p class="cue light-cue">💡 フィナーレ：最も明るく、暖かい照明。</p>
+<p class="stage-direction">（クリストフ、オラフ、スヴェンが駆け寄り、全員が舞台中央に集まる。冬アナと大人エルサが向き合い、笑みを交わす。）</p>
+<p class="dialog"><span class="char-name" style="color:#2070b0">大人エルサ</span>「アナ、一緒に帰りましょう。」</p>
+<p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「うん！」</p>
+<p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「ねえ、愛ってさ…夏みたいなもんだったんだね。よくわかんないけど、あったかいんだ。」</p>
+<p class="stage-direction">（全員が舞台中央に一列に並ぶ。それぞれが晴れ晴れとした表情で観客に向かって立つ。）</p>
+<p class="cue music-cue">🎵 <strong>BGMが流れ始める</strong></p>
+<p class="cue onkyo-cue">🔊 <strong>音響:</strong> フィナーレBGMを再生。キャスト紹介・全員お辞儀が終わったら徐々にフェードアウト。</p>
+<p class="stage-direction">（BGMとともにキャスト紹介。全員でお辞儀して幕。）</p>
+<p class="cue light-cue">💡 幕が下りたら照明を消し、客席の照明を戻す。</p>
+<hr>
+<p class="cue light-cue">💡 演出の詳細はリハーサルで随時調整すること。備考欄は参考程度でよい。場面転換の時間によってセリフを削る場合は、必ずキャスト・舞台監督に事前に連絡すること。</p>
+</body>
+</html>
