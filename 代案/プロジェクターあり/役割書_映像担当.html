@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">映像担当</div>
+<h2>役割書 — 映像担当</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>映像担当は<strong>プロジェクターによる映像演出</strong>をすべて担当する。</p>
+<p>舞台監督の合図に従い、台本の 🎬 マークのタイミングで映像を切り替える。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>PC・プロジェクター操作（映像の再生・切り替え）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：1人（音響係との兼任不可。操作が重なるため専任とする）</strong></p>
+<hr>
+<h2>準備物チェックリスト</h2>
+<ul><li>[ ] プロジェクターの動作確認（投影先・焦点・輝度）</li><li>[ ] 映像ファイルをPCに準備・再生テスト済み</li><li>[ ] 映像ファイルは再生順にフォルダ番号付きで整理（例：01_ACT1冒頭_雪の結晶.mp4）</li><li>[ ] 黒板への投影範囲・ピントを本番前に確認した</li><li>[ ] このキューシートを印刷して手元に持つ</li><li>[ ] 舞台監督との合図の確認済み（開演前に必ず確認）</li></ul>
+<hr>
+<h2>映像キューシート</h2>
+<blockquote class="narrator">舞台監督の合図（手信号：手を上げる→準備、手を下ろす→実行）で切り替える。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>ACT</th><th>タイミング</th><th>映像内容</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>1</td>
+<td>ACT1</td>
+<td>開幕・照明点灯と同時</td>
+<td>星空・城のシルエット</td>
+<td>幼少期の温かみある演出。子ども部屋シーン全般</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ACT2</td>
+<td>照明点灯と同時</td>
+<td>アレンデール王国の紋章・旗</td>
+<td>戴冠式の格式を演出。戴冠式シーン全般</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ACT3</td>
+<td>レット・イット・ゴー歌い始めの瞬間</td>
+<td>雪の結晶・氷の城のCG映像</td>
+<td>歌い始めと同時に映像スタート。歌い終わりで停止（舞台監督の合図）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ACT4</td>
+<td>照明点灯と同時</td>
+<td>雪景色・森の背景</td>
+<td>野外シーン全般（クリストフ・スヴェン登場〜あこがれの夏まで）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ACT5</td>
+<td>照明点灯と同時</td>
+<td>氷の宮殿の内部</td>
+<td>エルサの城シーン全般。照明の青色と合わせると雰囲気が増す</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ACT6 前半</td>
+<td>照明点灯と同時</td>
+<td>嵐・吹雪の映像</td>
+<td>ハンス裏切りシーン。暗い演出を強調</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ACT6 クライマックス</td>
+<td>エルサ「そうよ、愛よ！」セリフ直後</td>
+<td>春・花・光の映像</td>
+<td>吹雪映像から切り替え。フィナーレまで継続</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>合図の受け取り方</h2>
+<p>舞台監督の合図（手信号）：</p>
+<table class="cast-table">
+<thead><tr><th>合図</th><th>意味</th></tr></thead><tbody>
+<tr>
+<td>手を上げる</td>
+<td>「次の映像の準備をしてください」</td>
+</tr>
+<tr>
+<td>手を下ろす</td>
+<td>「今すぐ映像を切り替えてください（実行）」</td>
+</tr>
+<tr>
+<td>両手を広げる</td>
+<td>「止まれ・ちょっと待って」</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各映像キューのタイミングを舞台監督と合わせる</li><li>[ ] 映像の切り替え速度（フェードなし or 0.5秒フェード）を決める</li><li>[ ] 暗転中に映像を変更するタイミングを舞台監督と確認する</li><li>[ ] プロジェクターが映像を出している間の客席への影響（眩しくないか）を確認</li><li>[ ] ゲネプロで全キューを通しで確認する</li></ul>
+</body>
+</html>
