@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">舞台構成</div>
+<h2>このドキュメントについて</h2>
+<p>「推奨案」として作成。未確定箇所は <strong>⚠️ 要確認</strong> と明記。</p>
+<p>教室実地確認後に更新すること。</p>
+<hr>
+<h2>1. 教室全体レイアウト（推奨案）</h2>
+<h3>1-1. スペース配分</h3>
+<ul><li><strong>舞台エリア</strong>：黒板前方 約3〜4m × 幅 約8m（黒板をスクリーン・背景パネル掲示に使用）</li><li><strong>客席エリア</strong>：残り後方（机を撤去し、椅子のみ3〜4列に並べ直す）</li><li><strong>想定収容</strong>：30〜40名</li></ul>
+<h3>1-2. 教室レイアウト図（上から見た図）</h3>
+<p>```</p>
+<p>┌────────────────────────────────────────────────────────────┐</p>
+<p>│  ⚠️（廊下 or 窓：要確認）                                      │</p>
+<p>│  ┌──────────┬────────────────────────────────┬──────────┐  │</p>
+<p>│  │  上 手 袖  │         ＜  黒  板  ＞          │  下 手 袖  │  │</p>
+<p>│  │（教室端・  ├────────────────────────────────┤（教室端・  │  │</p>
+<p>│  │  幅 1m 程）│                                │  幅 1m 程）│  │</p>
+<p>│  │           │        舞 台 エ リ ア            │           │  │</p>
+<p>│  │ 大道具2名  │        （縦 3〜4m 程）           │ 小道具係   │  │</p>
+<p>│  │  待 機    │                                │  待 機    │  │</p>
+<p>│  │           │                                │           │  │</p>
+<p>│  └──────────┴──────────────┬─────────────────┴──────────┘  │</p>
+<p>│               ↑ 舞台エリアここまで ↑                           │</p>
+<p>│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │</p>
+<p>│                    椅 子 の み 3〜4 列                         │</p>
+<p>│                    （約 30〜40 席）                            │</p>
+<p>│  ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─   │</p>
+<p>│                      ↓ 入 口 ↓                               │</p>
+<p>└────────────────────────────────────────────────────────────┘</p>
+<p>⚠️（廊下 or 窓：要確認）</p>
+<p>```</p>
+<blockquote class="narrator"><strong>図の見方</strong>：黒板が上（舞台奥）、入口が下（客席後方）。</blockquote>
+<hr>
+<h2>2. 上手（かみて）・下手（しもて）の定義</h2>
+<h3>本公演での統一定義</h3>
+<blockquote class="narrator"><strong>客席から舞台（黒板方向）を向いたとき、右手が上手、左手が下手。</strong><br>台本・役割書に書かれている「上手」「下手」はすべてこの基準に従っている。</blockquote>
+<ul><li><strong>右手 → 上手（かみて）</strong></li><li><strong>左手 → 下手（しもて）</strong></li></ul>
+<blockquote class="narrator">⚠️ 実際の教室で確認すること：廊下側と窓側のどちらが上手（右）になるかは、教室の向きによって変わる。<br>確認後、下記のパターンからどちらかを採用して ⚠️ を削除する。</blockquote>
+<table class="cast-table">
+<thead><tr><th>パターン</th><th>上手（右）</th><th>下手（左）</th></tr></thead><tbody>
+<tr>
+<td>A案（廊下側が上手）</td>
+<td>廊下・入口側</td>
+<td>窓側</td>
+</tr>
+<tr>
+<td>B案（窓側が上手）</td>
+<td>窓側</td>
+<td>廊下・入口側</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. 照明パネル（蛍光灯スイッチ）の位置</h2>
+<blockquote class="narrator">⚠️ 要現地確認。一般的には入口ドア付近の壁に設置されていることが多い。</blockquote>
+<ul><li><strong>照明係の立ち位置</strong>：パネルから直接操作できる位置。客席後方の壁際 or ドア付近。</li><li>照明係2〜3名が手元に台本（キューシート）を持って待機する。</li><li>舞台監督の手信号が見えるように、舞台全体への視野を確保した位置に立つこと。</li></ul>
+<hr>
+<h2>4. 各ACTの大道具・役者配置</h2>
+<h3>ACT1　幼い日の姉妹</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>なし（暗転明けで部屋のイメージ）</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>上手に椅子または低いベンチ（エルサのベッド）、下手に同様（アナのベッド）</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>子供エルサ：上手ベッド、子供アナ：下手ベッド → 中央へ移動</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>茶系背景パネルは暗転後のACT2に合わせてセット</td>
+</tr>
+</tbody></table>
+<h3>ACT2　戴冠式とハンスとの出会い</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>茶系背景パネル（城内の壁・城の厳かな雰囲気）</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>なし（背景パネルのみ）</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>戴冠式：大人エルサ中央奥、司祭中央手前、夏アナ上手寄り後方、家来数名は舞台奥または袖。舞踏会：大人エルサ中央、夏アナとハンスは下手寄り一角</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>杖・玉を大人エルサ登場位置にセット済み。白手袋は開演30分前に渡し済み</td>
+</tr>
+</tbody></table>
+<h3>ACT3　エルサの逃走</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>茶系パネルのまま（舞踏会継続） → 「レット・イット・ゴー」歌い出しに合わせて白・水色パネルを後方に展開</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>「レット・イット・ゴー」開始時：白・水色の布/パネルを上手の大道具2名が展開</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>エルサ中央やや奥、アナ・ハンスは下手寄り、公爵は上手端。逃走後：エルサのみ上手袖から再登場し舞台奥中央に立つ</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>ドアフレームはこのACTでは使わない。暗転後に白・水色パネル撤去＋ドアフレームを上手袖の奥から搬入</td>
+</tr>
+</tbody></table>
+<h3>ACT4　クリストフ・オラフとの旅</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>なし（パネル撤去済み・野外のイメージ）</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>ドアフレーム：舞台中央やや奥に設置（納屋の扉として使用）</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>クリストフ：ドアフレーム内側（奥側）、スヴェン：フレーム横、アナ：小走りで登場後ドアをノック。オラフは袖または小道具の陰からひょっこり登場</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>ロープ・金づち・人参をアナの手が届く位置に配置済み。オラフの人参（鼻）は暗転中に装着</td>
+</tr>
+</tbody></table>
+<h3>ACT5　エルサの城・トロールの村</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>白・水色パネル（氷の城・ACT3と同じパネルを再利用）</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>白・水色パネルを前面に出す。ドアフレームは撤去済み</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>エルサ：上手袖から先行入場→舞台奥中央。冬アナ・クリストフ・オラフ・スヴェン：下手から登場。トロール村：トロール2〜3人ずつ両袖から登場</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>ACT5→ACT6の45秒暗転が最重要。エルサの横断動線（上手袖→舞台裏→下手袖）を確保すること</td>
+</tr>
+</tbody></table>
+<h3>ACT6　ハンスの裏切り〜フィナーレ</h3>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>**背景パネル**</td>
+<td>茶系背景パネル（ハンスの部屋・室内）。クライマックス後も残す（城の外壁として転用）</td>
+</tr>
+<tr>
+<td>**大道具**</td>
+<td>教室の机1台（執務机）＋椅子1脚：舞台中央やや奥。クライマックス前の暗転で上手袖へ撤収</td>
+</tr>
+<tr>
+<td>**主な役者の位置**</td>
+<td>ハンス：机の前の椅子に着席。冬アナ：息を切らせながら駆け込み。オラフ：袖から駆け込み。クライマックス：エルサ下手袖→中央、ハンス上手から剣持参、冬アナ・クリストフ・スヴェン・オラフ下手から</td>
+</tr>
+<tr>
+<td>**備考**</td>
+<td>暖炉プロップ（LED点灯済み）を舞台端壁際に設置。机の上に書類・地図・羽ペンを配置。ハンスの剣はクライマックス前暗転で手渡し</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. 舞台袖の使い方</h2>
+<h3>上手袖（教室内・黒板に向かって右側）</h3>
+<p>#### 【上手袖の「奥」とは】</p>
+<p>上手袖の中でもさらに舞台奥（黒板側）寄りのエリアを「奥」と呼ぶ。</p>
+<p>```</p>
+<p>┌──────────────────────────┐</p>
+<p>黒板方向 │                          │ ← 「奥」エリア（エルサが通過する中継地点）</p>
+<p>（上）   │  ← エルサの動線 →        │</p>
+<p>│  ← 大道具スタンバイ位置 → │ ← エルサ動線より舞台裏側に配置</p>
+<p>│  （机・椅子・ドアフレーム）│</p>
+<p>│                          │</p>
+<p>│  上 手 袖                 │</p>
+<p>└──────────────────────────┘</p>
+<p>客席方向 →（舞台との境界）</p>
+<p>```</p>
+<ul><li><strong>大道具の机・椅子・ドアフレームは「エルサ動線より舞台裏側」にスタンバイさせること</strong></li><li><strong>「エルサ通過確認後」に初めて搬入を開始する</strong>（動線がかぶると衝突するため）</li></ul>
+<p>#### 主な用途</p>
+<ul><li>大人エルサの出入り（ACT5→ACT6の舞台横断の出発点）</li><li>ドアフレームの事前スタンバイ（ACT4用・奥に配置）</li><li>机・椅子の事前スタンバイ（ACT6用・エルサ動線より奥に配置）</li><li>大道具係2名の待機・「レット・イット・ゴー」パネル展開担当</li><li>ACT3：ウェーゼルトン公爵・家来の退場方向</li><li>ACT7クライマックス：ハンスが剣を受け取りスタンバイ</li></ul>
+<h3>下手袖（教室内・黒板に向かって左側）</h3>
+<ul><li><strong>主な用途</strong></li><li>冬アナ一行（クリストフ・スヴェン・オラフ）のスタンバイ（ACT5〜6）</li><li>小道具係の担当エリア（暖炉プロップのセット等）</li><li>エルサのACT5→ACT6横断の到着点・待機（下手袖から舞台中央へ移動）</li><li>ACT7フィナーレ：冬アナ・クリストフ・スヴェン・オラフが下手から登場</li><li>ACT5→ACT6暗転：小道具係が下手袖から書類・地図・羽ペンをセット（エルサは上手寄り1.5m、小道具係は下手寄りで並行作業）</li></ul>
+<h3>廊下（使える場合のみ）</h3>
+<blockquote class="narrator">⚠️ 廊下が使えるか・横幅は要確認。使える場合は上手袖の延長として活用可能。</blockquote>
+<h3>ACT別 舞台袖活用表</h3>
+<table class="cast-table">
+<thead><tr><th>ACT</th><th>上手袖の使い方</th><th>下手袖の使い方</th></tr></thead><tbody>
+<tr>
+<td>ACT1</td>
+<td>なし（開演前にベッド代わりの椅子を設置）</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>ACT2</td>
+<td>なし</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>ACT3 前半（舞踏会〜逃走）</td>
+<td>ドアフレームを事前スタンバイ（奥）。公爵・家来が退場方向</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>ACT3 後半（レット・イット・ゴー）</td>
+<td>大道具2名が黒スタッフ服で待機→パネル展開</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>ACT4</td>
+<td>なし</td>
+<td>アナ一行のスタンバイ（ACT4後半）</td>
+</tr>
+<tr>
+<td>ACT5</td>
+<td>エルサ先行入場位置（上手から舞台中央奥へ）</td>
+<td>冬アナ・クリストフ・オラフ・スヴェンの入場方向</td>
+</tr>
+<tr>
+<td>ACT6 前半</td>
+<td>ハンス・クリストフ・スヴェン待機。机・椅子スタンバイ済み（エルサ動線より奥）</td>
+<td>エルサ待機（ACT5→6暗転で横断後）。小道具係が書類等をセット</td>
+</tr>
+<tr>
+<td>ACT6 クライマックス前暗転</td>
+<td>大道具が机・椅子を撤収。ハンスが剣を受け取りスタンバイ</td>
+<td>エルサ→クライマックス動線（下手から中央へ）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>6. ACT5→6 暗転（45秒）エルサ動線</h2>
+<p>この暗転は全公演中で最も複雑。エルサの動線を最優先に確保すること。</p>
+<p>```</p>
+<p>ACT5→6 暗転（45秒）のエルサ動線：</p>
+<p>[上手袖（奥）] ─────→ [舞台裏を横断] ─────→ [下手袖（待機）] ─→ [舞台中央]</p>
+<p>0〜 5秒：進入           5〜15秒               〜40秒              35〜40秒</p>
+<p>↓ エルサが上手袖を通過したのを確認してから ↓</p>
+<p>大道具係が机・椅子の搬入を開始（20〜35秒）</p>
+<p>↓ 同時進行 ↓</p>
+<p>大道具係4名：氷パネル撤去→茶系パネルに切替（0〜25秒）</p>
+<p>小道具係2名：下手袖から書類・地図・羽ペンをセット＋暖炉プロップ設置（20〜35秒）</p>
+<p>```</p>
+<p><strong>重要ルール</strong>：</p>
+<p>1. 上手袖担当が「エルサ通過確認」を舞台監督に肉声で報告する</p>
+<p>2. 報告を受けてから舞台監督が「机・椅子搬出GO」の合図を出す</p>
+<p>3. 35秒時点でパネル切替未完了なら即「延長合図（手を2回叩く）」→最大+15秒（計60秒）</p>
+<p>4. ゲネプロで必ず計測・記録すること</p>
+<hr>
+<h2>7. 場面転換マトリクス</h2>
+<table class="cast-table">
+<thead><tr><th>転換タイミング</th><th>背景パネル操作</th><th>大道具操作</th><th>担当</th><th>目安時間</th></tr></thead><tbody>
+<tr>
+<td>開演前</td>
+<td>なし</td>
+<td>ベッド代わりの椅子/ベンチを上手・下手に配置</td>
+<td>大道具係</td>
+<td>事前完了</td>
+</tr>
+<tr>
+<td>ACT1→ACT2（雪だるまつくろう後）</td>
+<td>茶系パネルを後方に配置（城内の壁）</td>
+<td>ベッド代わりの椅子/ベンチを撤去</td>
+<td>大道具係＋役者（ハンス役・公爵役）</td>
+<td>暗転内（目安30秒）</td>
+</tr>
+<tr>
+<td>ACT2→ACT3（とびら開けて後）</td>
+<td>転換なし（茶系パネルそのまま）</td>
+<td>転換なし</td>
+<td>大道具係</td>
+<td>0秒</td>
+</tr>
+<tr>
+<td>ACT3：レット・イット・ゴー歌い出し</td>
+<td>白・水色布/パネルを後方に展開（暗転ではなく歌の始まりに合わせて）</td>
+<td>同左（パネル展開）</td>
+<td>大道具係上手2名（黒スタッフ服）、8小節を目安</td>
+<td>歌唱中8〜16小節</td>
+</tr>
+<tr>
+<td>ACT3→ACT4（レット・イット・ゴー後）</td>
+<td>白・水色パネルを撤去</td>
+<td>ドアフレームを上手袖から搬入・舞台中央やや奥に設置</td>
+<td>大道具係＋トロール役</td>
+<td>暗転内（目安30秒）</td>
+</tr>
+<tr>
+<td>ACT4→ACT5（あこがれの夏後）</td>
+<td>白・水色パネルを前面に再設置</td>
+<td>ドアフレームを撤去</td>
+<td>大道具係</td>
+<td>暗転内（目安30秒）</td>
+</tr>
+<tr>
+<td>ACT5→ACT6（ハンスの部屋へ）</td>
+<td>白・水色パネルを撤去→茶系パネルに切替（4名・目安25秒）</td>
+<td>机・椅子を上手袖から搬入（2名・目安15秒）、暖炉プロップをセット</td>
+<td>大道具係4〜6名</td>
+<td>**45秒以内**（ゲネプロで計測）</td>
+</tr>
+<tr>
+<td>ACT6内クライマックス前</td>
+<td>茶系パネルそのまま（城の外壁として転用）</td>
+<td>机・椅子を上手袖へ撤収</td>
+<td>大道具係</td>
+<td>暗転内（目安20秒）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. 照明カラー早見表</h2>
+<table class="cast-table">
+<thead><tr><th>ACT/場面</th><th>照明カラー</th><th>雰囲気</th></tr></thead><tbody>
+<tr>
+<td>ACT1 開幕</td>
+<td>暖かい橙〜黄色（夜の子ども部屋）</td>
+<td>温かく静かな雰囲気</td>
+</tr>
+<tr>
+<td>ACT1 子供アナが魔法に当たる瞬間</td>
+<td>白フラッシュ → 即暗転</td>
+<td>魔法が当たった衝撃</td>
+</tr>
+<tr>
+<td>ACT2 戴冠式</td>
+<td>明るい白〜淡い黄色（厳か）</td>
+<td>格式ある儀式</td>
+</tr>
+<tr>
+<td>ACT2 舞踏会</td>
+<td>暖かいオレンジ〜黄色（パーティー）</td>
+<td>賑やかで華やか</td>
+</tr>
+<tr>
+<td>ACT3 魔法暴走</td>
+<td>冷たい青紫（暗め）+ 青白点滅</td>
+<td>緊迫・危険</td>
+</tr>
+<tr>
+<td>ACT3 レット・イット・ゴー前半</td>
+<td>暗めの青白（フェードイン）</td>
+<td>孤独・解放感</td>
+</tr>
+<tr>
+<td>ACT3 レット・イット・ゴー後半・マント脱ぎ</td>
+<td>強い白青（最大輝度）</td>
+<td>氷の宮殿完成</td>
+</tr>
+<tr>
+<td>ACT4 野外</td>
+<td>明るい白〜淡い黄色（昼間の野外）</td>
+<td>明るく軽快</td>
+</tr>
+<tr>
+<td>ACT5 氷の城</td>
+<td>冷たい青・水色（神秘的）</td>
+<td>神秘的・切ない</td>
+</tr>
+<tr>
+<td>ACT5 リプライズ中盤</td>
+<td>冷たい青・水色（不安定点滅）</td>
+<td>感情の揺らぎ</td>
+</tr>
+<tr>
+<td>ACT5 冬アナに魔法が当たる瞬間</td>
+<td>白フラッシュ → 青に戻す</td>
+<td>衝撃</td>
+</tr>
+<tr>
+<td>ACT5 トロールの村</td>
+<td>やや暖かい緑〜橙</td>
+<td>温かみのある村</td>
+</tr>
+<tr>
+<td>ACT6 ハンスの部屋（開幕）</td>
+<td>暖かい橙（暖炉のイメージ）</td>
+<td>温かく穏やか</td>
+</tr>
+<tr>
+<td>ACT6 ハンス裏切り・暖炉消灯後</td>
+<td>冷たい青紫（暗め）</td>
+<td>絶望・裏切り</td>
+</tr>
+<tr>
+<td>ACT6 オラフが暖炉を灯す</td>
+<td>やや暖かい橙（弱め）</td>
+<td>希望が戻る</td>
+</tr>
+<tr>
+<td>ACT6 クライマックス</td>
+<td>激しい青白</td>
+<td>緊迫・吹雪</td>
+</tr>
+<tr>
+<td>ACT6 冬アナが凍る瞬間</td>
+<td>冷たい青白 → 白フラッシュ</td>
+<td>凍りつく衝撃</td>
+</tr>
+<tr>
+<td>ACT6 氷が解ける・春の到来</td>
+<td>最も明るい暖色（オレンジ〜白）</td>
+<td>希望・解放</td>
+</tr>
+<tr>
+<td>フィナーレ</td>
+<td>最も明るい暖色（最大輝度）</td>
+<td>感動・祝福</td>
+</tr>
+<tr>
+<td>幕</td>
+<td>舞台消灯 → 客席点灯</td>
+<td>終演</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>9. 会場準備チェックリスト（当日）</h2>
+<ul><li>[ ] 客席の机を撤去し、椅子のみ3〜4列に並べ直した</li><li>[ ] 舞台エリア（前方3〜4m）を確保した</li><li>[ ] 上手袖・下手袖のスペースを確保した（各幅1m程度）</li><li>[ ] 照明パネルの場所・操作方法を照明係と確認した ⚠️要現地確認</li><li>[ ] 照明係の立ち位置から舞台監督の手信号が見えることを確認した</li><li>[ ] 背景パネル（茶系・白水色）の掲示方法（立て掛け・固定）を確認した</li><li>[ ] ドアフレームが倒れないよう補強されていることを確認した</li><li>[ ] 各大道具の初期配置（ACT1の状態）を確認した</li><li>[ ] 上手袖にドアフレームが事前スタンバイされていることを確認した（奥・エルサ動線より舞台裏側）</li><li>[ ] 上手袖に机・椅子が事前スタンバイされていること（ACT6用・エルサ動線より奥）を確認した</li><li>[ ] 暖炉プロップのLEDライトが点灯することを確認した</li><li>[ ] 杖・玉がACT2の配置位置にある</li><li>[ ] 白手袋が開演30分前に大人エルサ役へ渡し済みであることを確認した</li><li>[ ] ハンスの剣を小道具係が管理していることを確認した</li><li>[ ] 書類・地図・羽ペンがACT6用に準備されていることを確認した</li><li>[ ] 廊下の使用可否を確認した ⚠️要現地確認（使える場合は袖の準備も）</li><li>[ ] ACT5→ACT6転換（45秒）のタイムラインを全員で確認した</li><li>[ ] 上手・下手の定義（廊下側 or 窓側がどちらかを確認した）⚠️要現地確認</li><li>[ ] 上手袖の「奥」エリアのスタンバイ位置をエルサ役・大道具係全員で確認した</li></ul>
+</body>
+</html>
