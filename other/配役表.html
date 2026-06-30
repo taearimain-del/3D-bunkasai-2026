@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">3年D組 文化祭 キャスト・スタッフ一覧</div>
+<hr>
+<h2>キャスト</h2>
+<div class="char-legend"><span class="dot" style="background:#d44d75"></span><span style="color:#d44d75;font-weight:bold;margin-right:14px">子供アナ</span><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">夏アナ</span><span class="dot" style="background:#7a1030"></span><span style="color:#7a1030;font-weight:bold;margin-right:14px">冬アナ</span><span class="dot" style="background:#5095cc"></span><span style="color:#5095cc;font-weight:bold;margin-right:14px">子供エルサ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">大人エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td style="color:#d44d75;font-weight:bold">子供アナ</td>
+<td>ひなた・ゆな</td>
+</tr>
+<tr>
+<td style="color:#c0305a;font-weight:bold">夏アナ</td>
+<td>未定</td>
+</tr>
+<tr>
+<td style="color:#7a1030;font-weight:bold">冬アナ</td>
+<td>りえ・あおい</td>
+</tr>
+<tr>
+<td style="color:#5095cc;font-weight:bold">子供エルサ</td>
+<td>未定</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">大人エルサ</td>
+<td>あん・ここな</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td>未定</td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td>たつや・せいじ</td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td>みらい・うらら</td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td>あいり・Kyo</td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td>あゆま・こたに</td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td>ゆみか・けんしん・くるみ・かれん・まお・はると</td>
+</tr>
+<tr>
+<td style="color:#505050;font-weight:bold">ナレーター</td>
+<td>志内・こうすけ・ゆうな・わかな</td>
+</tr>
+<tr>
+<td style="color:#222;font-weight:bold">司祭・家来</td>
+<td>未定</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>スタッフ</h2>
+<table class="cast-table">
+<thead><tr><th>係</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td>舞台監督</td>
+<td>佐々木・時谷・船津</td>
+</tr>
+<tr>
+<td>照明係</td>
+<td>安部・村田</td>
+</tr>
+<tr>
+<td>音響係</td>
+<td>佐野・酒井</td>
+</tr>
+<tr>
+<td>大道具係</td>
+<td>佐野</td>
+</tr>
+<tr>
+<td>小道具係</td>
+<td>佐々木</td>
+</tr>
+</tbody></table>
+</body>
+</html>
