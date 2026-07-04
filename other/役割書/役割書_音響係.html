@@ -102,6 +102,59 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 .badge-yakusha { background: #7a3a10; color: #fcf8ee; }
 .footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
 .yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
 </style>
 </head>
 <body>
@@ -131,8 +184,16 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 <hr>
 <h2>歌唱キューシート</h2>
 <blockquote class="narrator">舞台監督の合図（手信号など）で再生開始する。歌が終わったら速やかに停止。</blockquote>
+<blockquote class="narrator"><strong>開演前イントロ（キュー#0）の運用</strong>：客入れ終了・開演予定時刻の<strong>1分30秒前</strong>に、舞台監督（または開場担当）が音響係へ合図（声かけ・手信号など）を出し、音響係が「イントロ.mp3」の再生を開始する。イントロは客入れ〜開演直前のBGMとして客席に流す。<strong>フェードアウトは行わない</strong>（イントロ自体がフェードアウトを前提とした曲ではないため）。舞台監督が全係の準備完了を確認して「開演」の合図（照明係へ客席消灯を指示、プロジェクター使用時は映像担当へ映像スタートを指示するのと同時）を出した時点で、曲が残っていても音響係がそのまま停止する（自然に終わっていればそのまま何もしなくてよい）。</blockquote>
 <table class="cast-table">
 <thead><tr><th>#</th><th>タイミング（台本）</th><th>曲名</th><th>尺</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>0</td>
+<td>開演1分30秒前</td>
+<td>イントロ（開演前BGM）</td>
+<td>約1分30秒</td>
+<td>舞台監督（または開場担当）の合図で再生開始。フェードアウトなし。舞台監督の「開演」の合図でそのまま停止（自然に終わっていれば何もしない）</td>
+</tr>
 <tr>
 <td>1</td>
 <td>ACT1 後半</td>
@@ -145,7 +206,7 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 <td>ACT2 前半（生まれてはじめて）</td>
 <td>生まれてはじめて</td>
 <td>約2分半</td>
-<td>二番の歌詞から再生開始。**停止条件：ハンスが立ち上がった瞬間（舞台監督の目視合図）→ 4〜5秒かけてフェードアウト**</td>
+<td>二番の歌詞から再生開始。<strong>停止条件：ハンスが立ち上がった瞬間（舞台監督の目視合図）→ 4〜5秒かけてフェードアウト</strong></td>
 </tr>
 <tr>
 <td>3</td>
@@ -225,7 +286,7 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 <ul><li>出番の少ない役者（オラフ役・ナレーター役など）が音響補助に入ることがある</li><li>音響操作は必ず音響係メンバーが行う</li></ul>
 <hr>
 <h2>リハーサルで確認すること</h2>
-<ul><li>[ ] 各曲の開始タイミングを舞台監督と合わせる</li><li>[ ] 歌唱音源の音量が客席全体に届くか確認</li><li>[ ] 曲を間違えて再生した場合のリカバリー方法を決めておく</li><li>[ ] キュー#2（生まれてはじめて）のフェードアウトタイミングを舞台監督と合わせる（ハンスが立ち上がる瞬間を基準に）</li><li>[ ] 生歌/音源の最終決定期限（通し稽古第1回）を確認した</li></ul>
+<ul><li>[ ] 開演1分30秒前のイントロ開始合図（誰が出すか）を舞台監督・開場担当と確認した</li><li>[ ] 各曲の開始タイミングを舞台監督と合わせる</li><li>[ ] 歌唱音源の音量が客席全体に届くか確認</li><li>[ ] 曲を間違えて再生した場合のリカバリー方法を決めておく</li><li>[ ] キュー#2（生まれてはじめて）のフェードアウトタイミングを舞台監督と合わせる（ハンスが立ち上がる瞬間を基準に）</li><li>[ ] 生歌/音源の最終決定期限（通し稽古第1回）を確認した</li></ul>
 <hr>
 <h2>生歌モード切替チェックリスト</h2>
 <p>役割書_キャストのリハーサル確認事項にあるとおり、生歌を選択した場合は以下の対応が必要。</p>
