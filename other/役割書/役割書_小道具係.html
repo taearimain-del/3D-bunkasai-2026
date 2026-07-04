@@ -102,6 +102,52 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 .badge-yakusha { background: #7a3a10; color: #fcf8ee; }
 .footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
 .yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
 </style>
 </head>
 <body>
@@ -240,7 +286,7 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 </tr>
 <tr>
 <td>ACT6 開幕前（暗転中）</td>
-<td>①机の上に書類・地図風の紙・羽ペン風小道具を並べる（机・椅子の搬入は大道具係）。②暖炉プロップを舞台端の壁際に設置し、LEDライトを点灯する。**照明点灯の5秒前に点灯しておくこと**（点灯済みであることを照明係と舞台監督に確認）。オラフがスイッチを入れやすい向きに調整する。③ハンスの剣は預かっておく（着席して書き物をするACT6冒頭では渡さない）。配置完了後、ハンスが着席して照明点灯を待つ</td>
+<td>①机の上に書類・地図風の紙・羽ペン風小道具を並べる（机・椅子の搬入は大道具係）。②暖炉プロップを舞台端の壁際に設置し、LEDライトを点灯する。<strong>照明点灯の5秒前に点灯しておくこと</strong>（点灯済みであることを照明係と舞台監督に確認）。オラフがスイッチを入れやすい向きに調整する。③ハンスの剣は預かっておく（着席して書き物をするACT6冒頭では渡さない）。配置完了後、ハンスが着席して照明点灯を待つ</td>
 </tr>
 <tr>
 <td>ACT6 クライマックス前の暗転</td>
@@ -261,16 +307,16 @@ p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px
 <ul><li>[ ] ドアパネルが開演前に黒板の一角に設置されている</li><li>[ ] 杖・玉がACT2の配置位置にある</li><li>[ ] 白手袋が開演30分前に大人エルサ役へ直接手渡し済みであることを確認した</li><li>[ ] 人参・ロープ・金づちがACT4の配置位置にある</li><li>[ ] 暖炉プロップのLEDライトが点灯確認済み</li><li>[ ] ハンスの剣を小道具係が管理している（ACT6クライマックス前の暗転でハンス役へ手渡す段取りを確認）</li><li>[ ] 書類・地図風の紙・羽ペン風小道具がACT6用に準備されている</li></ul>
 <hr>
 <h2>オラフ人参管理フロー</h2>
-<p>ACT4でオラフの鼻に装着した人参は、ACT6終了まで<strong>鼻につけたまま継続</strong>する（スヴェンの演技との視覚的一貫性のため）。</p>
+<p>台本ACT4では、アナが舞台上で人参をオラフの鼻に刺す演技が明記されている。人参は暗転中に事前装着するのではなく、ACT3→4暗転中に小道具係がアナ役者へ人参を手渡す（または下手袖の定位置に置く）。アナは開幕後、台本通り人参を持って登場しオラフに装着する演技を行う。装着後、人参はACT6終了まで<strong>鼻につけたまま継続</strong>する（スヴェンの演技との視覚的一貫性のため）。</p>
 <table class="cast-table">
 <thead><tr><th>タイミング</th><th>対応</th></tr></thead><tbody>
 <tr>
 <td>ACT3→ACT4 暗転中（ACT4開幕直前）</td>
-<td>小道具係がオラフ役者の鼻に人参を装着</td>
+<td>小道具係がアナ役者へ人参を手渡す（または下手袖の定位置に置く）。オラフ役者には装着しない</td>
 </tr>
 <tr>
-<td>ACT3→ACT4暗転</td>
-<td>人参はつけたまま袖へ（取り外し不要）</td>
+<td>ACT4開幕後</td>
+<td>アナが台本通り人参を持って登場し、舞台上でオラフの鼻に装着する演技を行う</td>
 </tr>
 <tr>
 <td>ACT4→ACT5暗転</td>
