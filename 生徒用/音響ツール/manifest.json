@@ -1,0 +1,32 @@
+{
+  "name": "アナと雪の女王 音響ツール",
+  "short_name": "音響ツール",
+  "description": "文化祭「アナと雪の女王」本番用の音響キュー再生ツール（音源内蔵・オフライン動作対応）",
+  "start_url": "./音響再生ツール.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
