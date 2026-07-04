@@ -110,6 +110,10 @@ kbd{background:var(--panel2); border:1px solid var(--border); border-radius:4px;
   <h2>③ 効果音（SE）キュー</h2>
 </section>
 
+<section id="sec-extra">
+  <h2>④ 追加音源（2026-07-04追加分・使用箇所は音響係で要確認）</h2>
+</section>
+
 <div class="nowplaying">
   <div>
     <div class="label">現在再生中</div>
@@ -139,12 +143,17 @@ const CUES = {
     {id:'N3', act:'ACT5 冒頭', name:'ACT5 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
   ],
   se: [
-    {id:'SE1', act:'ACT1 魔法が飛ぶ', name:'魔法発動音', dur:'短音', note:'子供エルサが手を振り上げた瞬間'},
+    {id:'SE1', act:'ACT1 魔法が飛ぶ', name:'魔法発動音', dur:'短音', note:'子供エルサが手を振り上げた瞬間', aliases:['魔法①']},
     {id:'SE2', act:'ACT3 手袋引き抜き', name:'氷の「ピシッ」音', dur:'短音', note:'アナがエルサの手袋を引き抜いた瞬間'},
-    {id:'SE3', act:'ACT3 魔法暴走', name:'低い振動音・氷が広がる音', dur:'1〜2秒', note:'「やめて…！」直後・照明フラッシュと同期（舞台監督の合図が最終トリガー）'},
+    {id:'SE3', act:'ACT3 魔法暴走', name:'低い振動音・氷が広がる音', dur:'1〜2秒', note:'「やめて…！」直後・照明フラッシュと同期（舞台監督の合図が最終トリガー）', aliases:['魔法②']},
     {id:'SE4', act:'ACT3 レット・イット・ゴー', name:'キラキラ効果音（省略可）', dur:'短音', note:'マントを脱いだ瞬間・照明最大輝度と同期'},
-    {id:'SE5', act:'ACT5 魔法が当たる', name:'鋭い氷音「ピキン！」', dur:'短音', note:'冬アナがよろめく直前'},
-    {id:'SE6', act:'ACT7 凍りつく', name:'氷結音「ジュワッ／ズバン！」', dur:'短音', note:'「やめて！」直後・白フラッシュと同期'},
+    {id:'SE5', act:'ACT5 魔法が当たる', name:'鋭い氷音「ピキン！」', dur:'短音', note:'冬アナがよろめく直前', file:'アナに魔法があたって倒れるとき.mp3', aliases:['アナに魔法があたって倒れるとき']},
+    {id:'SE6', act:'ACT7 凍りつく', name:'氷結音「ジュワッ／ズバン！」', dur:'短音', note:'「やめて！」直後・白フラッシュと同期', aliases:['魔法④']},
+  ],
+  extra: [
+    {id:'X1', act:'（要確認）', name:'アナの魔法が解けるとき', dur:'—', note:'2026-07-04追加。どの場面で使うか音響係で要確認', file:'アナの魔法が解けるとき.wav', aliases:['アナの魔法が解けるとき']},
+    {id:'X2', act:'（要確認）', name:'お城／オラフ2回目登場あたりのBGM', dur:'—', note:'2026-07-04追加。ACT5氷の城シーンかオラフ再登場シーンでの使用を想定？音響係で要確認', file:'お城にいるときとかオラフが二回目に初めて出てくるときとか.wav', aliases:['お城にいるとき']},
+    {id:'X3', act:'（要確認）', name:'氷の上を歩いている（足音／BGM）', dur:'—', note:'2026-07-04追加。ACT5氷の城での使用を想定？音響係で要確認', file:'氷の上歩いている.mp3', aliases:['氷の上歩いている']},
   ],
 };
 
@@ -186,9 +195,10 @@ function buildSection(containerEl, list, groupLabel){
 buildSection(document.getElementById('sec-song'), CUES.song);
 buildSection(document.getElementById('sec-narr'), CUES.narr);
 buildSection(document.getElementById('sec-se'), CUES.se);
+buildSection(document.getElementById('sec-extra'), CUES.extra);
 
 function allCues(){
-  return [...CUES.song, ...CUES.narr, ...CUES.se];
+  return [...CUES.song, ...CUES.narr, ...CUES.se, ...CUES.extra];
 }
 
 function markLoaded(id, label){
