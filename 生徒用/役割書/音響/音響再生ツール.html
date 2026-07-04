@@ -1,0 +1,344 @@
+<title>音響キュー再生ツール — アナと雪の女王</title>
+
+<style>
+:root{
+  --bg:#0e1420; --panel:#161d2c; --panel2:#1c2638;
+  --border:#2a3450; --text:#e8ecf5; --sub:#8b96ae;
+  --accent:#4a90d8; --good:#3ac07a; --warn:#e0a020; --danger:#e04a5a;
+}
+:root[data-theme="light"]{
+  --bg:#f2f4f8; --panel:#ffffff; --panel2:#eef1f7;
+  --border:#d3d9e6; --text:#161d2c; --sub:#5a6480;
+  --accent:#2a6fc0; --good:#1a9a5a; --warn:#b07800; --danger:#c02c3c;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f2f4f8; --panel:#ffffff; --panel2:#eef1f7;
+    --border:#d3d9e6; --text:#161d2c; --sub:#5a6480;
+    --accent:#2a6fc0; --good:#1a9a5a; --warn:#b07800; --danger:#c02c3c;
+  }
+}
+*{box-sizing:border-box;}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;
+  background:var(--bg); color:var(--text); margin:0; padding:16px 16px 120px;
+}
+h1{font-size:1.3rem; margin:0 0 4px;}
+.sub{color:var(--sub); font-size:0.85rem; margin-bottom:16px;}
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  background:var(--panel); border:1px solid var(--border); border-radius:10px;
+  padding:12px 14px; margin-bottom:18px;
+}
+.toolbar input[type=file]{color:var(--sub); font-size:0.8rem;}
+button{
+  font-family:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--border);
+  background:var(--panel2); color:var(--text); padding:8px 14px; font-size:0.9rem;
+}
+button:hover{filter:brightness(1.15);}
+button.play{background:var(--good); color:#fff; border-color:var(--good); font-weight:700;}
+button.stop{background:var(--danger); color:#fff; border-color:var(--danger);}
+button.fade{background:var(--warn); color:#111; border-color:var(--warn);}
+button:disabled{opacity:.35; cursor:not-allowed;}
+section{margin-bottom:26px;}
+section h2{
+  font-size:1.02rem; border-left:5px solid var(--accent); padding-left:10px;
+  margin:0 0 10px;
+}
+.cue{
+  display:grid;
+  grid-template-columns: 34px 46px 1fr 90px auto;
+  gap:10px; align-items:center;
+  background:var(--panel); border:1px solid var(--border); border-radius:10px;
+  padding:10px 12px; margin-bottom:8px;
+}
+.cue.current{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent) inset;}
+.dot{width:12px; height:12px; border-radius:50%; background:#555; margin:0 auto;}
+.dot.loaded{background:var(--good);}
+.num{color:var(--sub); font-size:0.85rem; text-align:center;}
+.meta b{display:block; font-size:0.95rem;}
+.meta .timing{color:var(--sub); font-size:0.78rem;}
+.meta .note{color:var(--warn); font-size:0.76rem; margin-top:2px; line-height:1.4;}
+.dur{color:var(--sub); font-size:0.8rem; text-align:right;}
+.ctrl{display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end;}
+.filebtn{position:relative; overflow:hidden; font-size:0.78rem; padding:6px 10px;}
+.filebtn input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+.nowplaying{
+  position:fixed; left:0; right:0; bottom:0;
+  background:var(--panel); border-top:2px solid var(--accent);
+  padding:12px 20px; display:flex; align-items:center; gap:16px;
+  box-shadow:0 -4px 16px rgba(0,0,0,.3);
+}
+.nowplaying .label{font-size:0.75rem; color:var(--sub);}
+.nowplaying .title{font-size:1.05rem; font-weight:700; min-width:180px;}
+.nowplaying .bar{flex:1; height:8px; background:var(--panel2); border-radius:4px; overflow:hidden;}
+.nowplaying .bar .fill{height:100%; width:0%; background:var(--accent);}
+.nowplaying .time{font-size:0.85rem; color:var(--sub); min-width:90px; text-align:right;}
+.kbd{font-size:0.72rem; color:var(--sub); margin-left:auto;}
+kbd{background:var(--panel2); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.72rem;}
+.note-box{
+  background:var(--panel); border:1px solid var(--border); border-left:4px solid var(--accent);
+  border-radius:8px; padding:10px 14px; margin-bottom:18px; font-size:0.85rem; line-height:1.8;
+}
+</style>
+
+<h1>🔊 音響キュー再生ツール</h1>
+<div class="sub">アナと雪の女王 文化祭公演用 ／ オフラインで動作（ネット不要）／ ブラウザを閉じない限りファイルは保持されます</div>
+
+<div class="note-box">
+<b>使い方：</b>このHTMLファイルを音源mp3と同じフォルダに置いて開くと、ファイル名が一致する曲は<b>自動で読み込み済み（緑丸）</b>になる。まだファイルが無いキュー（フィナーレBGM・SE・ナレーション等）は「ファイル選択」で個別に指定するか、上の「一括読み込み」で複数まとめて選ぶと曲名から自動で割り当てる。①再生したいキューの「▶ 再生」を押す（別の曲が再生中なら自動で止めて切り替え）。②キュー#2だけ専用の「🔉 フェードアウト」ボタンあり（5秒かけて音量を下げて停止）。③画面下に常時「現在再生中」バーが表示される。④<kbd>Esc</kbd>でいつでも全停止。
+</div>
+
+<div class="toolbar">
+  <button id="bulkBtn" style="position:relative;overflow:hidden;">
+    📁 音源ファイルを一括読み込み（複数選択可）
+    <input type="file" id="bulkInput" accept="audio/*" multiple style="position:absolute;inset:0;opacity:0;cursor:pointer;">
+  </button>
+  <span id="bulkStatus" style="color:var(--sub);font-size:0.8rem;"></span>
+  <span class="kbd">全停止：<kbd>Esc</kbd></span>
+</div>
+
+<section id="sec-song">
+  <h2>① 歌唱・BGM キュー</h2>
+</section>
+
+<section id="sec-narr">
+  <h2>② ナレーター録音キュー（録音を選択した場合のみ）</h2>
+</section>
+
+<section id="sec-se">
+  <h2>③ 効果音（SE）キュー</h2>
+</section>
+
+<div class="nowplaying">
+  <div>
+    <div class="label">現在再生中</div>
+    <div class="title" id="npTitle">（停止中）</div>
+  </div>
+  <div class="bar"><div class="fill" id="npFill"></div></div>
+  <div class="time" id="npTime">00:00 / 00:00</div>
+  <button class="stop" id="npStop">■ 全停止</button>
+</div>
+
+<script>
+const CUES = {
+  song: [
+    {id:'00', act:'開演前', name:'イントロ／開演前BGM', dur:'—', note:'幕が開く前・開演直後の導入BGM', file:'イントロ.mp3', aliases:['イントロ']},
+    {id:'01', act:'ACT1 後半', name:'雪だるまつくろう', dur:'約3分', note:'歌唱後、暗転→場面転換', file:'雪だるまつくろう.mp3', aliases:['雪だるま']},
+    {id:'02', act:'ACT2 前半', name:'生まれてはじめて', dur:'約2分半', note:'二番の歌詞から再生開始。停止条件：ハンスが立ち上がった瞬間→4〜5秒フェードアウト', fade:true, file:'生まれてはじめて.mp3', aliases:['生まれてはじめて']},
+    {id:'03', act:'ACT2 後半', name:'とびら開けて', dur:'約2分', note:'歌唱後、暗転→場面転換', file:'とびら開けて.mp3', aliases:['とびら開けて']},
+    {id:'04', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜', dur:'約4分', note:'歌唱後、暗転', file:'ありのままの.mp3', aliases:['ありのまま','レット・イット・ゴー']},
+    {id:'05', act:'ACT4 後半', name:'あこがれの夏', dur:'約2分', note:'歌唱後、即暗転', file:'あこかれの夏.mp3', aliases:['あこがれ','あこかれ']},
+    {id:'06', act:'ACT5 中盤', name:'生まれてはじめて（リプライズ）', dur:'約2分半', note:'終盤で冬アナに魔法。音量を絞るタイミングは舞台監督の合図', aliases:['リプライズ']},
+    {id:'07', act:'ACT5 後半', name:'愛さえあれば', dur:'約3分', note:'曲終わりにアナが座り込む', file:'愛さえあれば.mp3', aliases:['愛さえ']},
+    {id:'08', act:'フィナーレ', name:'フィナーレBGM', dur:'—', note:'キャスト紹介中に流す（選曲後に差し替え）', aliases:['フィナーレ']},
+  ],
+  narr: [
+    {id:'N1', act:'ACT1 冒頭', name:'ACT1 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+    {id:'N2', act:'ACT2 冒頭', name:'ACT2 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+    {id:'N3', act:'ACT5 冒頭', name:'ACT5 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+  ],
+  se: [
+    {id:'SE1', act:'ACT1 魔法が飛ぶ', name:'魔法発動音', dur:'短音', note:'子供エルサが手を振り上げた瞬間'},
+    {id:'SE2', act:'ACT3 手袋引き抜き', name:'氷の「ピシッ」音', dur:'短音', note:'アナがエルサの手袋を引き抜いた瞬間'},
+    {id:'SE3', act:'ACT3 魔法暴走', name:'低い振動音・氷が広がる音', dur:'1〜2秒', note:'「やめて…！」直後・照明フラッシュと同期（舞台監督の合図が最終トリガー）'},
+    {id:'SE4', act:'ACT3 レット・イット・ゴー', name:'キラキラ効果音（省略可）', dur:'短音', note:'マントを脱いだ瞬間・照明最大輝度と同期'},
+    {id:'SE5', act:'ACT5 魔法が当たる', name:'鋭い氷音「ピキン！」', dur:'短音', note:'冬アナがよろめく直前'},
+    {id:'SE6', act:'ACT7 凍りつく', name:'氷結音「ジュワッ／ズバン！」', dur:'短音', note:'「やめて！」直後・白フラッシュと同期'},
+  ],
+};
+
+const state = {}; // id -> {audio, objectUrl, fileName}
+let currentId = null;
+let fadeTimer = null;
+
+function fmtTime(s){
+  if(!isFinite(s)) return '00:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function buildSection(containerEl, list, groupLabel){
+  list.forEach(cue => {
+    const row = document.createElement('div');
+    row.className = 'cue';
+    row.id = 'row-'+cue.id;
+    row.innerHTML = `
+      <div class="dot" id="dot-${cue.id}"></div>
+      <div class="num">${cue.id}</div>
+      <div class="meta">
+        <b>${cue.name}</b>
+        <div class="timing">${cue.act} ／ ${cue.dur}</div>
+        ${cue.note ? `<div class="note">${cue.note}</div>` : ''}
+      </div>
+      <div class="dur" id="filename-${cue.id}" style="grid-column:1/-1;font-size:0.72rem;color:var(--sub);display:none;"></div>
+      <div class="ctrl">
+        <button class="filebtn">📂 ファイル選択<input type="file" accept="audio/*" data-id="${cue.id}" class="fileInput"></button>
+        <button class="play" data-id="${cue.id}" disabled>▶ 再生</button>
+        ${cue.fade ? `<button class="fade" data-id="${cue.id}" disabled>🔉 フェードアウト</button>` : ''}
+        <button class="stop" data-id="${cue.id}" disabled>■ 停止</button>
+      </div>
+    `;
+    containerEl.appendChild(row);
+  });
+}
+
+buildSection(document.getElementById('sec-song'), CUES.song);
+buildSection(document.getElementById('sec-narr'), CUES.narr);
+buildSection(document.getElementById('sec-se'), CUES.se);
+
+function allCues(){
+  return [...CUES.song, ...CUES.narr, ...CUES.se];
+}
+
+function markLoaded(id, label){
+  document.getElementById('dot-'+id).classList.add('loaded');
+  const fnEl = document.getElementById('filename-'+id);
+  fnEl.textContent = '読み込み済み: ' + label;
+  fnEl.style.display = 'block';
+  document.querySelectorAll(`button[data-id="${id}"]`).forEach(b => b.disabled = false);
+}
+
+function wireAudioEvents(id, audio){
+  audio.addEventListener('timeupdate', () => { if(currentId===id) updateNowPlaying(); });
+  audio.addEventListener('ended', () => { if(currentId===id) stopAll(); });
+}
+
+function assignFile(id, file){
+  const cue = allCues().find(c => c.id === id);
+  if(!cue) return;
+  if(state[id] && state[id].objectUrl) URL.revokeObjectURL(state[id].objectUrl);
+  const url = URL.createObjectURL(file);
+  const audio = new Audio(url);
+  audio.preload = 'auto';
+  state[id] = {audio, objectUrl:url, fileName:file.name};
+  markLoaded(id, file.name);
+  wireAudioEvents(id, audio);
+}
+
+function tryAutoLoad(cue){
+  if(!cue.file || state[cue.id]) return;
+  const audio = new Audio();
+  audio.preload = 'auto';
+  audio.addEventListener('canplaythrough', () => {
+    if(state[cue.id]) return; // already loaded via picker
+    state[cue.id] = {audio, objectUrl:null, fileName:cue.file};
+    markLoaded(cue.id, cue.file + '（自動読込）');
+    wireAudioEvents(cue.id, audio);
+  }, {once:true});
+  audio.addEventListener('error', () => {
+    // ファイルが見つからない場合は何もしない（手動読み込み待ち）
+  });
+  audio.src = encodeURI(cue.file);
+}
+
+allCues().forEach(tryAutoLoad);
+
+document.querySelectorAll('.fileInput').forEach(inp => {
+  inp.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if(f) assignFile(inp.dataset.id, f);
+  });
+});
+
+function matchCueByName(fileBase){
+  const norm = s => s.toLowerCase().replace(/[\s_\-]/g,'');
+  const nb = norm(fileBase);
+  // ID prefix (01_, N1_, SE1_ 等)にも対応
+  const prefix = fileBase.split(/[_\-\s]/)[0].toUpperCase();
+  let cue = allCues().find(c => c.id.toUpperCase() === prefix);
+  if(cue) return cue;
+  // エイリアス／曲名の部分一致（どちらかがどちらかを含む）
+  cue = allCues().find(c => (c.aliases||[]).some(a => nb.includes(norm(a)) || norm(a).includes(nb)));
+  if(cue) return cue;
+  cue = allCues().find(c => nb.includes(norm(c.name)) || norm(c.name).includes(nb));
+  return cue;
+}
+
+document.getElementById('bulkInput').addEventListener('change', e => {
+  const files = Array.from(e.target.files);
+  let matched = 0;
+  files.forEach(f => {
+    const base = f.name.replace(/\.[^.]+$/, '');
+    const cue = matchCueByName(base);
+    if(cue){ assignFile(cue.id, f); matched++; }
+  });
+  document.getElementById('bulkStatus').textContent =
+    `${files.length}件中${matched}件を自動割り当てしました（未割り当ては個別に「ファイル選択」してください）`;
+});
+
+function play(id){
+  if(!state[id]) return;
+  if(currentId && currentId !== id) stopAll(true);
+  const {audio} = state[id];
+  audio.volume = 1;
+  audio.currentTime = 0;
+  audio.play();
+  currentId = id;
+  document.querySelectorAll('.cue').forEach(r => r.classList.remove('current'));
+  document.getElementById('row-'+id).classList.add('current');
+  updateNowPlaying();
+}
+
+function stopAll(silent){
+  if(fadeTimer){ clearInterval(fadeTimer); fadeTimer = null; }
+  if(currentId && state[currentId]){
+    state[currentId].audio.pause();
+    state[currentId].audio.currentTime = 0;
+  }
+  currentId = null;
+  document.querySelectorAll('.cue').forEach(r => r.classList.remove('current'));
+  if(!silent) updateNowPlaying();
+}
+
+function fadeOut(id, seconds=5){
+  if(currentId !== id || !state[id]) return;
+  const audio = state[id].audio;
+  const steps = 25;
+  const stepTime = (seconds*1000)/steps;
+  let i = 0;
+  if(fadeTimer) clearInterval(fadeTimer);
+  fadeTimer = setInterval(() => {
+    i++;
+    audio.volume = Math.max(0, 1 - i/steps);
+    if(i >= steps){
+      clearInterval(fadeTimer);
+      fadeTimer = null;
+      stopAll();
+    }
+  }, stepTime);
+}
+
+document.body.addEventListener('click', e => {
+  const id = e.target.dataset && e.target.dataset.id;
+  if(!id) return;
+  if(e.target.classList.contains('play')) play(id);
+  else if(e.target.classList.contains('stop')) { if(currentId===id) stopAll(); }
+  else if(e.target.classList.contains('fade')) fadeOut(id);
+});
+
+document.getElementById('npStop').addEventListener('click', () => stopAll());
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') stopAll();
+});
+
+function updateNowPlaying(){
+  const titleEl = document.getElementById('npTitle');
+  const fillEl = document.getElementById('npFill');
+  const timeEl = document.getElementById('npTime');
+  if(!currentId || !state[currentId]){
+    titleEl.textContent = '（停止中）';
+    fillEl.style.width = '0%';
+    timeEl.textContent = '00:00 / 00:00';
+    return;
+  }
+  const cue = allCues().find(c => c.id === currentId);
+  const audio = state[currentId].audio;
+  titleEl.textContent = `${cue.id}　${cue.name}`;
+  const pct = audio.duration ? (audio.currentTime/audio.duration*100) : 0;
+  fillEl.style.width = pct + '%';
+  timeEl.textContent = `${fmtTime(audio.currentTime)} / ${fmtTime(audio.duration)}`;
+}
+setInterval(updateNowPlaying, 250);
+</script>
