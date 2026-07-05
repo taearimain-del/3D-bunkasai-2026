@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \"C:\\Users\\Fort_\\OneDrive\\デスクトップ\\CLAUDE 作業場所\\3D-bunkasai-2026\\.claude\\hooks\\discord-notify.ps1\" -Phase start",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -File \"C:\\Users\\Fort_\\OneDrive\\デスクトップ\\CLAUDE 作業場所\\3D-bunkasai-2026\\.claude\\hooks\\discord-notify.ps1\" -Phase stop",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
