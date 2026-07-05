@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">文化祭公演 概要のご説明</div>
+<h2>3年D組「アナと雪の女王」</h2>
+<p><strong>作成日：2026年7月4日　／　提出先：担任の先生</strong></p>
+<hr>
+<h2>1. 基本情報</h2>
+<table class="cast-table">
+<thead><tr><th>項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>演目名</td>
+<td>アナと雪の女王</td>
+</tr>
+<tr>
+<td>原作</td>
+<td>ウォルト・ディズニー・アニメーション・スタジオ</td>
+</tr>
+<tr>
+<td>クラス</td>
+<td>3年D組</td>
+</tr>
+<tr>
+<td>上演時間</td>
+<td>約40分</td>
+</tr>
+<tr>
+<td>会場</td>
+<td>教室（教室内特設ステージ）</td>
+</tr>
+<tr>
+<td>学内発表</td>
+<td>2026年9月11日（金）</td>
+</tr>
+<tr>
+<td>一般公開</td>
+<td>2026年9月12日（土）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. あらすじ</h2>
+<p>アレンデール王国に暮らす姉妹、エルサとアナ。姉のエルサは氷の魔法を持ち、幼い頃にアナを誤って傷つけてしまったことを機に、自らを城に閉じ込めて育ちました。</p>
+<p>長年の孤独の末に行われた戴冠式の日、二人は久しぶりに顔を合わせますが、アナの婚約をめぐって言い争いとなり、エルサの魔法が暴走して国全体が真冬に閉ざされてしまいます。エルサを追うアナは、クリストフ・スヴェン・オラフと出会い、山の奥へ旅立ちます。</p>
+<p><strong>姉妹の絆と「本当の愛とは何か」</strong>を描いた、生徒手作りの舞台版です。</p>
+<hr>
+<h2>3. 上演構成（全7幕・約40分）</h2>
+<table class="cast-table">
+<thead><tr><th>ACT</th><th>内容</th><th>主な楽曲</th></tr></thead><tbody>
+<tr>
+<td>ACT1</td>
+<td>幼い日の姉妹</td>
+<td>雪だるまつくろう</td>
+</tr>
+<tr>
+<td>ACT2</td>
+<td>戴冠式</td>
+<td>生まれてはじめて／とびら開けて</td>
+</tr>
+<tr>
+<td>ACT3</td>
+<td>エルサの逃走</td>
+<td>レット・イット・ゴー</td>
+</tr>
+<tr>
+<td>ACT4</td>
+<td>旅の始まり</td>
+<td>あこがれの夏</td>
+</tr>
+<tr>
+<td>ACT5</td>
+<td>エルサの城</td>
+<td>生まれてはじめて（リプライズ）／愛さえあれば</td>
+</tr>
+<tr>
+<td>ACT6</td>
+<td>ハンスの裏切り</td>
+<td class="cast-slot-cell"></td>
+</tr>
+<tr>
+<td>ACT7</td>
+<td>真実の愛とフィナーレ</td>
+<td>フィナーレBGM</td>
+</tr>
+</tbody></table>
+<p>歌唱シーンは計7曲（フィナーレは歌唱ではなくBGM再生）。場面転換は照明の暗転で行います。</p>
+<hr>
+<h2>4. キャスト・スタッフ体制（2026年7月4日時点）</h2>
+<h3>キャスト</h3>
+<div class="char-legend"><span class="dot" style="background:#d44d75"></span><span style="color:#d44d75;font-weight:bold;margin-right:14px">子供アナ</span><span class="dot" style="background:#c0305a"></span><span style="color:#c0305a;font-weight:bold;margin-right:14px">夏アナ</span><span class="dot" style="background:#7a1030"></span><span style="color:#7a1030;font-weight:bold;margin-right:14px">冬アナ</span><span class="dot" style="background:#5095cc"></span><span style="color:#5095cc;font-weight:bold;margin-right:14px">子供エルサ</span><span class="dot" style="background:#2070b0"></span><span style="color:#2070b0;font-weight:bold;margin-right:14px">大人エルサ</span><span class="dot" style="background:#8a6030"></span><span style="color:#8a6030;font-weight:bold;margin-right:14px">ハンス</span><span class="dot" style="background:#b86020"></span><span style="color:#b86020;font-weight:bold;margin-right:14px">クリストフ</span><span class="dot" style="background:#b09000"></span><span style="color:#b09000;font-weight:bold;margin-right:14px">オラフ</span><span class="dot" style="background:#9a6840"></span><span style="color:#9a6840;font-weight:bold;margin-right:14px">スヴェン</span><span class="dot" style="background:#604898"></span><span style="color:#604898;font-weight:bold;margin-right:14px">ウェーゼルトン公爵</span><span class="dot" style="background:#386838"></span><span style="color:#386838;font-weight:bold;margin-right:14px">トロール</span></div>
+<table class="cast-table">
+<thead><tr><th>役名</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td style="color:#d44d75;font-weight:bold">子供アナ</td>
+<td>ひなた・ゆな</td>
+</tr>
+<tr>
+<td style="color:#c0305a;font-weight:bold">夏アナ</td>
+<td>調整中</td>
+</tr>
+<tr>
+<td style="color:#7a1030;font-weight:bold">冬アナ</td>
+<td>りえ・あおい</td>
+</tr>
+<tr>
+<td style="color:#5095cc;font-weight:bold">子供エルサ</td>
+<td>うらら</td>
+</tr>
+<tr>
+<td style="color:#2070b0;font-weight:bold">大人エルサ</td>
+<td>あん・ここな</td>
+</tr>
+<tr>
+<td style="color:#8a6030;font-weight:bold">ハンス</td>
+<td>調整中</td>
+</tr>
+<tr>
+<td style="color:#b86020;font-weight:bold">クリストフ</td>
+<td>たつや・せいじ</td>
+</tr>
+<tr>
+<td style="color:#b09000;font-weight:bold">オラフ</td>
+<td>みらい・せら</td>
+</tr>
+<tr>
+<td style="color:#9a6840;font-weight:bold">スヴェン</td>
+<td>あいり・Kyo</td>
+</tr>
+<tr>
+<td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
+<td>こたに</td>
+</tr>
+<tr>
+<td style="color:#386838;font-weight:bold">トロール</td>
+<td>ゆみか・けんしん・くるみ・かれん・まお・はると</td>
+</tr>
+<tr>
+<td style="color:#505050;font-weight:bold">ナレーター</td>
+<td>志内・こうすけ・ゆうな・わかな</td>
+</tr>
+<tr>
+<td style="color:#222;font-weight:bold">司祭・家来</td>
+<td>やまと</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator">主要キャスト4役（夏アナ・ハンス・子供エルサ・司祭家来）は7月11日（土）を目標に決定予定です。</blockquote>
+<h3>スタッフ（照明・音響・大道具・小道具・舞台監督・映像の6係）</h3>
+<table class="cast-table">
+<thead><tr><th>係</th><th>担当</th><th>主な業務</th></tr></thead><tbody>
+<tr>
+<td>舞台監督</td>
+<td>佐々木・時谷・船津</td>
+<td>進行・合図出し・タイム管理</td>
+</tr>
+<tr>
+<td>照明係</td>
+<td>安部・村田</td>
+<td>照明操作</td>
+</tr>
+<tr>
+<td>音響係</td>
+<td>佐野・酒井</td>
+<td>BGM・歌唱音源の再生</td>
+</tr>
+<tr>
+<td>大道具係</td>
+<td>佐野（兼務）</td>
+<td>背景パネル・セット制作/転換</td>
+</tr>
+<tr>
+<td>小道具係</td>
+<td>佐々木（兼務）・袋</td>
+<td>小道具の管理・受け渡し</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>八島</td>
+<td>プロジェクター操作</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. 特記事項（安全面・演出面）</h2>
+<ul><li><strong>火気は使用しません。</strong> 劇中の暖炉は段ボール製プロップ＋LEDライトで代用しています。</li><li><strong>殺陣・剣の演技があります。</strong> ハンス役の剣は模造品で、役者間の安全マージン（20cm以上）を台本上のルールとして明記済みです。</li><li><strong>プロジェクターを使用します。</strong> ホワイトボード（借用予定）に背景映像を投影する演出を予定しています（詳細は下記6.参照）。</li><li>場面転換は暗転（照明オフ）で行うため、一時的に教室内が暗くなる時間があります。</li></ul>
+<hr>
+<h2>6. 先生にご確認・ご協力をお願いしたい事項</h2>
+<ul><li><strong>プロジェクターの貸し出し</strong>：ホワイトボードへの投影用に1台お借りできるか（設置位置は客席後方中央付近を想定）</li><li><strong>電源の確保</strong>：プロジェクター・音響機材・LEDライト用の電源コンセント／延長コードの使用可否</li></ul>
+<hr>
+<h2>7. 今後のスケジュール（概要）</h2>
+<table class="cast-table">
+<thead><tr><th>時期</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>7月前半</td>
+<td>キャスト・スタッフ最終決定、読み合わせ</td>
+</tr>
+<tr>
+<td>7月後半〜8月前半</td>
+<td>個人練習、グループ稽古、歌唱・照明音響合わせ</td>
+</tr>
+<tr>
+<td>8月後半</td>
+<td>衣装合わせ・通し稽古</td>
+</tr>
+<tr>
+<td>9月上旬</td>
+<td>最終通し稽古、会場入り</td>
+</tr>
+<tr>
+<td>9月10日</td>
+<td>ゲネプロ（最終リハーサル）</td>
+</tr>
+<tr>
+<td><strong>9月11日（金）</strong></td>
+<td><strong>本番（学内発表）</strong></td>
+</tr>
+<tr>
+<td><strong>9月12日（土）</strong></td>
+<td><strong>本番（一般公開）</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>8. 詳しい資料について</h2>
+<p>企画書全文・完全版台本・係別の役割書・舞台配置図など、より詳しい資料は下記のページにまとめてあります。</p>
+<p><strong>資料一覧ページ：&lt;https://taearimain-del.github.io/3D-bunkasai-2026/shiryo.html&gt;</strong></p>
+<p>ご不明な点があれば、担当生徒までお気軽にお声がけください。</p>
+</body>
+</html>

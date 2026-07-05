@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">音響係</div>
+<h2>役割書 — 音響係</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>音響係は<strong>BGM・歌唱音源の管理</strong>をすべて担当する。</p>
+<p>歌唱シーンの曲出しミスは本番に直結するため、事前に音源ファイルを整理し、何度も通し練習すること。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人目</td>
+<td>PC操作（曲の再生・停止・SE管理）</td>
+</tr>
+<tr>
+<td>2人目</td>
+<td>サブ操作・音量確認・トラブル時のバックアップ</td>
+</tr>
+</tbody></table>
+<p><strong>目安：2人体制</strong></p>
+<hr>
+<h2>準備物チェックリスト</h2>
+<ul><li>[ ] 歌唱音源（7曲 + フィナーレBGM）をPCに準備・再生テスト済み</li><li>[ ] 音源ファイルは再生順にフォルダ番号付きで整理する（例：01_雪だるまつくろう.mp3）</li><li>[ ] スピーカー（学校備品）の接続・音量確認</li><li>[ ] このキューシートを印刷して手元に持つ</li><li>[ ] ゲネプロ前にすべての曲を通しで確認する</li></ul>
+<hr>
+<h2>歌唱キューシート</h2>
+<blockquote class="narrator">舞台監督の合図（手信号など）で再生開始する。歌が終わったら速やかに停止。</blockquote>
+<blockquote class="narrator"><strong>開演前イントロ（キュー#0）の運用</strong>：客入れ終了・開演予定時刻の<strong>1分30秒前</strong>に、舞台監督（または開場担当）が音響係へ合図（声かけ・手信号など）を出し、音響係が「イントロ.mp3」の再生を開始する。イントロは客入れ〜開演直前のBGMとして客席に流す。<strong>フェードアウトは行わない</strong>（イントロ自体がフェードアウトを前提とした曲ではないため）。舞台監督が全係の準備完了を確認して「開演」の合図（照明係へ客席消灯を指示、プロジェクター使用時は映像担当へ映像スタートを指示するのと同時）を出した時点で、曲が残っていても音響係がそのまま停止する（自然に終わっていればそのまま何もしなくてよい）。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>タイミング（台本）</th><th>曲名</th><th>尺</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>0</td>
+<td>開演1分30秒前</td>
+<td>イントロ（開演前BGM）</td>
+<td>約1分30秒</td>
+<td>舞台監督（または開場担当）の合図で再生開始。フェードアウトなし。舞台監督の「開演」の合図でそのまま停止（自然に終わっていれば何もしない）</td>
+</tr>
+<tr>
+<td>1</td>
+<td>ACT1 後半</td>
+<td>雪だるまつくろう</td>
+<td>約3分</td>
+<td>歌唱後、暗転→場面転換</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ACT2 前半（生まれてはじめて）</td>
+<td>生まれてはじめて</td>
+<td>約2分半</td>
+<td>二番の歌詞から再生開始。<strong>停止条件：ハンスが立ち上がった瞬間（舞台監督の目視合図）→ 4〜5秒かけてフェードアウト</strong></td>
+</tr>
+<tr>
+<td>3</td>
+<td>ACT2 後半</td>
+<td>とびら開けて</td>
+<td>約2分</td>
+<td>歌唱後、暗転→場面転換</td>
+</tr>
+<tr>
+<td>4</td>
+<td>ACT3 後半</td>
+<td>レット・イット・ゴー ～ありのままで～</td>
+<td>約4分</td>
+<td>歌唱後、暗転</td>
+</tr>
+<tr>
+<td>5</td>
+<td>ACT4 後半</td>
+<td>あこがれの夏</td>
+<td>約2分</td>
+<td>歌唱後、即暗転</td>
+</tr>
+<tr>
+<td>6</td>
+<td>ACT5 中盤</td>
+<td>生まれてはじめて（リプライズ）</td>
+<td>約2分半</td>
+<td>終盤で冬アナに魔法が当たる演出あり（照明係と連携）。音量を絞るタイミングは舞台監督の合図に従う</td>
+</tr>
+<tr>
+<td>7</td>
+<td>ACT5 後半</td>
+<td>愛さえあれば</td>
+<td>約3分</td>
+<td>曲終わりにアナが座り込む</td>
+</tr>
+<tr>
+<td>8</td>
+<td>フィナーレ</td>
+<td>BGM（選曲中）</td>
+<td>—</td>
+<td>キャスト紹介中に流す。選曲後に更新</td>
+</tr>
+</tbody></table>
+<p><strong>歌唱合計：約19分（BGMを除く）</strong></p>
+<hr>
+<h2>ナレーター録音キューシート（録音を選択した場合のみ）</h2>
+<blockquote class="narrator">ナレーターが生演技ではなく録音音声を使用する場合、以下のタイミングで音響係が再生する。<br>再生タイミングは「舞台監督の点灯合図直後」を基本とし、ゲネプロで秒数を確認・記録すること。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>ACT</th><th>タイミング</th><th>内容</th><th>備考</th></tr></thead><tbody>
+<tr>
+<td>N1</td>
+<td>ACT1 冒頭</td>
+<td>舞台監督の点灯合図後すぐ</td>
+<td>ACT1 開幕ナレーション</td>
+<td>台本 ACT1 最初のセリフ（ナレーター行）を事前収録</td>
+</tr>
+<tr>
+<td>N2</td>
+<td>ACT2 冒頭</td>
+<td>舞台監督の点灯合図後すぐ</td>
+<td>ACT2 開幕ナレーション</td>
+<td>台本 ACT2 最初のセリフ（ナレーター行）を事前収録</td>
+</tr>
+<tr>
+<td>N3</td>
+<td>ACT5 冒頭</td>
+<td>舞台監督の点灯合図後すぐ</td>
+<td>ACT5 開幕ナレーション</td>
+<td>台本 ACT5 最初のセリフ（ナレーター行）を事前収録</td>
+</tr>
+</tbody></table>
+<p><strong>ナレーター録音の準備：</strong> 通し稽古第1回までにナレーター役者が自分で収録し、音響係へデータを渡す。</p>
+<p>ファイル名例：`N1_ACT1開幕ナレーション.mp3`</p>
+<hr>
+<h2>役者との連携</h2>
+<ul><li>出番の少ない役者（オラフ役・ナレーター役など）が音響補助に入ることがある</li><li>音響操作は必ず音響係メンバーが行う</li></ul>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 開演1分30秒前のイントロ開始合図（誰が出すか）を舞台監督・開場担当と確認した</li><li>[ ] 各曲の開始タイミングを舞台監督と合わせる</li><li>[ ] 歌唱音源の音量が客席全体に届くか確認</li><li>[ ] 曲を間違えて再生した場合のリカバリー方法を決めておく</li><li>[ ] キュー#2（生まれてはじめて）のフェードアウトタイミングを舞台監督と合わせる（ハンスが立ち上がる瞬間を基準に）</li><li>[ ] 生歌/音源の最終決定期限（通し稽古第1回）を確認した</li></ul>
+<hr>
+<h2>生歌モード切替チェックリスト</h2>
+<p>役割書_キャストのリハーサル確認事項にあるとおり、生歌を選択した場合は以下の対応が必要。</p>
+<p><strong>最終決定期限：通し稽古第1回（ゲネプロ3週間前）</strong>。決定後7日以内に音響係が本リストに従い個別役割書を作成・舞台監督に提出。</p>
+<table class="cast-table">
+<thead><tr><th>確認項目</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>音源の役割</td>
+<td>伴奏トラックのみ再生（ボーカルトラックなし）</td>
+</tr>
+<tr>
+<td>停止条件（キュー#2）</td>
+<td>音源再生がない曲は停止条件不要・削除</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator">※ 生歌/音源を録音前提の本役割書から変更する場合は、上記チェックリストを基に別紙「生歌モード音響役割書」を作成すること。</blockquote>
+<hr>
+<h2>効果音（SE）キューシート</h2>
+<blockquote class="narrator">効果音は音源をPCに事前準備し、舞台監督の合図で再生する。</blockquote>
+<table class="cast-table">
+<thead><tr><th>#</th><th>場面</th><th>SE内容</th><th>タイミング</th></tr></thead><tbody>
+<tr>
+<td>SE1</td>
+<td>ACT1 魔法が飛ぶ</td>
+<td>魔法発動音（短い「シュワッ」系）</td>
+<td>子供エルサが手を振り上げた瞬間</td>
+</tr>
+<tr>
+<td>SE2</td>
+<td>ACT3 手袋引き抜き</td>
+<td>氷の「ピシッ」音</td>
+<td>アナがエルサの手袋を引き抜いた瞬間</td>
+</tr>
+<tr>
+<td>SE3</td>
+<td>ACT3 魔法暴走</td>
+<td>低い振動音・氷が広がる音（1〜2秒）</td>
+<td>「やめて…！」セリフ直後の照明フラッシュと同期。※このキューは舞台監督の合図が最終トリガー（照明係キュー#11と同一セリフで同期させること）</td>
+</tr>
+<tr>
+<td>SE4</td>
+<td>ACT3 レット・イット・ゴー</td>
+<td>キラキラ効果音（省略可）</td>
+<td>マントを脱いだ瞬間・照明最大輝度と同期</td>
+</tr>
+<tr>
+<td>SE5</td>
+<td>ACT5 魔法が当たる</td>
+<td>鋭い氷音（「ピキン！」）</td>
+<td>冬アナがよろめく直前</td>
+</tr>
+<tr>
+<td>SE6</td>
+<td>ACT7 凍りつく</td>
+<td>氷結音（「ジュワッ」/「ズバン！」）</td>
+<td>「やめて！」直後・白フラッシュと同期</td>
+</tr>
+</tbody></table>
+<p><strong>SE素材の準備方法</strong>（案）：</p>
+<ul><li>フリー音源サイト（効果音ラボ、DOVA-SYNDROMEなど）で「氷」「魔法」で検索</li><li>各SE再生時間：0.5〜2秒程度の短いもの</li><li>決定期限：通し稽古第1回（音響係が各シーンで試聴・選定）</li></ul>
+</body>
+</html>
