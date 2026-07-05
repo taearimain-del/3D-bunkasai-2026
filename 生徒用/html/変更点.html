@@ -4,104 +4,301 @@
 <meta charset="UTF-8">
 <title>役割書</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
-@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+@page { size: A4; margin: 20mm 18mm 24mm 18mm; }
 body {
-  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-family: 'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif;
   font-size: 10.5pt;
-  line-height: 1.9;
-  color: #1e0e00;
-  max-width: 680px;
+  line-height: 2.0;
+  color: #1a1a1a;
+  max-width: 780px;
   margin: 0 auto;
-  padding: 16px 0 30px;
+  padding: 20px 24px 30px;
   background: #fff;
 }
 
-/* タイトル：中央揃え・大文字 */
-.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
-.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
-.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
-.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+/* ===== TITLE BLOCK ===== */
+.title-block {
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+}
+.title-label {
+  font-size: 9pt;
+  letter-spacing: 0.3em;
+  color: #888;
+  margin-bottom: 8px;
+}
+.title-main {
+  font-size: 40pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+  margin: 6px 0 10px;
+}
+.title-sub {
+  font-size: 10pt;
+  color: #555;
+  letter-spacing: 0.1em;
+}
 .title-divider {
   border: none;
-  border-top: 1px solid #b0802a;
-  margin: 18px 0 6px;
+  border-top: 3px double #aac;
+  margin: 14px 0 20px;
 }
-.title-divider + * { margin-top: 0; }
 
-/* 見出し：下線のみ・中央 */
+/* ===== SECTION HEADINGS ===== */
 h2 {
-  font-size: 12.5pt; font-weight: 700; color: #3a1000;
-  margin: 30px 0 12px; padding: 0 0 8px 0;
-  border-bottom: 2px solid #b0802a;
-  background: none; letter-spacing: 0.1em;
-  text-align: center;
+  font-size: 13.5pt;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 26px 0 10px;
+  padding: 7px 12px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 1px solid #c8d8ee;
+  background: #f4f7fc;
+  letter-spacing: 0.05em;
 }
-h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
-hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+h3 {
+  font-size: 11pt;
+  font-weight: 700;
+  color: #446;
+  margin: 16px 0 6px;
+  padding-left: 10px;
+  border-left: 3px solid #99a;
+}
+hr {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 22px 0;
+}
 
-/* キャスト表 */
-.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
-.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
-table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
-table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
-table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
-td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
-p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
-.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
-.staff-notes ul { list-style: none; padding: 0; margin: 0; }
-.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
-.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
-
-/* ACTヘッダー：中央揃え・大きな飾り枠 */
-.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
-.act-title {
-  font-size: 16pt; font-weight: 700; color: #5a1500;
-  padding: 12px 20px;
-  border-top: 3px double #b0802a;
-  border-bottom: 3px double #b0802a;
-  background: none;
-  letter-spacing: 0.12em;
+/* ===== CAST TABLE ===== */
+.char-legend {
+  font-size: 9.5pt;
+  margin: 8px 0 10px;
+  line-height: 2.2;
+}
+.char-legend .dot {
   display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
 }
-.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
-.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+table.cast-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 10pt;
+  margin: 8px 0 6px;
+}
+table.cast-table th {
+  background: #eef2f8;
+  border: 1px solid #c0c8d8;
+  padding: 6px 10px;
+  font-weight: 700;
+  text-align: left;
+  color: #334;
+}
+table.cast-table td {
+  border: 1px solid #c8ccd8;
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+td.cast-slot-cell {
+  min-width: 100px;
+  background: #fafaf6;
+  border-bottom: 2px solid #888 !important;
+  padding-bottom: 3px !important;
+}
+p.cast-note {
+  font-size: 9.5pt;
+  color: #999;
+  margin: 6px 0 0;
+  font-style: italic;
+}
 
-/* セリフ */
-p.dialog { margin: 6px 0 2px; line-height: 1.9; }
-span.char-name { font-weight: 700; }
+/* ===== STAFF NOTES ===== */
+.staff-notes {
+  background: #f6f6f4;
+  border: 1px solid #d8d4cc;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 10px 0 14px;
+}
+.staff-notes ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.staff-notes li {
+  font-size: 10pt;
+  color: #333;
+  padding: 2px 0;
+  line-height: 1.9;
+}
+.staff-notes li::before {
+  content: '▸';
+  color: #888;
+  margin-right: 7px;
+  font-size: 9pt;
+}
+
+/* ===== ACT HEADER ===== */
+.act-header {
+  margin: 28px 0 12px;
+  page-break-before: auto;
+}
+.act-title {
+  font-size: 15pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  padding: 8px 14px;
+  border-left: 5px solid #4a7cc0;
+  border-top: 2px solid #4a7cc0;
+  background: #f0f4fa;
+  letter-spacing: 0.03em;
+}
+.act-meta {
+  font-size: 9pt;
+  color: #888;
+  margin: 4px 0 2px 4px;
+}
+.act-chars {
+  font-size: 10pt;
+  font-weight: 700;
+  color: #444;
+  margin: 3px 0 10px 4px;
+}
+
+/* ===== DIALOG ===== */
+p.dialog {
+  margin: 4px 0;
+  line-height: 1.9;
+}
+span.char-name {
+  font-weight: 700;
+}
 p.stage-direction {
-  color: #7a5a38; font-size: 9.5pt; font-style: italic;
-  margin: 6px 0 6px 1.5em; padding-left: 0;
-  border-left: none;
+  color: #888;
+  font-size: 10pt;
+  font-style: italic;
+  margin: 4px 0 4px 14px;
+  padding-left: 10px;
+  border-left: 2px solid #ddd;
+  line-height: 1.8;
+}
+
+/* ===== NARRATOR ===== */
+blockquote.narrator {
+  background: #f5f5f2;
+  border: 1px solid #d4d0c8;
+  border-left: 4px solid #aaa;
+  border-radius: 3px;
+  padding: 8px 14px;
+  margin: 10px 0;
+  font-size: 10pt;
+  color: #333;
   line-height: 1.9;
 }
 
-/* ナレーター */
-blockquote.narrator {
-  background: #f5ead0; border: 1px solid #d0b880;
-  border-left: 4px solid #a07030;
-  padding: 8px 16px; margin: 12px 0;
-  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+/* ===== CUES ===== */
+p.cue {
+  font-size: 11pt;
+  font-weight: 700;
+  padding: 6px 12px;
+  margin: 8px 0;
+  border-radius: 3px;
+  line-height: 1.7;
+}
+p.light-cue {
+  background: #fffbeb;
+  border: 1px solid #f0cc70;
+  border-left: 6px solid #e0a020;
+  color: #5a3800;
+}
+p.music-cue {
+  background: #f0f8f4;
+  border: 1px solid #80c8a0;
+  border-left: 6px solid #30a060;
+  color: #174025;
+}
+p.time-cue {
+  background: #f4f4f2;
+  border: 1px solid #ccc;
+  border-left: 6px solid #999;
+  color: #555;
+  font-weight: 400;
+}
+p.daidogu-cue {
+  background: #fdf4e7;
+  border: 1px solid #c8842a;
+  border-left: 6px solid #a06010;
+  color: #4a2800;
+}
+p.shodogu-cue {
+  background: #f2eefd;
+  border: 1px solid #9060c0;
+  border-left: 6px solid #6040a0;
+  color: #2a0a50;
+}
+p.onkyo-cue {
+  background: #e6f6f5;
+  border: 1px solid #3aaa9a;
+  border-left: 6px solid #108070;
+  color: #083830;
+}
+p.isho-cue {
+  background: #fde8f0;
+  border: 1px solid #d060a0;
+  border-left: 6px solid #b04080;
+  color: #4a0a28;
+}
+p.kantoku-cue {
+  background: #eaecf4;
+  border: 1px solid #4050b8;
+  border-left: 6px solid #2030a0;
+  color: #0a1040;
 }
 
-/* キュー */
-p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
-p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
-p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
-p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
-p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
-p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
-p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
-p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
-p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+/* ===== VERSION BADGE ===== */
+.version-badge {
+  display: inline-block;
+  font-size: 9.5pt;
+  padding: 2px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.badge-full   { background: #4a7cc0; color: #fff; }
+.badge-yakusha { background: #6a3080; color: #fff; }
 
-/* バッジ・フッター */
-.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
-.badge-full { background: #b0802a; color: #fcf8ee; }
-.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
-.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
-.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+/* ===== FOOTER NOTE ===== */
+.footer-note {
+  font-size: 8.5pt;
+  color: #999;
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+/* ===== YAKUWARI TITLE ===== */
+.yakuwari-dept {
+  font-size: 32pt;
+  font-weight: 700;
+  color: #1a3a6a;
+  text-align: center;
+  padding: 24px 0 10px;
+  letter-spacing: 0.08em;
+  line-height: 1.3;
+}
 
 /* ===== H4 ===== */
 h4 {
@@ -158,16 +355,6 @@ p.eizo-cue {
 </style>
 </head>
 <body>
-<h2>2026-07-05 11:22　キャストのA/B班割り当てを尚早に確定していた誤りを修正・Discord進捗通知を追加・shiryo.htmlに時刻表記と詳細リンクを追加</h2>
-<h3>背景</h3>
-<p>ユーザーから「企画書・役割書_キャストのキャスト表でA/B班の割り当てをまだ決めていないのに、特定の名前をA欄・B欄に振り分けてしまっている。A/B分けはまだせず、決定済みの配役者名を別の欄で管理してほしい」との指摘。あわせて、Discordでの作業進捗通知の仕組み構築、shiryo.htmlの資料更新日表記に時刻を追加、変更点の詳細ページへのリンク再追加も対応した。</p>
-<h3>変更内容</h3>
-<ul><li>`other\企画書.md`：キャスト一覧表に「担当者」列を新設（決定済み配役者名）。既存の「担当者（A）」「担当者（B）」列は将来用に残しつつ中身を「未定」に統一。</li><li>`other\役割書\役割書_キャスト.md`：同様に「配役一覧」表に「担当者」列を新設。既存のA/B列を「未定」に統一。あわせて子供エルサ・オラフ・ウェーゼルトン公爵・司祭家来の配役を最新の内容に更新（うらら／みらい・せら／こたに／やまと）。</li><li>`生徒用\pdf\企画書.pdf`・`生徒用\pdf\役割書\役割書_キャスト.pdf`・対応する`生徒用\html\`側HTMLを再生成。</li><li>`.claude\settings.json`・`.claude\hooks\discord-notify.ps1`：サブエージェントの起動時・完了時にDiscordへ通知するhookを新規構築（`.env`のDISCORD_WEBHOOK_URLを使用。完了時通知にはサブエージェントの実際の最終応答内容を含める）。</li><li>`shiryo.html`：各PDFリンクの更新日表記に時刻を追加（`YYYY-MM-DD HH:MM`形式）。「重要な変更点（まとめ）」直下に「もっと詳しい変更点はこちら」（`生徒用/html/変更点.html`へのリンク）を追加。</li><li>`プロジェクト概要.md`：上記shiryo.html運用ルールの変更を反映。</li></ul>
-<h3>アーカイブ</h3>
-<ul><li>`過去版\企画書\企画書_20260705v3.pdf`</li><li>`過去版\役割書\役割書_キャスト_20260705.pdf`</li></ul>
-<h3>対応ファイル</h3>
-<p>`other\企画書.md`、`other\役割書\役割書_キャスト.md`、`生徒用\pdf\企画書.pdf`、`生徒用\pdf\役割書\役割書_キャスト.pdf`、対応する`生徒用\html\`側HTML、`.claude\settings.json`、`.claude\hooks\discord-notify.ps1`、`shiryo.html`、`プロジェクト概要.md`</p>
-<hr>
 <h2>2026-07-05 11:28　音響ツールのフェードアウトを緩やかに調整</h2>
 <h3>背景</h3>
 <p>ユーザーから「フェードアウトが今は急激に下がりすぎる、もう少し緩やかにしていい」との指摘。</p>
@@ -177,6 +364,16 @@ p.eizo-cue {
 <p>`過去版/その他/音響再生ツール_20260705.html`（編集前のgit HEAD版）</p>
 <h3>対応ファイル</h3>
 <p>`生徒用/音響ツール/音響再生ツール.html`</p>
+<hr>
+<h2>2026-07-05 11:22　キャストのA/B班割り当てを尚早に確定していた誤りを修正・Discord進捗通知を追加・shiryo.htmlに時刻表記と詳細リンクを追加</h2>
+<h3>背景</h3>
+<p>ユーザーから「企画書・役割書_キャストのキャスト表でA/B班の割り当てをまだ決めていないのに、特定の名前をA欄・B欄に振り分けてしまっている。A/B分けはまだせず、決定済みの配役者名を別の欄で管理してほしい」との指摘。あわせて、Discordでの作業進捗通知の仕組み構築、shiryo.htmlの資料更新日表記に時刻を追加、変更点の詳細ページへのリンク再追加も対応した。</p>
+<h3>変更内容</h3>
+<ul><li>`other\企画書.md`：キャスト一覧表に「担当者」列を新設（決定済み配役者名）。既存の「担当者（A）」「担当者（B）」列は将来用に残しつつ中身を「未定」に統一。</li><li>`other\役割書\役割書_キャスト.md`：同様に「配役一覧」表に「担当者」列を新設。既存のA/B列を「未定」に統一。あわせて子供エルサ・オラフ・ウェーゼルトン公爵・司祭家来の配役を最新の内容に更新（うらら／みらい・せら／こたに／やまと）。</li><li>`生徒用\pdf\企画書.pdf`・`生徒用\pdf\役割書\役割書_キャスト.pdf`・対応する`生徒用\html\`側HTMLを再生成。</li><li>`.claude\settings.json`・`.claude\hooks\discord-notify.ps1`：サブエージェントの起動時・完了時にDiscordへ通知するhookを新規構築（`.env`のDISCORD_WEBHOOK_URLを使用。完了時通知にはサブエージェントの実際の最終応答内容を含める）。</li><li>`shiryo.html`：各PDFリンクの更新日表記に時刻を追加（`YYYY-MM-DD HH:MM`形式）。「重要な変更点（まとめ）」直下に「もっと詳しい変更点はこちら」（`生徒用/html/変更点.html`へのリンク）を追加。</li><li>`プロジェクト概要.md`：上記shiryo.html運用ルールの変更を反映。</li></ul>
+<h3>アーカイブ</h3>
+<ul><li>`過去版\企画書\企画書_20260705v3.pdf`</li><li>`過去版\役割書\役割書_キャスト_20260705.pdf`</li></ul>
+<h3>対応ファイル</h3>
+<p>`other\企画書.md`、`other\役割書\役割書_キャスト.md`、`生徒用\pdf\企画書.pdf`、`生徒用\pdf\役割書\役割書_キャスト.pdf`、対応する`生徒用\html\`側HTML、`.claude\settings.json`、`.claude\hooks\discord-notify.ps1`、`shiryo.html`、`プロジェクト概要.md`</p>
 <hr>
 <h2>2026-07-05 10:53　プロジェクター投影先の矛盾解消・配役反映・映像担当の専任表記削除・企画書のフィナーレ整理</h2>
 <h3>背景</h3>
