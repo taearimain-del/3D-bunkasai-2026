@@ -1,2 +1,5 @@
 # 機密情報
 .env
+
+# Claude Code ローカル設定（Webhook等の機密情報を含みうるため非公開に）
+.claude/
