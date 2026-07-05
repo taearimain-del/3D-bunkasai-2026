@@ -41,6 +41,27 @@
     border-left:4px solid var(--accent2); border-radius:6px;
     color:var(--sub); font-size:0.9rem;
   }
+  .comments-list{
+    max-height:340px; overflow-y:auto; margin-top:16px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .comment-item{
+    background:var(--card); border:1px solid var(--border); border-radius:8px;
+    padding:10px 14px;
+  }
+  .comment-text{ font-size:0.92rem; white-space:pre-wrap; word-break:break-word; }
+  .comment-date{ font-size:0.75rem; color:var(--sub); margin-top:4px; }
+  .comment-empty{ color:var(--sub); font-size:0.9rem; }
+  .comment-form{ margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .comment-form textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px;
+    background:var(--card); color:var(--ink); font-family:inherit; font-size:0.92rem; resize:vertical;
+  }
+  .comment-form button{
+    align-self:flex-start; padding:8px 20px; border:none; border-radius:8px;
+    background:var(--accent); color:#fff; font-size:0.9rem; cursor:pointer;
+  }
+  .comment-form button:hover{ opacity:0.9; }
 </style>
 </head>
 <body>
@@ -82,28 +103,76 @@
   </div>
   <p class="lead" style="margin:8px 0 0;"><a href="生徒用/html/変更点.html">→ もっと詳しい変更点はこちら</a></p>
 
-  <h2>ご質問・気になる点</h2>
-  <div class="note">
-    気になる点・ご質問があれば、下記に匿名でコメントを投稿できます（名前の入力は不要です）。投稿は確認のうえ表示されます。
-  </div>
-  <!--
-    Cusdis（匿名コメント埋め込みサービス、https://cusdis.com）を利用。セットアップ済み（2026-07-05）。
-    - ダッシュボード: https://cusdis.com/dashboard/project/a6a695c5-54c7-4029-b179-2164310bdbb8
-    - 投稿されたコメントはダッシュボードで承認するまで表示されない（スパム対策のデフォルト仕様）。承認・削除もダッシュボードから行う。
-  -->
-  <div id="cusdis_thread"
-    data-host="https://cusdis.com"
-    data-app-id="a6a695c5-54c7-4029-b179-2164310bdbb8"
-    data-page-id="shiryo"
-    data-page-url="https://taearimain-del.github.io/3D-bunkasai-2026/shiryo.html"
-    data-page-title="資料一覧 — 3年D組「アナと雪の女王」"
-    data-theme="auto"
-  ></div>
-  <script async defer src="https://cusdis.com/js/cusdis.es.js"></script>
-
   <div class="note">
     本番用の音響再生ツールは <a href="生徒用/音響ツール/音響再生ツール.html">こちら</a> からご覧いただけます（生徒の操作端末用）。
   </div>
+
+  <h2>ご質問・気になる点</h2>
+  <div class="note">
+    気になる点・ご質問があれば、下記に匿名でコメントを投稿できます（名前の入力は不要・即時反映されます）。
+  </div>
+
+  <div id="comments-list" class="comments-list"></div>
+  <form id="comment-form" class="comment-form">
+    <textarea id="comment-input" maxlength="500" rows="3" placeholder="コメントを入力..." required></textarea>
+    <button type="submit">投稿する</button>
+  </form>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+
+  // 匿名コメント欄（Firebase Realtime Database、2026-07-05〜）。
+  // 承認不要・即時反映。誰でも読み書きできる公開ルールのため、荒らし投稿のリスクは許容のうえ運用する方針。
+  const firebaseConfig = {
+    apiKey: "AIzaSyCT3kB44SweowSshAxHKCo2wKM5XqsD2SQ",
+    authDomain: "d-bunkasai.firebaseapp.com",
+    databaseURL: "https://d-bunkasai-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "d-bunkasai",
+    storageBucket: "d-bunkasai.firebasestorage.app",
+    messagingSenderId: "709713875911",
+    appId: "1:709713875911:web:8ee19207018491ea60ffe2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const commentsRef = ref(db, 'comments');
+  const recentComments = query(commentsRef, limitToLast(100));
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  const listEl = document.getElementById('comments-list');
+
+  onValue(recentComments, (snapshot) => {
+    const data = snapshot.val();
+    listEl.innerHTML = '';
+    if (!data) {
+      listEl.innerHTML = '<p class="comment-empty">まだコメントはありません。</p>';
+      return;
+    }
+    const items = Object.values(data).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    for (const item of items) {
+      const el = document.createElement('div');
+      el.className = 'comment-item';
+      const date = item.ts ? new Date(item.ts).toLocaleString('ja-JP') : '';
+      el.innerHTML = `<div class="comment-text">${escapeHtml(item.text || '')}</div><div class="comment-date">${escapeHtml(date)}</div>`;
+      listEl.appendChild(el);
+    }
+  });
+
+  document.getElementById('comment-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('comment-input');
+    const text = input.value.trim();
+    if (!text) return;
+    push(commentsRef, { text: text.slice(0, 500), ts: Date.now() });
+    input.value = '';
+  });
+</script>
 </body>
 </html>
