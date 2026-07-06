@@ -15,7 +15,7 @@
     margin:0; padding:24px; background:var(--bg); color:var(--text);
     font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
   }
-  .wrap{ max-width:1000px; margin:0 auto; }
+  .wrap{ max-width:1280px; margin:0 auto; }
   h1{ font-size:1.4rem; margin-bottom:4px; }
   .sub{ color:var(--muted); font-size:0.85rem; margin-bottom:20px; }
   .card{ background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:16px; }
@@ -27,12 +27,15 @@
   table{ width:100%; border-collapse:collapse; font-size:0.85rem; }
   th, td{ text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); vertical-align:top; }
   th{ color:var(--muted); font-weight:600; white-space:nowrap; }
-  td.clicks{ max-width:260px; }
+  td.clicks{ max-width:220px; }
+  td.gpu{ max-width:200px; font-size:0.78rem; word-break:break-word; }
   .click-item{ display:block; color:var(--muted); }
   .empty{ color:var(--muted); padding:20px 0; }
   .err{ color:#e05a5a; }
   .table-wrap{ overflow-x:auto; }
-  .visitor{ font-family:monospace; font-size:0.75rem; color:var(--muted); }
+  .visitor, .fp{ font-family:monospace; font-size:0.75rem; color:var(--muted); }
+  .fp{ padding:2px 6px; border-radius:5px; color:#1b1d22; font-weight:600; }
+  .legend{ color:var(--muted); font-size:0.8rem; margin-bottom:12px; }
 </style>
 </head>
 <body>
@@ -46,12 +49,17 @@
   </div>
 
   <div class="card" id="log-card" style="display:none;">
+    <p class="legend">同じ色の「端末指紋」は同一端末からのアクセスです。位置情報・時間帯・見た資料と合わせて閲覧者を推測してください（氏名までは技術上取得できません）。</p>
     <div class="table-wrap">
       <table id="log-table">
         <thead>
           <tr>
             <th>日時</th>
+            <th>端末指紋</th>
             <th>ブラウザ/OS</th>
+            <th>GPU</th>
+            <th>画面</th>
+            <th>TZ</th>
             <th>位置情報</th>
             <th>IP</th>
             <th>参照元</th>
@@ -129,6 +137,14 @@
     return item.org ? `${loc}（${item.org}）` : loc;
   }
 
+  // 指紋IDから淡いパステル背景色を生成（同一端末を色でグルーピングするため）
+  function fpColor(fp) {
+    if (!fp) return 'transparent';
+    let h = 0;
+    for (let i = 0; i < fp.length; i++) h = (h * 31 + fp.charCodeAt(i)) % 360;
+    return `hsl(${h}, 70%, 80%)`;
+  }
+
   function renderLog(data) {
     logBody.innerHTML = '';
     if (!data) {
@@ -146,9 +162,19 @@
             .map((c) => `<span class="click-item">${escapeHtml(c.label || c.href || '')}</span>`)
             .join('')
         : '<span class="click-item">（なし）</span>';
+      const fp = item.fp || '';
+      const fpBadge = fp
+        ? `<span class="fp" style="background:${fpColor(fp)}">${escapeHtml(fp)}</span>`
+        : '<span class="fp">—</span>';
+      const gpu = item.gpu || '';
+      const scr = item.screen ? `${escapeHtml(item.screen)}${item.dpr && item.dpr !== 1 ? ' @' + escapeHtml(String(item.dpr)) : ''}` : '—';
       tr.innerHTML = `
         <td>${escapeHtml(date)}</td>
+        <td>${fpBadge}</td>
         <td>${escapeHtml(parseUA(item.ua))}</td>
+        <td class="gpu">${escapeHtml(gpu || '—')}</td>
+        <td>${scr}</td>
+        <td>${escapeHtml(item.tz || '—')}</td>
         <td>${escapeHtml(formatGeo(item))}</td>
         <td>${escapeHtml(item.ip || '不明')}</td>
         <td>${escapeHtml(item.referrer || '(direct)')}</td>

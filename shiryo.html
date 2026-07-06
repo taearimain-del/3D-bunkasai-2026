@@ -67,7 +67,7 @@
 <body>
 <div class="wrap">
   <h1>資料一覧</h1>
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-06 15:11</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-06 15:36</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -140,8 +140,9 @@
   const commentsRef = ref(db, 'comments');
   const recentComments = query(commentsRef, limitToLast(100));
 
-  // 閲覧ログ（管理者のみ`pageview-log.html`から閲覧。日時・ブラウザ/OS・参照元・IP・位置情報・クリック先を記録。2026-07-06〜）
+  // 閲覧ログ（管理者のみ`pageview-log.html`から閲覧。日時・ブラウザ/OS・参照元・IP・位置情報・クリック先・端末指紋を記録。2026-07-06〜）
   // クライアントJSからは実IPを取得できないため、外部API（ipapi.co）でIPと位置情報をまとめて取得する。
+  // 端末指紋（fp）は画面・GPU・Canvas等から生成する匿名の識別子で、氏名等は一切含まない（人力での閲覧者推定を補助する目的）。
   const pageviewsRef = ref(db, 'pageviews');
 
   // 同一端末からの再訪問を判別するための匿名ID（氏名等は含まない）
@@ -150,6 +151,66 @@
     visitorId = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
     localStorage.setItem('visitorId', visitorId);
   }
+
+  // 文字列を短い16進ハッシュにする（指紋ID生成用・暗号用途ではない）
+  function hashStr(str) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return (h >>> 0).toString(16).padStart(8, '0');
+  }
+
+  // GPU情報（WebGLのレンダラ名）を取得。機種推定にかなり有効。失敗時は空文字。
+  function getGpu() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return '';
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!ext) return '';
+      return gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) || '';
+    } catch (e) { return ''; }
+  }
+
+  // Canvasに固定テキストを描画し、その出力のハッシュを取る（描画の微差で端末を区別）。失敗時は空文字。
+  function getCanvasHash() {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.width = 220; canvas.height = 40;
+      const ctx = canvas.getContext('2d');
+      ctx.textBaseline = 'top';
+      ctx.font = "16px 'Arial'";
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(10, 5, 100, 20);
+      ctx.fillStyle = '#069';
+      ctx.fillText('3D-bunkasai 雪だるま☃', 12, 10);
+      return hashStr(canvas.toDataURL());
+    } catch (e) { return ''; }
+  }
+
+  // Cookie/localStorageを消しても変わりにくいデバイス指紋を組み立てる。
+  const gpu = getGpu();
+  const canvasHash = getCanvasHash();
+  const device = {
+    screen: `${screen.width}x${screen.height}`,
+    dpr: window.devicePixelRatio || 1,
+    depth: screen.colorDepth || 0,
+    tz: (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { return ''; } })(),
+    lang: [navigator.language, ...(navigator.languages || [])].filter(Boolean).join(','),
+    cores: navigator.hardwareConcurrency || 0,
+    mem: navigator.deviceMemory || 0,
+    touch: navigator.maxTouchPoints || 0,
+    platform: navigator.platform || '',
+    gpu,
+    canvas: canvasHash,
+  };
+  // 指紋ID：主要属性を連結してハッシュ化（visitorIdを消された/別ブラウザで開かれた場合の補完）
+  const fp = hashStr([
+    device.screen, device.dpr, device.depth, device.tz, device.lang,
+    device.cores, device.mem, device.touch, device.platform, device.gpu, device.canvas,
+  ].join('|'));
 
   let pageviewKey = null;
   fetch('https://ipapi.co/json/')
@@ -168,6 +229,8 @@
         ua: navigator.userAgent,
         referrer: document.referrer || '(direct)',
         visitorId,
+        fp,
+        ...device,
         ...geo,
       });
       pageviewKey = newRef.key;
