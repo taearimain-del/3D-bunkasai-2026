@@ -67,7 +67,7 @@
 <body>
 <div class="wrap">
   <h1>資料一覧</h1>
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-06 14:44</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-06 15:11</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -140,21 +140,53 @@
   const commentsRef = ref(db, 'comments');
   const recentComments = query(commentsRef, limitToLast(100));
 
-  // 閲覧ログ（管理者のみFirebaseコンソールから閲覧。日時・ブラウザ/OS・参照元・IPを記録。2026-07-06〜）
-  // クライアントJSからは実IPを取得できないため、外部API（ipify）で自己IPを取得してから記録する。
+  // 閲覧ログ（管理者のみ`pageview-log.html`から閲覧。日時・ブラウザ/OS・参照元・IP・位置情報・クリック先を記録。2026-07-06〜）
+  // クライアントJSからは実IPを取得できないため、外部API（ipapi.co）でIPと位置情報をまとめて取得する。
   const pageviewsRef = ref(db, 'pageviews');
-  fetch('https://api.ipify.org?format=json')
+
+  // 同一端末からの再訪問を判別するための匿名ID（氏名等は含まない）
+  let visitorId = localStorage.getItem('visitorId');
+  if (!visitorId) {
+    visitorId = (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+    localStorage.setItem('visitorId', visitorId);
+  }
+
+  let pageviewKey = null;
+  fetch('https://ipapi.co/json/')
     .then((res) => res.json())
-    .then((data) => data.ip)
-    .catch(() => 'unknown')
-    .then((ip) => {
-      push(pageviewsRef, {
+    .then((data) => ({
+      ip: data.ip || 'unknown',
+      city: data.city || '',
+      region: data.region || '',
+      country: data.country_name || '',
+      org: data.org || '',
+    }))
+    .catch(() => ({ ip: 'unknown', city: '', region: '', country: '', org: '' }))
+    .then((geo) => {
+      const newRef = push(pageviewsRef, {
         ts: Date.now(),
         ua: navigator.userAgent,
         referrer: document.referrer || '(direct)',
-        ip: ip,
+        visitorId,
+        ...geo,
+      });
+      pageviewKey = newRef.key;
+    });
+
+  // 資料リンクをクリックしたら新しいタブで開き、どのリンクを開いたかを同じ閲覧記録に追記する
+  document.querySelectorAll('a.doc').forEach((link) => {
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.addEventListener('click', () => {
+      if (!pageviewKey) return;
+      const label = link.querySelector('.name')?.textContent || link.textContent;
+      push(ref(db, `pageviews/${pageviewKey}/clicks`), {
+        label,
+        href: link.getAttribute('href'),
+        ts: Date.now(),
       });
     });
+  });
 
   function escapeHtml(str) {
     const div = document.createElement('div');
