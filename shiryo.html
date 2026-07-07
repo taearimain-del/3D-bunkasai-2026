@@ -62,12 +62,109 @@
     background:var(--accent); color:#fff; font-size:0.9rem; cursor:pointer;
   }
   .comment-form button:hover{ opacity:0.9; }
+
+  /* ===== アナ雪世界の映画的入口ヒーロー（2026-07-07追加） ===== */
+  .hero{
+    position:relative; width:100%; min-height:100svh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; overflow:hidden; isolation:isolate;
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(120,200,255,.35), transparent 60%),
+      linear-gradient(180deg, #041427 0%, #072a45 34%, #0a3a58 62%, #0e4e63 100%);
+  }
+  /* オーロラの帯（ゆっくり流れる） */
+  .hero .aurora{
+    position:absolute; inset:-20% -20% auto -20%; height:70%; z-index:-2;
+    background:
+      radial-gradient(60% 60% at 20% 30%, rgba(88,242,180,.30), transparent 70%),
+      radial-gradient(55% 55% at 70% 20%, rgba(120,170,255,.32), transparent 70%),
+      radial-gradient(50% 50% at 45% 40%, rgba(180,130,255,.24), transparent 70%);
+    filter:blur(20px); opacity:.9;
+    animation:auroraMove 16s ease-in-out infinite alternate;
+  }
+  @keyframes auroraMove{
+    0%{ transform:translate3d(-6%,0,0) scale(1.05); }
+    100%{ transform:translate3d(6%,3%,0) scale(1.15); }
+  }
+  .hero canvas.snow{ position:absolute; inset:0; z-index:-1; display:block; }
+  .hero__inner{ position:relative; z-index:1; padding:24px 18px; max-width:760px; }
+  .hero__kicker{
+    letter-spacing:.42em; font-size:.78rem; color:#bfe6ff; margin:0 0 14px;
+    text-transform:uppercase; opacity:.9;
+  }
+  .hero__title{
+    margin:0; font-weight:800; line-height:1.14;
+    font-size:clamp(2.3rem, 8vw, 4.6rem);
+    background:linear-gradient(180deg,#ffffff 0%,#dff2ff 42%,#8fd4ff 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 0 26px rgba(150,220,255,.55), 0 2px 2px rgba(0,20,40,.35);
+    animation:titleGlow 4.5s ease-in-out infinite;
+  }
+  @keyframes titleGlow{
+    0%,100%{ filter:drop-shadow(0 0 10px rgba(150,220,255,.35)); }
+    50%{ filter:drop-shadow(0 0 22px rgba(180,235,255,.7)); }
+  }
+  .hero__sub{ margin:14px 0 0; color:#eaf6ff; font-size:clamp(1rem,3.4vw,1.35rem); font-weight:600; letter-spacing:.06em; }
+  .hero__count{
+    margin:30px auto 0; display:inline-flex; align-items:baseline; gap:12px;
+    padding:14px 26px; border-radius:999px;
+    background:rgba(255,255,255,.10); border:1px solid rgba(180,225,255,.35);
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+    color:#eaf6ff; font-size:1rem;
+  }
+  .hero__count .num{ font-size:2.1rem; font-weight:800; color:#fff; text-shadow:0 0 16px rgba(150,220,255,.7); line-height:1; }
+  .hero__count .lbl{ font-size:.85rem; color:#bfe6ff; }
+  .hero__cta{
+    margin-top:34px; display:inline-flex; flex-direction:column; align-items:center; gap:8px;
+    background:none; border:none; cursor:pointer; color:#eaf6ff; font-family:inherit;
+  }
+  .hero__cta .btn{
+    padding:11px 30px; border-radius:999px; font-size:.98rem; font-weight:700; letter-spacing:.05em;
+    color:#062033; background:linear-gradient(180deg,#eaf7ff,#bfe4ff);
+    box-shadow:0 6px 22px rgba(60,150,220,.45); transition:transform .15s, box-shadow .15s;
+  }
+  .hero__cta:hover .btn{ transform:translateY(-2px); box-shadow:0 10px 28px rgba(120,200,255,.6); }
+  .hero__cta .arrow{ font-size:1.3rem; animation:bob 1.8s ease-in-out infinite; }
+  @keyframes bob{ 0%,100%{ transform:translateY(0); opacity:.85; } 50%{ transform:translateY(6px); opacity:1; } }
+  /* ヒーローから資料エリアへ自然につなぐ下端フェード */
+  .hero::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:120px; z-index:0;
+    background:linear-gradient(180deg, transparent, var(--bg));
+  }
+  /* 氷の魔法カーソル（サイト全面のオーバーレイ） */
+  #sparkle{ position:fixed; inset:0; z-index:9999; pointer-events:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero .aurora, .hero__title, .hero__cta .arrow{ animation:none; }
+    .hero canvas.snow, #sparkle{ display:none; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<canvas id="sparkle" aria-hidden="true"></canvas>
+<section class="hero" id="hero">
+  <div class="aurora" aria-hidden="true"></div>
+  <canvas class="snow" aria-hidden="true"></canvas>
+  <div class="hero__inner">
+    <p class="hero__kicker">3年D組 文化祭 2026</p>
+    <h1 class="hero__title">アナと雪の女王</h1>
+    <p class="hero__sub">Frozen ― 学内発表 2026.9.11 (金)</p>
+    <div class="hero__count" id="countdown" aria-live="polite">
+      <span class="lbl">本番まで</span>
+      <span class="num" id="count-num">—</span>
+      <span class="lbl" id="count-unit">日</span>
+    </div>
+    <div>
+      <button class="hero__cta" id="scroll-cta" type="button" aria-label="資料一覧へ移動">
+        <span class="btn">資料を見る</span>
+        <span class="arrow" aria-hidden="true">↓</span>
+      </button>
+    </div>
+  </div>
+</section>
+<div class="wrap" id="resources">
   <h1>資料一覧</h1>
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-06 15:36</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-07 14:00</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -118,6 +215,124 @@
     <button type="submit">投稿する</button>
   </form>
 </div>
+
+<script>
+  // ===== アナ雪世界ヒーローの演出（自己完結・外部ライブラリ不使用） =====
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // --- 本番までのカウントダウン（2026-09-11 学内発表） ---
+    (function () {
+      var numEl = document.getElementById('count-num');
+      var unitEl = document.getElementById('count-unit');
+      if (!numEl) return;
+      var target = new Date(2026, 8, 11, 0, 0, 0); // 月は0始まり→8=9月
+      function startOfToday() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+      var diffDays = Math.round((target - startOfToday()) / 86400000);
+      if (diffDays > 0) { numEl.textContent = diffDays; unitEl.textContent = '日'; }
+      else if (diffDays === 0) { numEl.textContent = '本番当日！'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+      else { numEl.textContent = 'ご来場ありがとうございました'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+    })();
+
+    // --- スクロール誘導 ---
+    var cta = document.getElementById('scroll-cta');
+    if (cta) cta.addEventListener('click', function () {
+      var t = document.getElementById('resources');
+      if (t) t.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    });
+
+    if (reduce) return; // アニメーション減設定なら以降の描画演出はスキップ
+
+    // --- 降雪（ヒーロー内canvas） ---
+    (function () {
+      var hero = document.getElementById('hero');
+      var canvas = hero && hero.querySelector('canvas.snow');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var W = 0, H = 0, flakes = [];
+      function resize() {
+        W = hero.clientWidth; H = hero.clientHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var max = W < 640 ? 55 : 120;
+        flakes = [];
+        for (var i = 0; i < max; i++) flakes.push(newFlake(true));
+      }
+      function newFlake(anyY) {
+        return { x: Math.random() * W, y: anyY ? Math.random() * H : -10,
+          r: Math.random() * 2.4 + 0.8, s: Math.random() * 0.8 + 0.35,
+          d: Math.random() * 0.6 - 0.3, o: Math.random() * 0.5 + 0.4,
+          sway: Math.random() * Math.PI * 2 };
+      }
+      function tick() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < flakes.length; i++) {
+          var f = flakes[i];
+          f.y += f.s; f.sway += 0.01; f.x += f.d + Math.sin(f.sway) * 0.3;
+          if (f.y > H + 6) { flakes[i] = newFlake(false); continue; }
+          if (f.x < -6) f.x = W + 6; else if (f.x > W + 6) f.x = -6;
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(240,250,255,' + f.o + ')';
+          ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(tick);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      requestAnimationFrame(tick);
+    })();
+
+    // --- 氷の魔法カーソル（サイト全面overlay） ---
+    (function () {
+      var canvas = document.getElementById('sparkle');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var W, H, parts = [], MAX = 60;
+      function resize() {
+        W = window.innerWidth; H = window.innerHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      function spawn(x, y) {
+        for (var i = 0; i < 2; i++) {
+          if (parts.length > MAX) parts.shift();
+          parts.push({ x: x, y: y, vx: (Math.random() - 0.5) * 0.8, vy: (Math.random() - 0.3) * 0.8,
+            life: 1, r: Math.random() * 2.2 + 0.8, hue: 195 + Math.random() * 40 });
+        }
+      }
+      var last = 0;
+      function onMove(e) {
+        var now = performance.now();
+        if (now - last < 16) return; last = now;
+        var p = e.touches ? e.touches[0] : e;
+        if (p) spawn(p.clientX, p.clientY);
+      }
+      window.addEventListener('mousemove', onMove, { passive: true });
+      window.addEventListener('touchmove', onMove, { passive: true });
+      function tick() {
+        ctx.clearRect(0, 0, W, H);
+        for (var i = parts.length - 1; i >= 0; i--) {
+          var p = parts[i];
+          p.x += p.vx; p.y += p.vy; p.vy += 0.02; p.life -= 0.022;
+          if (p.life <= 0) { parts.splice(i, 1); continue; }
+          ctx.beginPath();
+          ctx.fillStyle = 'hsla(' + p.hue + ',100%,85%,' + p.life + ')';
+          ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        requestAnimationFrame(tick);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+      requestAnimationFrame(tick);
+    })();
+  })();
+</script>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
