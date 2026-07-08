@@ -7,7 +7,11 @@
 // 失敗しても通常のオンライン読み込み（ネットワーク経由での表示）に一切影響しない
 // よう設計している（エラーで機能停止しない）。
 
-const CACHE_NAME = 'sound-tool-cache-v1';
+// 重要：音響再生ツール.html／manifest.json／アイコンを更新するたびに、
+// このCACHE_NAMEの末尾バージョンを必ず上げること（例 v2→v3）。
+// Cache First戦略のため、名前を変えない限り古いキャッシュが配信され続け、
+// 本番端末に新しいデザイン・修正が反映されない（2026-07-08に実際に発生）。
+const CACHE_NAME = 'sound-tool-cache-v2';
 const PRECACHE_URLS = [
   './音響再生ツール.html',
   './manifest.json',
