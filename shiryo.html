@@ -180,9 +180,6 @@
     content:""; position:absolute; left:0; right:0; bottom:0; height:160px; z-index:0; pointer-events:none;
     background:linear-gradient(180deg, transparent, #082238);
   }
-  /* オーロラの筆カーソル（サイト全面のオーバーレイ） */
-  #sparkle{ position:fixed; inset:0; z-index:9999; pointer-events:none; }
-
   /* ④ 雪解け：本番に近づくほど地平に暖色の陽が差す（--melt 0→1で強まる） */
   .hero::before{
     content:""; position:absolute; left:-10%; right:-10%; bottom:-6%; height:56%; z-index:-2; pointer-events:none;
@@ -209,7 +206,6 @@
 </style>
 </head>
 <body>
-<canvas id="sparkle" aria-hidden="true"></canvas>
 <section class="hero" id="hero">
   <div class="aurora" aria-hidden="true"></div>
   <canvas class="snow" aria-hidden="true"></canvas>
@@ -234,7 +230,7 @@
 </section>
 <div class="wrap" id="resources">
   <h1>資料一覧</h1>
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-08 19:08</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-08 19:22</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -379,62 +375,6 @@
       window.addEventListener('orientationchange', function () { setTimeout(resize, 250); });
       window.addEventListener('load', resize);
       setTimeout(resize, 400);
-      requestAnimationFrame(tick);
-    })();
-
-    // --- ⑨ オーロラの筆カーソル（軌跡が薄く残って消える／サイト全面overlay） ---
-    (function () {
-      if (reduce) return; // 動き減設定ではカーソル演出は控える（雪は残す）
-      var canvas = document.getElementById('sparkle');
-      if (!canvas) return;
-      var ctx = canvas.getContext('2d');
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var W, H, pts = [], hue = 160;
-      function resize() {
-        W = window.innerWidth; H = window.innerHeight;
-        canvas.width = W * dpr; canvas.height = H * dpr;
-        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      var last = 0;
-      function onMove(e) {
-        var now = performance.now();
-        if (now - last < 14) return; last = now;
-        var p = e.touches ? e.touches[0] : e;
-        if (!p) return;
-        pts.push({ x: p.clientX, y: p.clientY, t: now });
-        if (pts.length > 44) pts.shift();
-      }
-      window.addEventListener('mousemove', onMove, { passive: true });
-      window.addEventListener('touchmove', onMove, { passive: true });
-      function tick() {
-        // 既存の描画をゆっくり透明へ（軌跡が薄く残って消える）
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.fillStyle = 'rgba(0,0,0,0.08)';
-        ctx.fillRect(0, 0, W, H);
-        // 新しい軌跡をオーロラ色（緑〜青〜紫）でなめらかに描く
-        ctx.globalCompositeOperation = 'lighter';
-        var now = performance.now();
-        while (pts.length && now - pts[0].t > 900) pts.shift();
-        if (pts.length > 1) {
-          hue = 150 + (Math.sin(now / 2600) * 0.5 + 0.5) * 120; // 150(緑)〜270(紫)を往復
-          for (var i = 1; i < pts.length; i++) {
-            var a = pts[i - 1], b = pts[i];
-            var age = (now - b.t) / 900;          // 0(新)→1(古)
-            var alpha = (1 - age) * 0.5;
-            var lw = (1 - age) * 9 + 1;
-            ctx.strokeStyle = 'hsla(' + (hue + i * 2).toFixed(0) + ',85%,68%,' + alpha.toFixed(3) + ')';
-            ctx.lineWidth = lw; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-            ctx.shadowColor = 'hsla(' + hue.toFixed(0) + ',90%,70%,' + alpha.toFixed(3) + ')';
-            ctx.shadowBlur = 12;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
-        }
-        ctx.shadowBlur = 0; ctx.globalCompositeOperation = 'source-over';
-        requestAnimationFrame(tick);
-      }
-      resize();
-      window.addEventListener('resize', resize);
       requestAnimationFrame(tick);
     })();
   })();
