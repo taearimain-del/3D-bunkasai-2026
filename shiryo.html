@@ -189,19 +189,10 @@
     filter:blur(26px);
   }
 
-  /* ④ 王国カウンター（集合アクセスの可視化・データが来たら表示） */
-  .hero__kingdom{
-    margin:22px auto 0; max-width:520px; font-size:.72rem; letter-spacing:.06em;
-    color:#9fbdd8; opacity:0; transition:opacity 1s ease;
-  }
-  .hero__kingdom.on{ opacity:.9; }
-  .hero__kingdom b{ color:#eaf4ff; font-family:var(--serif); font-weight:600; }
-
   @media (prefers-reduced-motion: reduce){
     /* 動きは弱めるが「真っ白で何も起きない」を避け、ごく穏やかな雪は残す（当ページは演出が主目的） */
     .hero .aurora, .hero__cta .arrow{ animation:none; transition:none; }
     .hero__title{ animation:none; background-position:50% 0; }
-    .hero__kingdom{ transition:none; }
   }
 </style>
 </head>
@@ -219,7 +210,6 @@
       <span class="num" id="count-num">—</span>
       <span class="lbl" id="count-unit">日</span>
     </div>
-    <p class="hero__kingdom" id="kingdom-line"></p>
     <div>
       <button class="hero__cta" id="scroll-cta" type="button" aria-label="資料一覧へ移動">
         <span class="btn">資料を見る</span>
@@ -230,7 +220,7 @@
 </section>
 <div class="wrap" id="resources">
   <h1>資料一覧</h1>
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-10 11:30</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-07-10 15:05</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -321,11 +311,6 @@
     window.applyKingdom = function (count) {
       if (typeof count !== 'number' || count < 0) return;
       setMelt(meltBase + Math.min(0.18, count / 4000));
-      var el = document.getElementById('kingdom-line');
-      if (el) {
-        el.innerHTML = '❄ これまで <b>' + count.toLocaleString('ja-JP') + '</b> 回、誰かがこの世界を訪れました';
-        el.classList.add('on');
-      }
     };
 
     // --- 降雪（ヒーロー内canvas・reduced-motion時も穏やかに継続） ---
