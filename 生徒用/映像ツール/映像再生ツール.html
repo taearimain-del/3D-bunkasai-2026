@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>映像再生ツール — アナと雪の女王</title>
+<style>
+  :root{ color-scheme: dark; }
+  *{ box-sizing:border-box; }
+  html,body{
+    margin:0; padding:0; width:100%; height:100%; overflow:hidden;
+    background:#000; font-family:"Yu Gothic","Hiragino Sans",sans-serif;
+  }
+
+  /* ===== ステージ（プロジェクターに映る領域） ===== */
+  #stage{ position:fixed; inset:0; width:100%; height:100%; background:#000; overflow:hidden; }
+  #stageImg{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; transition:opacity .8s ease; transform-origin:center center; }
+  #stageImg.active{ opacity:1; }
+  @keyframes kbA{ from{ transform:scale(1.0) translate(0,0); } to{ transform:scale(1.13) translate(-2.2%,-1.2%); } }
+  @keyframes kbB{ from{ transform:scale(1.13) translate(2.2%,1.4%); } to{ transform:scale(1.0) translate(0,0); } }
+  @keyframes kbC{ from{ transform:scale(1.0) translate(0,0); } to{ transform:scale(1.11) translate(2%,-2%); } }
+  @keyframes kbD{ from{ transform:scale(1.11) translate(-1.6%,1.8%); } to{ transform:scale(1.0) translate(0,0); } }
+  .kb-a{ animation:kbA 26s ease-in-out forwards; }
+  .kb-b{ animation:kbB 26s ease-in-out forwards; }
+  .kb-c{ animation:kbC 26s ease-in-out forwards; }
+  .kb-d{ animation:kbD 26s ease-in-out forwards; }
+  #vignette{ position:absolute; inset:0; pointer-events:none;
+    background:radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 45%, rgba(0,0,0,.45) 100%); }
+  #fx{ position:absolute; inset:0; width:100%; height:100%; mix-blend-mode:screen; }
+  #placeholder{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    flex-direction:column; gap:10px; color:#cfe3ff; text-align:center; padding:0 6%;
+    background:radial-gradient(ellipse at 50% 40%,#0c1830,#020408);
+  }
+  #placeholder.show{ display:flex; }
+  #placeholder .big{ font-size:1.4rem; letter-spacing:.05em; }
+  #placeholder .small{ font-size:.9rem; opacity:.7; }
+
+  /* ===== 操作パネル ===== */
+  #panel{ position:fixed; left:0; right:0; bottom:0; padding:10px 14px 12px; z-index:10;
+    background:linear-gradient(180deg, rgba(6,12,24,0) 0%, rgba(6,12,24,.85) 30%, rgba(6,12,24,.92) 100%);
+    display:flex; flex-direction:column; gap:8px; opacity:1; transition:opacity .5s ease; }
+  #panel.hidden{ opacity:0; pointer-events:none; }
+  #cueRow{ display:flex; gap:8px; flex-wrap:wrap; }
+  .cueBtn{ flex:1 1 auto; min-width:86px; padding:8px 6px; border-radius:10px; cursor:pointer;
+    background:rgba(255,255,255,.08); border:1.5px solid rgba(207,231,255,.35);
+    color:#eaf3ff; font-size:.78rem; text-align:center; line-height:1.3; backdrop-filter:blur(10px); }
+  .cueBtn b{ display:block; font-size:.92rem; }
+  .cueBtn.current{ border-color:#8fd0ff; background:rgba(143,208,255,.22); box-shadow:0 0 14px rgba(143,208,255,.4); }
+  #infoRow{ display:flex; align-items:center; gap:12px; color:#eaf3ff; }
+  #desc{ flex:1; font-size:.85rem; opacity:.85; }
+  .iconbtn{ width:42px; height:42px; min-width:42px; border-radius:50%; border:1.5px solid rgba(207,231,255,.6);
+    background:linear-gradient(160deg, rgba(255,255,255,.22), rgba(255,255,255,.05) 55%, rgba(207,231,255,.1));
+    color:#eaf3ff; font-size:1.05rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  #hint{ position:fixed; top:14px; left:50%; transform:translateX(-50%); color:#eaf3ff; font-size:.8rem;
+    background:rgba(6,12,24,.7); border:1px solid rgba(207,231,255,.35); border-radius:20px; padding:6px 16px;
+    opacity:1; transition:opacity 1s ease; z-index:10; pointer-events:none; }
+  #hint.hidden{ opacity:0; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <img id="stageImg" alt="">
+  <div id="vignette"></div>
+  <canvas id="fx"></canvas>
+  <div id="placeholder">
+    <div class="big" id="placeholderTitle"></div>
+    <div class="small" id="placeholderSub"></div>
+  </div>
+</div>
+
+<div id="hint">数字キー 1〜7 でACT切替 ／ F でフルスクリーン</div>
+
+<div id="panel">
+  <div id="cueRow"></div>
+  <div id="infoRow">
+    <button class="iconbtn" id="prevBtn" title="前のACT">◀</button>
+    <button class="iconbtn" id="nextBtn" title="次のACT">▶▶</button>
+    <div id="desc"></div>
+    <button class="iconbtn" id="fsBtn" title="フルスクリーン">⛶</button>
+  </div>
+</div>
+
+<script>
+const cues = [
+  { act:1, label:'ACT1', title:'星空・城のシルエット', src:'画像/01_ACT1_星空と城のシルエット.jpg',
+    desc:'開幕・子ども部屋シーン全般。照明点灯と同時に表示。',
+    particles:{ mode:'snow', count:70, color:'rgba(255,255,255,.75)', sizeMin:1, sizeMax:2.4, vyMin:0.3, vyMax:0.8, vxMin:-0.2, vxMax:0.2 },
+    depth:{
+      maskCurve:[
+        {x:0,y:1},{x:8,y:6},{x:14,y:3},{x:20,y:9},{x:26,y:22},{x:30,y:36},
+        {x:36,y:42},{x:42,y:27},{x:48,y:9},{x:50,y:4},{x:52,y:9},{x:58,y:26},
+        {x:64,y:40},{x:70,y:34},{x:74,y:19},{x:80,y:7},{x:86,y:4},{x:92,y:7},{x:100,y:2}
+      ],
+      bridgeZone:{ xMin:34, xMax:66, groundY:93 }
+    },
+    nearSnow:{ count:14, sizeMin:3, sizeMax:6, vyMin:0.7, vyMax:1.3, vxMin:-0.4, vxMax:0.5, color:'rgba(255,255,255,.55)' } },
+  { act:2, label:'ACT2', title:'アレンデール王国の紋章・旗', src:'画像/02_ACT2_アレンデール王国の紋章と旗.jpg',
+    desc:'戴冠式シーン全般。照明点灯と同時に表示。',
+    particles:{ mode:'glint', count:34, color:'rgba(255,236,180,.9)', sizeMin:0.8, sizeMax:2, vyMin:-0.12, vyMax:0.04, vxMin:-0.08, vxMax:0.08 } },
+  { act:3, label:'ACT3', title:'雪の結晶・氷の城', src:'画像/03_ACT3_雪の結晶と氷の城.jpg',
+    desc:'レット・イット・ゴー歌い始めの瞬間にスタート。歌い終わりで停止（舞台監督の合図）。',
+    particles:{ mode:'snow', count:130, color:'rgba(255,255,255,.85)', sizeMin:1, sizeMax:3, vyMin:0.6, vyMax:1.6, vxMin:-0.3, vxMax:0.3 } },
+  { act:4, label:'ACT4', title:'雪景色・森', src:'画像/04_ACT4_雪景色と森.jpg',
+    desc:'野外シーン全般（クリストフ・スヴェン登場〜あこがれの夏まで）。照明点灯と同時に表示。',
+    particles:{ mode:'snow', count:90, color:'rgba(255,255,255,.75)', sizeMin:1, sizeMax:2.6, vyMin:0.3, vyMax:0.9, vxMin:-0.2, vxMax:0.2 } },
+  { act:5, label:'ACT5', title:'氷の宮殿の内部', src:'画像/05_ACT5_氷の宮殿内部.jpg',
+    desc:'エルサの城シーン全般。照明点灯と同時に表示。',
+    particles:{ mode:'glint', count:50, color:'rgba(220,240,255,.9)', sizeMin:0.8, sizeMax:2, vyMin:-0.15, vyMax:0.05, vxMin:-0.1, vxMax:0.1 } },
+  { act:6, label:'ACT6', title:'嵐・吹雪', src:'画像/06_ACT6_嵐と吹雪.jpg',
+    desc:'ハンス裏切りシーン。照明点灯と同時に表示。',
+    particles:{ mode:'streak', count:110, color:'rgba(210,225,240,.55)', sizeMin:1, sizeMax:2, vyMin:2.2, vyMax:4.2, vxMin:-5.5, vxMax:-3.0, streakLen:26 } },
+  { act:7, label:'ACT7', title:'春・花・光', src:'画像/07_ACT7_春と花と光.jpg',
+    desc:'台本668行目 エルサ「そうよ、愛よ！」のセリフ直後に切替。フィナーレまで継続。',
+    particles:{ mode:'petal', count:70, color:'rgba(255,214,224,.85)', sizeMin:2.5, sizeMax:5, vyMin:0.4, vyMax:1.0, vxMin:-0.15, vxMax:0.35 } },
+];
+
+let current = 0;
+const cueRow = document.getElementById('cueRow');
+const descEl = document.getElementById('desc');
+const stageImg = document.getElementById('stageImg');
+const placeholder = document.getElementById('placeholder');
+const placeholderTitle = document.getElementById('placeholderTitle');
+const placeholderSub = document.getElementById('placeholderSub');
+
+cues.forEach((c, i) => {
+  const btn = document.createElement('div');
+  btn.className = 'cueBtn';
+  btn.innerHTML = `<b>${c.label}</b>${c.title}`;
+  btn.addEventListener('click', () => selectCue(i));
+  cueRow.appendChild(btn);
+  c.btn = btn;
+});
+
+const kbVariants = ['kb-a','kb-b','kb-c','kb-d'];
+
+function selectCue(i){
+  current = i;
+  const c = cues[i];
+  cues.forEach(x => x.btn.classList.remove('current'));
+  c.btn.classList.add('current');
+  descEl.textContent = c.title + ' ｜ ' + c.desc;
+
+  stageImg.classList.remove('active');
+  kbVariants.forEach(v => stageImg.classList.remove(v));
+  placeholder.classList.remove('show');
+  stageImg.onerror = () => {
+    stageImg.classList.remove('active');
+    placeholder.classList.add('show');
+    placeholderTitle.textContent = '🎬 ' + c.title;
+    placeholderSub.textContent = '画像未配置：「画像」フォルダに ' + c.src.split('/').pop() + ' を入れてください';
+  };
+  stageImg.onload = () => {
+    stageImg.classList.add('active');
+    void stageImg.offsetWidth;
+    stageImg.classList.add(kbVariants[i % kbVariants.length]);
+  };
+  stageImg.src = c.src + '?t=' + Date.now();
+
+  initParticles(c.particles, c.depth, c.nearSnow);
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => selectCue((current - 1 + cues.length) % cues.length));
+document.getElementById('nextBtn').addEventListener('click', () => selectCue((current + 1) % cues.length));
+document.getElementById('fsBtn').addEventListener('click', () => {
+  if(document.fullscreenElement){ document.exitFullscreen(); }
+  else{ document.documentElement.requestFullscreen().catch(()=>{}); }
+});
+document.addEventListener('keydown', e => {
+  if(e.key >= '1' && e.key <= '7'){ selectCue(parseInt(e.key,10) - 1); }
+  else if(e.key === 'f' || e.key === 'F'){ document.getElementById('fsBtn').click(); }
+  else if(e.key === 'ArrowRight'){ document.getElementById('nextBtn').click(); }
+  else if(e.key === 'ArrowLeft'){ document.getElementById('prevBtn').click(); }
+});
+
+/* パネル自動フェード */
+const panel = document.getElementById('panel');
+let hideTimer;
+function showPanel(){
+  panel.classList.remove('hidden');
+  clearTimeout(hideTimer);
+  hideTimer = setTimeout(() => panel.classList.add('hidden'), 4000);
+}
+document.addEventListener('mousemove', showPanel);
+document.addEventListener('touchstart', showPanel);
+showPanel();
+setTimeout(() => document.getElementById('hint').classList.add('hidden'), 8000);
+
+/* ===== パーティクル演出（雪・吹雪・花びら・きらめき） ===== */
+const fx = document.getElementById('fx');
+const ctxFx = fx.getContext('2d');
+let W = 0, H = 0;
+function resizeFx(){
+  const dpr = window.devicePixelRatio || 1;
+  W = window.innerWidth; H = window.innerHeight;
+  fx.width = W * dpr; fx.height = H * dpr;
+  ctxFx.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener('resize', resizeFx);
+resizeFx();
+
+let particles = [];
+let nearParticles = [];
+let particleCfg = null;
+let nearCfg = null;
+let depthCfg = null;
+let bridgeAccum = 0;
+
+function rand(a,b){ return a + Math.random()*(b-a); }
+function spawnParticle(cfg, randomY){
+  return {
+    x: Math.random()*W,
+    y: randomY ? Math.random()*H : -20,
+    r: rand(cfg.sizeMin, cfg.sizeMax),
+    vx: rand(cfg.vxMin, cfg.vxMax),
+    vy: rand(cfg.vyMin, cfg.vyMax),
+    rot: Math.random()*Math.PI*2,
+    rotSpeed: rand(-0.02,0.02),
+    phase: Math.random()*Math.PI*2,
+  };
+}
+function initParticles(cfg, depth, near){
+  particleCfg = cfg;
+  depthCfg = depth || null;
+  nearCfg = near || null;
+  bridgeAccum = 0;
+  particles = cfg ? Array.from({length: cfg.count}, () => spawnParticle(cfg, true)) : [];
+  nearParticles = near ? Array.from({length: near.count}, () => spawnParticle(near, true)) : [];
+}
+
+/* 稜線・屋根のラインを補間して「地面/構造物に当たるY座標」を求める */
+function curveY(curve, xPct){
+  for(let i=0;i<curve.length-1;i++){
+    const a = curve[i], b = curve[i+1];
+    if(xPct >= a.x && xPct <= b.x){
+      const t = (xPct - a.x) / ((b.x - a.x) || 1);
+      return a.y + (b.y - a.y) * t;
+    }
+  }
+  return curve[curve.length-1].y;
+}
+function groundYFor(xPct){
+  const bz = depthCfg.bridgeZone;
+  if(bz && xPct >= bz.xMin && xPct <= bz.xMax) return bz.groundY;
+  return curveY(depthCfg.maskCurve, xPct);
+}
+
+function drawOneParticle(p, cfg, alphaScale){
+  ctxFx.save();
+  ctxFx.globalAlpha = alphaScale;
+  ctxFx.translate(p.x, p.y);
+  ctxFx.rotate(p.rot);
+  if(cfg.mode === 'petal'){
+    ctxFx.fillStyle = cfg.color;
+    ctxFx.beginPath(); ctxFx.ellipse(0,0,p.r,p.r*0.55,0,0,Math.PI*2); ctxFx.fill();
+  } else if(cfg.mode === 'streak'){
+    ctxFx.strokeStyle = cfg.color; ctxFx.lineWidth = p.r;
+    ctxFx.beginPath(); ctxFx.moveTo(0,0); ctxFx.lineTo(-cfg.streakLen, -cfg.streakLen*0.5); ctxFx.stroke();
+  } else if(cfg.mode === 'glint'){
+    const a = 0.35 + Math.sin(p.phase + performance.now()/500) * 0.35;
+    ctxFx.fillStyle = cfg.color.replace(/[\d.]+\)$/, Math.max(0,a) + ')');
+    ctxFx.shadowColor = cfg.color; ctxFx.shadowBlur = 8;
+    ctxFx.beginPath(); ctxFx.arc(0,0,p.r,0,Math.PI*2); ctxFx.fill();
+  } else {
+    ctxFx.fillStyle = cfg.color;
+    ctxFx.beginPath(); ctxFx.arc(0,0,p.r,0,Math.PI*2); ctxFx.fill();
+  }
+  ctxFx.restore();
+}
+
+function drawParticles(){
+  if(particleCfg){
+    particles.forEach(p => {
+      p.x += p.vx + Math.sin(p.y*0.02 + p.phase) * 0.3;
+      p.y += p.vy;
+      p.rot += p.rotSpeed;
+
+      let alphaScale = 1;
+      let landed = false;
+      if(depthCfg){
+        const groundYPct = groundYFor(p.x / W * 100);
+        const groundY = groundYPct / 100 * H;
+        const fadeBand = H * 0.05;
+        if(p.y > groundY){ landed = true; }
+        else if(groundY - p.y < fadeBand){ alphaScale = (groundY - p.y) / fadeBand; }
+      }
+      if(landed || p.y > H + 20 || p.x < -60 || p.x > W + 60){
+        Object.assign(p, spawnParticle(particleCfg, false));
+        return;
+      }
+      drawOneParticle(p, particleCfg, Math.max(0, alphaScale));
+    });
+  }
+
+  /* 手前（カメラに近い）の大粒の雪：奥行きマスクの影響を受けず常に手前に降る */
+  if(nearCfg){
+    nearParticles.forEach(p => {
+      p.x += p.vx + Math.sin(p.y*0.015 + p.phase) * 0.5;
+      p.y += p.vy;
+      p.rot += p.rotSpeed;
+      if(p.y > H + 30 || p.x < -80 || p.x > W + 80){
+        Object.assign(p, spawnParticle(nearCfg, false));
+      }
+      ctxFx.save();
+      ctxFx.filter = 'blur(1.5px)';
+      drawOneParticle(p, nearCfg, 0.9);
+      ctxFx.restore();
+    });
+  }
+
+  /* 橋の上にゆっくり雪が積もっていく演出 */
+  if(depthCfg && depthCfg.bridgeZone){
+    bridgeAccum = Math.min(1, bridgeAccum + 0.00025);
+    const bz = depthCfg.bridgeZone;
+    const cx = (bz.xMin + bz.xMax) / 2 / 100 * W;
+    const cy = bz.groundY / 100 * H;
+    const rad = (bz.xMax - bz.xMin) / 100 * W * 0.9 * (0.3 + bridgeAccum * 0.7);
+    const grad = ctxFx.createRadialGradient(cx, cy, 0, cx, cy, rad);
+    grad.addColorStop(0, `rgba(255,255,255,${0.28 * bridgeAccum})`);
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    ctxFx.fillStyle = grad;
+    ctxFx.beginPath();
+    ctxFx.ellipse(cx, cy, rad, rad * 0.25, 0, 0, Math.PI*2);
+    ctxFx.fill();
+  }
+}
+function loop(){
+  ctxFx.clearRect(0,0,W,H);
+  drawParticles();
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+selectCue(0);
+</script>
+</body>
+</html>
