@@ -355,6 +355,15 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-07-16 02:36　Linux環境用のPDF再生成ツール（tools/html_to_pdf.js）を新規追加</h2>
+<h3>背景</h3>
+<p>直前の作業で6件のPDFをその場限りのコマンドで再生成したが、ユーザーから「新しいtool作っていいよ」と、恒久的なツールとしてリポジトリに残すよう指示があった。今後もこのLinux環境（Claude Code on the web等）からPDF再生成を依頼された際に毎回同じ調査をしなくて済むよう、汎用スクリプトとして整備した。</p>
+<h3>変更内容</h3>
+<p>`tools/html_to_pdf.js`を新規作成。`other/`配下のHTMLから`生徒用/pdf/`配下のPDFを生成するNode.jsスクリプト（Playwright経由でChromiumのヘッドレス印刷機能を使用）。`--all`で登録済み全13資料（配役表・企画書・先生用概要・舞台構成・台本2種・役割書6種）を一括再生成。`<入力.html>:<出力.pdf>`形式で個別指定も可能。NODE_PATH未設定でもグローバルインストール済みのplaywrightを自動で見つけ、Chromiumの実行ファイルパスが変わってもある程度追従できるフォールバックを実装。</p>
+<p>`tools/README.md`を新規作成し、使い方・前提条件・注意点（アーカイブは別途手動で行うことなど）を記載。</p>
+<p>`プロジェクト概要.md`の「PDF再生成手順」を、Windows環境（`/build-pdfs`）とLinux環境（`tools/html_to_pdf.js`）の2系統に分けて明記。</p>
+<h3>対応ファイル</h3>
+<p>`tools/html_to_pdf.js`（新規）、`tools/README.md`（新規）、`プロジェクト概要.md`</p>
 <h2>2026-07-16 02:23　未反映だったPDF6点をLinux環境で再生成（Chromium/Playwright使用）</h2>
 <h3>背景</h3>
 <p>直前の2件の作業（音源埋め込み・A/B班確定）で「Windows専用のmd_to_html.pyが使えないためPDF未再生成」と報告したところ、ユーザーから「PDFあなたが作れないの？」と指摘を受けた。改めて環境を確認したところ、Playwright同梱のChromium（`/opt/pw-browsers/chromium-1194/`）がこのLinux環境にすでに用意されていたため、`page.pdf()`（`preferCSSPageSize: true`・`printBackground: true`）でHTMLから直接PDFを生成できることを確認し、対応した。</p>
