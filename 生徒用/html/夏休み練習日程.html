@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">夏休み 練習日程</div>
+<h2>アナと雪の女王</h2>
+<p><strong>クラス：3年D組　／　作成日：2026年7月19日</strong></p>
+<hr>
+<blockquote class="narrator"><strong>【確定版】</strong> 夏休み中の練習日は <strong>8/4・8/7・8/17・8/19・8/20・8/24・8/25・8/26・8/27・8/28の全10日</strong> に決定しました。各日とも <strong>9:00〜17:00</strong>（昼休憩1時間）で実施します。時間割・人数配分は現場で調整可能な「たたき台」です。厳密な分刻みではなく、目安として活用してください。<br><strong>新方針：夏休み期間中、キャストは自分の出番の練習がない時間帯に小道具係・大道具係の作業を手伝う体制とします。</strong> 大道具係は現在1名（佐野）のみで役割書上の目安人数（3〜4名）に対して人員が不足しているため、この手伝い体制は人員不足を解消する重要な仕組みです。詳細は本ドキュメント末尾「4. キャストによる小道具・大道具係の手伝いについて」を参照してください。</blockquote>
+<hr>
+<h2>1. 全体日程一覧</h2>
+<table class="cast-table">
+<thead><tr><th>Day</th><th>日付</th><th>曜日</th><th>テーマ</th></tr></thead><tbody>
+<tr>
+<td>Day1</td>
+<td>8/4</td>
+<td>火</td>
+<td>キックオフ・通し稽古①（粗通し）</td>
+</tr>
+<tr>
+<td>Day2</td>
+<td>8/7</td>
+<td>金</td>
+<td>ACT1〜4 集中パート練習／音響：音源3本＋SE試聴決定会議</td>
+</tr>
+<tr>
+<td>Day3</td>
+<td>8/17</td>
+<td>月</td>
+<td>ACT5〜7 集中パート練習／音響：フィナーレBGM埋め込み期限</td>
+</tr>
+<tr>
+<td>Day4</td>
+<td>8/19</td>
+<td>水</td>
+<td>通し稽古②／暗転3箇所の所要時間実測</td>
+</tr>
+<tr>
+<td>Day5</td>
+<td>8/20</td>
+<td>木</td>
+<td>課題潰し集中日（タイムテスト・動線テスト）</td>
+</tr>
+<tr>
+<td>Day6</td>
+<td>8/24</td>
+<td>月</td>
+<td>通し稽古③（衣装・小道具フル装備）</td>
+</tr>
+<tr>
+<td>Day7</td>
+<td>8/25</td>
+<td>火</td>
+<td>舞台構成 現地確認日（プロジェクター・窓・照明）</td>
+</tr>
+<tr>
+<td>Day8</td>
+<td>8/26</td>
+<td>水</td>
+<td>ゲネプロ①</td>
+</tr>
+<tr>
+<td>Day9</td>
+<td>8/27</td>
+<td>木</td>
+<td>ゲネプロ②（Day8の反省を反映）</td>
+</tr>
+<tr>
+<td>Day10</td>
+<td>8/28</td>
+<td>金</td>
+<td>最終確認日／目隠しスクリーン制作完了期限</td>
+</tr>
+</tbody></table>
+<p>全体の流れ：<strong>粗い通し稽古 → 課題潰し・実測 → フル通し（衣装小道具込み）→ 現地技術確認 → ゲネプロ → 最終確認</strong>の順に、段階的に本番の完成度へ近づけます。</p>
+<hr>
+<h2>2. 8月に入るまで（〜7月末）に各係が終わらせておくべき仕事</h2>
+<p>以下は特に期限が過ぎている・迫っている課題を中心にまとめたものです。Day1（8/4）の時点でこれらが未着手だと後続日程にしわ寄せが来るため、優先度が高い順に記載します。</p>
+<table class="cast-table">
+<thead><tr><th>優先度</th><th>係</th><th>やっておくこと</th></tr></thead><tbody>
+<tr>
+<td>最優先</td>
+<td>音響係（佐野・酒井）</td>
+<td>用途未確定の音源3本（X1〜X3）・SE2/SE4の音源欠如について、本来7月12日が期限だったが未対応のまま。Day2（8/7）の試聴決定会議までに、各自持ち寄る音源候補を用意しておく</td>
+</tr>
+<tr>
+<td>最優先</td>
+<td>プロジェクト全体（ユーザー本人／舞台監督）</td>
+<td>プロジェクター借用可否の確認。社会科の先生への確認は本来7月12日期限、最終確定は8月1日（本番40日前）期限で、いずれもこの夏休み日程が始まる8/4より前の期限。<strong>まだ確定していない場合は直ちに先生へ確認すること。</strong> Day7（8/25）で改めて状況確認・フォールバック検討を行うが、それまで判断を待たない</td>
+</tr>
+<tr>
+<td>高</td>
+<td>舞台監督（佐々木）</td>
+<td>夏休み全10日分の集合時間・場所・持ち物をキャスト・スタッフ全員に共有。ACT3→4暗転（アナ役交代・手袋回収・マント回収・ロープ金づちバッグ・人参受け渡し・Kyoの衣装替えが重なる過密な転換）の担当スタッフ・手順のたたき台を作っておく（Day4で実測・検証する）</td>
+</tr>
+<tr>
+<td>高</td>
+<td>大道具係（佐野）</td>
+<td>背景パネル（氷・雪／城内）・目隠しスクリーンの材料調達を開始する。夏休み中の制作スケジュールをキャストの手伝い人数を見込んで組み直す</td>
+</tr>
+<tr>
+<td>高</td>
+<td>小道具係（佐々木・袋）</td>
+<td>人参3本（本番用＋予備2本）・エルサの手袋・ハンスの剣・暖炉プロップなど既存小道具一式を点検し、不足分をリストアップしておく</td>
+</tr>
+<tr>
+<td>中</td>
+<td>映像担当（八島）</td>
+<td>ACT2〜7の背景画像（映画スチル等）の収集を開始する。Day7で進捗を共有する</td>
+</tr>
+<tr>
+<td>中</td>
+<td>照明係（安部・村田）</td>
+<td>色フィルター（青・暖色）など機材の点検・在庫確認</td>
+</tr>
+<tr>
+<td>中</td>
+<td>ユーザー本人</td>
+<td>バックステージ幕（暗幕）の学校許可取得状況を確認し、記録が残っていなければ`変更点.md`等に記録する</td>
+</tr>
+<tr>
+<td>全員</td>
+<td>キャスト全員</td>
+<td>セリフ・歌詞の暗記を進めておく（Day1は台本を持ちながらでもよいが、Day4以降は極力見ずに演じられる状態を目指す）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. 各日のスケジュール</h2>
+<h3>Day1　8/4（火）　キックオフ・通し稽古①</h3>
+<p>夏休み練習の初日。まずは止めながらでよいので、全体の流れを役者・スタッフ全員で確認する。役者は台本を持ってよい。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:20</td>
+<td>集合・夏休み全10日の日程説明（舞台監督）・注意事項確認</td>
+</tr>
+<tr>
+<td>9:20〜9:40</td>
+<td>ステージセッティング・機材チェック</td>
+</tr>
+<tr>
+<td>9:40〜12:00</td>
+<td>通し稽古①（ACT1〜7、止めながらでOK。役者は台本を持ってよい）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜14:30</td>
+<td>各係：機材・素材の現状点検（下表参照）</td>
+</tr>
+<tr>
+<td>14:30〜16:30</td>
+<td>気になったシーンの部分練習</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・次回（8/7）までの宿題確認・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>照明機器・色フィルターの動作確認、キューシート（台本）の見直し</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>音響再生ツールの全キュー動作確認。Day2の試聴決定会議に向けて音源候補を整理</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>背景パネル2種・目隠しスクリーンの制作計画を確認し、必要な材料・作業日を洗い出す</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>小道具一式（人参・手袋・剣・暖炉プロップ等）の在庫点検</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>通し稽古の進行・タイム計測、夏休み日程全体の共有</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>映像再生ツールの動作確認（ACT1のみ実装）、ACT2〜7画像収集の計画確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>通し稽古参加。出番のない時間帯は小道具・大道具係の在庫点検を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day2　8/7（金）　ACT1〜4 集中パート練習</h3>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:15</td>
+<td>集合・当日の流れ確認</td>
+</tr>
+<tr>
+<td>9:15〜12:00</td>
+<td>ACT1〜4 パート練習（グループ別に分かれて集中稽古）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>ACT1〜4 パート練習つづき・歌唱シーンの音合わせ</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>音響係：用途未確定の音源3本（X1〜X3）・SE2/SE4の試聴決定会議（<strong>最優先課題</strong>）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>ACT1〜4の照明キュー合わせ</td>
+</tr>
+<tr>
+<td>音響</td>
+<td><strong>試聴決定会議：</strong> X1〜X3・SE2/SE4を試聴し、使用するシーンを決定するか、使用しないなら削除を決定する。あわせてフィナーレBGM（選曲期限8/10）の候補探しも並行して進める</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>ACT1〜4で使う大道具・パネルの制作継続</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>ACT1〜4で使う小道具（ドアパネル・肩掛けバッグ・王権の杖と玉・エルサの手袋等）の準備</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>パート練習の進行管理、音響会議のファシリテート</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>ACT1〜4の映像投影タイミングをパート練習に合わせて確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>ACT1〜4のパート練習。自分の出番がない時間帯は小道具・大道具の制作を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day3　8/17（月）　ACT5〜7 集中パート練習</h3>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:15</td>
+<td>集合・当日の流れ確認</td>
+</tr>
+<tr>
+<td>9:15〜12:00</td>
+<td>ACT5〜7 パート練習（グループ別に分かれて集中稽古）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>ACT5〜7 パート練習つづき・歌唱シーンの音合わせ</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>音響係：フィナーレBGM（歌唱#8）埋め込み作業・試聴確認（<strong>埋め込み期限日</strong>）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>ACT5〜7の照明キュー合わせ（フィナーレの色温度切替を含む）</td>
+</tr>
+<tr>
+<td>音響</td>
+<td><strong>フィナーレBGM（歌唱#8）埋め込み期限日：</strong> 音源をBase64化し音響再生ツールへ埋め込み、試聴確認まで完了させる（担当：酒井、技術サポート：プロジェクトリーダー）</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>ACT5〜7で使う背景パネル・机椅子の転換練習</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>ACT5〜7で使う小道具（暖炉プロップ・書類・羽ペン等）の準備、目隠しスクリーンの制作継続</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>パート練習の進行管理、ACT6→7の下手袖混雑状況を目視で確認しておく</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>ACT5〜7の映像投影タイミングをパート練習に合わせて確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>ACT5〜7のパート練習。自分の出番がない時間帯は小道具・大道具の制作を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day4　8/19（水）　通し稽古②・暗転の所要時間実測</h3>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:20</td>
+<td>集合・この日の目的確認（暗転の実測がメイン）</td>
+</tr>
+<tr>
+<td>9:20〜9:40</td>
+<td>ステージセッティング</td>
+</tr>
+<tr>
+<td>9:40〜12:00</td>
+<td>通し稽古②（ACT1〜7を通しで実施）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>主要な暗転（ACT3→4／ACT5→6／ACT6→7）をストップウォッチで実測・記録（複数回計測）</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>実測結果をもとに気になる転換の部分練習</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・実測結果の記録・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>通し稽古の照明操作、暗転の開始・終了タイミングの確認</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>通し稽古のBGM・歌唱音源操作</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>ACT3→4／ACT5→6／ACT6→7の転換動作を実測に合わせて実施。ACT5→6は45秒→70秒延長が必要か判断する材料を取る</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>各暗転中の小道具受け渡し動作を実測に合わせて実施（特にACT3→4の人参・ロープ・金づちバッグ受け渡し）</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>ストップウォッチでの実測・記録係。ACT3→4暗転（アナ役交代含む）の手順を実測しながら整理する</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>通し稽古の映像切替操作</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>通し稽古参加。特にACT3→4暗転はアナ役の交代・衣装受け渡しが重なるため、該当役者は動作確認に集中する</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator"><strong>記録すること：</strong> ACT3→4／ACT5→6／ACT6→7の各暗転の実測秒数。ACT5→6が42秒以内に収まるなら現行45秒のままでよいが、収まらない場合は70秒への延長を検討する。</blockquote>
+<hr>
+<h3>Day5　8/20（木）　課題潰し集中日</h3>
+<p>これまでの「次の課題」に挙がっている、要確認・要実測の項目をまとめて片付ける日。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:15</td>
+<td>集合・この日の実施項目確認</td>
+</tr>
+<tr>
+<td>9:15〜10:15</td>
+<td>白ケープ早着替えタイムテスト（ACT6→7暗転45秒以内に冬アナが確実に羽織れるか）</td>
+</tr>
+<tr>
+<td>10:15〜11:15</td>
+<td>ACT6→7 下手袖 2列スタンバイ動線テスト（衣装を着た状態で実施。前列3名・後列4名）</td>
+</tr>
+<tr>
+<td>11:15〜12:00</td>
+<td>ACT3レット・イット・ゴーのパネル展開 再計測（目安8〜16小節・20〜30秒）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜13:45</td>
+<td>トロールの両袖均等キャスティング確認・退場動線確認</td>
+</tr>
+<tr>
+<td>13:45〜14:30</td>
+<td>Kyo（スヴェン／司祭家来 二役兼任）の衣装切替の段取り確認</td>
+</tr>
+<tr>
+<td>14:30〜16:30</td>
+<td>大道具・小道具の制作作業（キャスト全員で分担して手伝う）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・実測結果まとめ・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>各テストに合わせた照明操作の実地確認</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>各テストに合わせたBGM・SE操作の実地確認</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>パネル展開の再計測に立ち会う。午後は目隠しスクリーン・背景パネルの制作を進める</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>白ケープの受け渡し・トロール衣装の即脱ぎ動作を実地確認。午後は小道具の追加制作</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>各タイムテスト・動線テストの計測・記録の総括</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>動線テストに合わせた映像切替タイミングの確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>該当する役者はタイムテスト・動線テストに参加。それ以外の時間は小道具・大道具の制作を手伝う（この日は特に手伝い時間を多めに確保）</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day6　8/24（月）　通し稽古③（衣装・小道具フル装備）</h3>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:30</td>
+<td>集合・衣装着用・小道具セッティング</td>
+</tr>
+<tr>
+<td>9:30〜12:00</td>
+<td>通し稽古③（衣装・小道具をすべて本番同様に装備して実施）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜14:30</td>
+<td>気になったシーン・転換の部分練習</td>
+</tr>
+<tr>
+<td>14:30〜16:30</td>
+<td>大道具・小道具の仕上げ作業（キャスト手伝い含む）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>フル装備での照明キュー最終確認</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>フル装備での音響キュー最終確認</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>全パネル・目隠しスクリーンを実際に使用して通し稽古に参加。仕上げ作業も並行</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>全小道具を実際に使用して通し稽古に参加。不足・破損があれば当日中に補修</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>フル装備での進行管理・タイム計測</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>フル装備での映像切替の最終確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>衣装・小道具を身に着けての通し稽古。出番のない時間帯は大道具・小道具の仕上げを手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day7　8/25（火）　舞台構成 現地確認日</h3>
+<p>教室内での実地確認を行う日。`舞台構成.md`のプロジェクター設置・照明パネル・窓の遮光セクション（3・10・11）を現地確認のうえ更新する。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:15</td>
+<td>集合・確認項目のおさらい</td>
+</tr>
+<tr>
+<td>9:15〜11:00</td>
+<td>プロジェクター設置予定位置（客席後方・上手寄り）の机・スタンド・電源コンセントの確認、投影距離に対するズーム・ピント確認、ホワイトボードへの投影テスト</td>
+</tr>
+<tr>
+<td>11:00〜12:00</td>
+<td>窓の枚数・サイズ・下手側壁での配置確認、蛍光灯スイッチの実際の設置位置・系統分けの確認</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜14:00</td>
+<td>プロジェクター借用可否の最終状況確認（社会科の先生への確認結果を共有。NGの場合はフォールバック案［①別教室のAV機材転用→②持ち込み機材募集→③レンタル予算計上］を検討）</td>
+</tr>
+<tr>
+<td>14:00〜15:30</td>
+<td>映像担当：ACT2〜7背景画像の収集・作成の進捗共有と作業</td>
+</tr>
+<tr>
+<td>15:30〜16:30</td>
+<td>大道具・小道具の制作（キャスト手伝い含む）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・`舞台構成.md`更新項目の整理・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>蛍光灯スイッチの系統確認に立ち会う</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>特別な作業なし（音源整備の続きがあれば実施）</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>現地確認の記録・実測を担当。午後は制作作業</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>制作作業（キャストと分担）</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>現地確認全体の進行・記録係。`舞台構成.md`の更新箇所をとりまとめる</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>プロジェクター設置確認の中心担当。ACT2〜7画像の進捗共有</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>現地確認の見学・記録補助。午後は大道具・小道具の制作を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day8　8/26（水）　ゲネプロ①</h3>
+<p>通しでフルテクニカル（照明・音響・映像・大道具・小道具すべて込み）のゲネプロ。記録・撮影して課題を洗い出す。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:30</td>
+<td>準備・フルセッティング</td>
+</tr>
+<tr>
+<td>9:30〜9:45</td>
+<td>スタンバイ・開始前確認</td>
+</tr>
+<tr>
+<td>9:45〜10:30</td>
+<td>ゲネプロ通し①（原則ノンストップ。撮影記録を残す）</td>
+</tr>
+<tr>
+<td>10:30〜11:30</td>
+<td>振り返りミーティング（撮影記録を見ながら課題出し）</td>
+</tr>
+<tr>
+<td>11:30〜12:00</td>
+<td>洗い出した課題の優先順位づけ</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>課題箇所の部分修正練習</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>大道具・小道具の修正・補修作業</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>翌日（Day9）への申し送り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>ゲネプロ通しでの操作、課題出しへの参加</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>ゲネプロ通しでの操作、課題出しへの参加</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>ゲネプロ通しでの転換、課題出し後の修正作業</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>ゲネプロ通しでの受け渡し、課題出し後の修正作業</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>ゲネプロ全体の進行・撮影記録の指示・振り返りの司会</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>ゲネプロ通しでの映像切替</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>ゲネプロ通し参加。出番のない時間帯は大道具・小道具の修正作業を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day9　8/27（木）　ゲネプロ②</h3>
+<p>Day8で洗い出した課題を反映したうえで、再度通しのゲネプロを行う。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:20</td>
+<td>準備・フルセッティング・Day8課題の反映確認</td>
+</tr>
+<tr>
+<td>9:20〜9:45</td>
+<td>スタンバイ・開始前確認</td>
+</tr>
+<tr>
+<td>9:45〜10:30</td>
+<td>ゲネプロ通し②（原則ノンストップ。撮影記録を残す）</td>
+</tr>
+<tr>
+<td>10:30〜11:30</td>
+<td>振り返りミーティング（Day8からの改善度を確認）</td>
+</tr>
+<tr>
+<td>11:30〜12:00</td>
+<td>残った課題の優先順位づけ</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>残課題の部分修正練習</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>大道具・小道具の最終調整</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>振り返り・Day10への申し送り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>ゲネプロ通しでの操作、Day8指摘事項の修正確認</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>ゲネプロ通しでの操作、Day8指摘事項の修正確認</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>ゲネプロ通しでの転換、最終調整作業</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>ゲネプロ通しでの受け渡し、最終調整作業</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>ゲネプロ全体の進行・Day8との比較記録</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>ゲネプロ通しでの映像切替、Day8指摘事項の修正確認</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>ゲネプロ通し参加。出番のない時間帯は大道具・小道具の最終調整を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Day10　8/28（金）　最終確認日</h3>
+<p>夏休み練習の最終日。目隠しスクリーンの制作完了期限でもある。</p>
+<table class="cast-table">
+<thead><tr><th>時間</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>9:00〜9:15</td>
+<td>集合・この日の目的確認</td>
+</tr>
+<tr>
+<td>9:15〜10:30</td>
+<td>目隠しスクリーンの制作完了・設置テスト（<strong>制作完了期限日</strong>）</td>
+</tr>
+<tr>
+<td>10:30〜12:00</td>
+<td>全係の最終チェックリスト消化（機材・小道具・大道具・衣装の点検）</td>
+</tr>
+<tr>
+<td>12:00〜13:00</td>
+<td>昼休憩</td>
+</tr>
+<tr>
+<td>13:00〜15:00</td>
+<td>小道具・大道具の総仕上げ（補修・予備の準備）</td>
+</tr>
+<tr>
+<td>15:00〜16:30</td>
+<td>最終確認ミーティング（各係が現状と残課題を報告）</td>
+</tr>
+<tr>
+<td>16:30〜17:00</td>
+<td>夏休み練習の総括・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>機材の最終点検・キューシートの最終確認</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>全音源・キューの最終確認（フィナーレBGMを含む）</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td><strong>目隠しスクリーンの制作完了・設置テスト（期限日）</strong>。背景パネルの総仕上げ</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>全小道具の最終点検・補修・予備の準備</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>全係の最終チェックリストの取りまとめ、9月の練習スケジュールへの申し送り整理</td>
+</tr>
+<tr>
+<td>映像担当</td>
+<td>映像再生ツールの最終動作確認（ACT2〜7の画像が揃っていれば反映状況を確認）</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>最終チェックリストの確認に参加。出番のない時間帯は目隠しスクリーン設置・小道具大道具の総仕上げを手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>4. キャストによる小道具・大道具係の手伝いについて</h2>
+<p>夏休み期間中を通じて、<strong>キャストは自分の出番の練習がない時間帯に、小道具係・大道具係の作業を手伝う</strong>方針とします。</p>
+<h3>手伝ってもらう作業の例</h3>
+<ul><li>人参3本（本番用＋予備2本）の準備・固定具の取り付け</li><li>トロール衣装の即脱ぎ化（スナップボタン・面ファスナーの取り付け）</li><li>目隠しスクリーンの制作・組み立て・設置テスト</li><li>背景パネル（氷・雪／城内）の制作・強度確認</li><li>小道具（暖炉プロップ・書類・羽ペン等）の制作・補修</li></ul>
+<h3>この方針の位置づけ</h3>
+<p>大道具係は現在1名（佐野）のみで運営しており、役割書上の目安人数（3〜4名）に対して人員が不足していることが課題として挙がっていました。<strong>キャストによる手伝い体制は、この人員不足を解消する重要な仕組みとして位置づけます。</strong> 各日のスケジュールで「午後は大道具・小道具の制作作業」という時間帯を設けているのはこのためです。舞台監督・大道具係・小道具係で、その日にどのキャストが手伝いに入るかを事前に調整してください。</p>
+<hr>
+<h2>5. 注意事項</h2>
+<ul><li>各日の時間割・人数配分は目安です。現場の進み具合に応じて午前・午後の内容を入れ替えるなど、柔軟に調整してください。</li><li>熱中症対策のため、水分補給・休憩をこまめに取ってください。</li><li>各日の終わりには必ず振り返りの時間を設け、次回への申し送りを共有してください。</li><li>この日程表に記載のない期限付き課題（用途未確定音源・プロジェクター借用・フィナーレBGM等）は「2. 8月に入るまでに各係が終わらせておくべき仕事」を参照してください。</li></ul>
+</body>
+</html>
