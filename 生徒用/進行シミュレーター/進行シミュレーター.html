@@ -60,6 +60,15 @@
   .actseg:last-child{border-right:none;}
   .actseg span{position:relative;z-index:2;padding:0 4px;text-align:center;text-wrap:balance;}
   .actseg.active{filter:brightness(1.28);}
+  .transseg{
+    position:relative;display:flex;align-items:center;justify-content:center;
+    background:repeating-linear-gradient(135deg,#3a3f4d,#3a3f4d 5px,#2a2e3a 5px,#2a2e3a 10px);
+    border-right:1px solid rgba(0,0,0,.35);min-width:4px;
+    transition:filter .15s;
+  }
+  .transseg span{font-size:9px;color:var(--ink-faint);letter-spacing:.02em;position:relative;z-index:2;}
+  .transseg.active{filter:brightness(1.6);background:repeating-linear-gradient(135deg,var(--accent),var(--accent) 5px,#5a3a20 5px,#5a3a20 10px);}
+  .transseg.active span{color:#1a1006;font-weight:700;}
   .playhead{
     position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--accent-ice);
     box-shadow:0 0 10px 1px var(--accent-ice);pointer-events:none;z-index:5;
@@ -126,8 +135,28 @@
   .song-notes ul{margin:6px 0 0;padding-left:18px;}
   .song-notes li{margin-bottom:3px;}
 
+  .trans-badge{
+    display:inline-flex;align-items:center;gap:8px;background:rgba(224,118,63,.14);
+    border:1px solid var(--accent);color:var(--accent);border-radius:999px;
+    padding:5px 14px;font-size:13px;width:fit-content;position:relative;
+  }
+  .trans-bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;position:relative;}
+  .trans-bar > i{display:block;height:100%;background:var(--accent);border-radius:2px;transition:width .2s linear;}
+  .trans-notes{font-size:13px;color:var(--ink-dim);position:relative;}
+  .trans-notes ol{margin:6px 0 0;padding-left:18px;}
+  .trans-notes li{margin-bottom:3px;}
+
   .next-preview{font-size:12.5px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:10px;margin-top:4px;position:relative;}
   .next-preview b{color:var(--ink-dim);font-weight:600;}
+
+  /* ---- 舞台構成図 ---- */
+  .layout-card{display:flex;flex-direction:column;gap:8px;}
+  .layout-card .layout-caption{font-size:12.5px;color:var(--ink-dim);line-height:1.5;}
+  .layout-svg-wrap{
+    background:#fff;border-radius:10px;padding:8px;overflow-x:auto;
+    border:1px solid var(--line);
+  }
+  .layout-svg-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto;}
 
   /* ---- dept board ---- */
   .board{display:flex;flex-direction:column;gap:10px;}
@@ -215,12 +244,18 @@
         <div id="lineArea"></div>
         <div class="next-preview" id="nextPreview"></div>
       </div>
+
+      <div class="card layout-card">
+        <h2>舞台構成（教室レイアウト・上から見た図）</h2>
+        <div class="layout-svg-wrap" id="layoutSvg"></div>
+        <div class="layout-caption" id="layoutCaption"></div>
+      </div>
     </div>
 
     <div class="board" id="board"></div>
   </div>
 
-  <footer>台本「台本_アナと雪の女王.md」をもとに自動生成。セリフ・キューの秒数は自然な会話ペースからの試算であり、実測値ではありません。</footer>
+  <footer>台本「台本_アナと雪の女王.md」・「舞台構成.md」をもとに自動生成。セリフ・キューの秒数、ACT間の転換時間は台本・舞台構成資料の目安をもとにした試算であり、実測値ではありません。</footer>
 </div>
 
 <script>
@@ -240,6 +275,7 @@ function song(title,singer,dur,notes,cues){return {k:"song",title,singer,dur,not
 function line(sp,text,scene){return {k:"line",sp,text,scene};}
 function dir(text,scene){return {k:"dir",text,scene};}
 function cue(dept,text,scene){return {k:"cue",dept,text,scene};}
+function trans(label,dur,notes,cues){return {k:"trans",label,dur,notes:notes||[],cues:cues||[]};}
 
 const ACTS = [
 {
@@ -273,10 +309,6 @@ const ACTS = [
        {dept:"light",text:"歌の最後のフレーズで本当の暗転に入る→次の場面（戴冠式）の役者・小道具が配置につく。"}]
     ),
     cue("sound","♪ 曲終了。"),
-    cue("stage","キャスト交代：本当の暗転中に子供アナ役が退場し、夏アナ・大人エルサ・ハンス・司祭/家来・ウェーゼルトン公爵役（別キャスト）が配置につく。"),
-    cue("set","暗転中にセットを戴冠式の配置へ変更（茶系背景パネルを城内の壁として後方に配置）。"),
-    cue("props","暗転中にドアパネルを撤去。杖・玉を大人エルサの登場位置にセット。白手袋は開演30分前に大人エルサ役へ手渡し済み。"),
-    cue("stage","大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。"),
   ]
 },
 {
@@ -331,15 +363,13 @@ const ACTS = [
     line("夏アナ","なんでぇ～！"),
     dir("公爵はぎこちないステップで一人踊り続けるがやがて相手がいないことに気づき、とぼとぼと上手袖へ退場。舞台がいったん無人になる。"),
     line("ナレーター","踊り終えたアナはハンスと再会し、庭で互いの境遇が似ていることを知り、二人の距離が近づいていきます。"),
-    dir("夏アナが上手袖からそっと戻り、ハンスも入れ替わりで登場。歌いながら距離を縮め、サビで手をつないで同時に一回転する「シンクロ振付」を入れる。"),
+    dir("夏アナが上手袖からそっと戻り、ハンスも入れ替わりで登場。歌いながら距離を縮め、サビで手をつないで同時に一回転する「シンクロ振付」を入れる。","とびら開けて"),
     song("とびら開けて","夏アナ・ハンス（デュエット）",120,
       ["二人でくるっと同時に一回転し、見つめ合うポーズを取る。動きは大げさになりすぎない範囲で"],
       [{dept:"sound",text:"歌い終わりに合わせて止める。"}]
     ),
     cue("sound","♪ 曲終了。"),
     cue("light","歌唱後、舞台の照明を消す。アナ・ハンスは横に移動して待機。エルサが配置についたら照明を付けて次の場面へ。"),
-    cue("props","暗転中に不要な小道具を片付け。舞踏会→逃走シーンへの切り替えは照明で行う（茶系背景パネルはそのまま）。"),
-    cue("stage","大道具の転換完了を確認してから照明・役者入場の合図を出す。"),
   ]
 },
 {
@@ -375,9 +405,6 @@ const ACTS = [
     ),
     cue("sound","♪ 曲終了。"),
     dir("暗転―脱いだマントを小道具係が回収。夏アナ役は退場し冬アナ役（別キャスト）がACT4へスタンバイ（衣装共用のため早替え不要）。エルサは上手袖へ退場しACT4の間（約6分）待機。"),
-    cue("set","暗転中に白・水色パネルを撤去し、ACT4（納屋のある野外）の配置へ変更。"),
-    cue("props","ロープ・金づちは開演前にアナのバッグへ。人参は小道具係が管理し、この暗転中にアナ役者へ手渡す。"),
-    cue("stage","大道具・小道具の転換完了を確認してから照明・役者入場の合図を出す。"),
   ]
 },
 {
@@ -426,8 +453,6 @@ const ACTS = [
     ),
     cue("sound","♪ 曲終了。"),
     cue("light","歌い終わった瞬間に照明を消し、次の場面へ移行。"),
-    cue("set","暗転中にセットをACT5（大人エルサの氷の城）の配置へ変更（青白い背景パネルを前面に出す）。"),
-    cue("stage","大道具の転換完了を確認してから照明・役者入場の合図を出す。"),
   ]
 },
 {
@@ -482,11 +507,6 @@ const ACTS = [
     line("冬アナ","真実の愛…？"),
     line("トロール","大好きな人のキスじゃない？"),
     line("クリストフ","…！今すぐハンスのところに連れて行くぞ！"),
-    cue("stage","トロール役は「来た袖に戻る」原則で退場。暗転直後（目安0〜8秒）にそれぞれの袖へ。エルサの上手→下手横断（目安0〜6秒）と重ならないよう最優先で完了させる。"),
-    cue("light","暗転→次の場面（ハンスの部屋）の役者が配置につく→照明を付ける。"),
-    cue("set","暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネル）。机・椅子を執務机として舞台中央やや奥に配置。"),
-    cue("props","机の上に書類・地図風の紙・羽ペン風の小道具。暖炉プロップ（LED）を壁際に設置。ハンスの剣は小道具係が預かる（帯剣しない）。"),
-    cue("stage","大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。"),
   ]
 },
 {
@@ -523,10 +543,6 @@ const ACTS = [
   id:7, name:"ACT7　真実の愛とフィナーレ", scene:"吹雪の城の外 → 春の訪れ", people:"冬アナ、エルサ、ハンス、オラフ、クリストフ、スヴェン",
   beats:[
     cue("video","クライマックス中は吹雪・嵐の映像。エルサの「そうよ、愛よ！」直後に春・花・光の映像へ切り替え（最大の演出ポイント）。"),
-    cue("stage","暗転45秒の動線：①エルサは下手袖奥で待機継続（追加横断なし）②大道具が机・椅子を上手袖へ撤収（目安0〜20秒）③ハンスは上手袖で剣を受け取りスタンバイ④冬アナ一行は短距離で下手袖へ⑤ウェーゼルトン公爵は上手袖のまま待機⑥子供アナ・子供エルサは舞台監督補佐がバックステージ経由で下手袖の目隠しスクリーン内側へ誘導。残り5〜10秒で全員スタンバイ完了。"),
-    cue("set","暗転中に机・椅子を舞台袖へ撤収。茶系背景パネルはそのまま残す（城の外壁として転用）。"),
-    cue("props","暗転中に、舞台袖でハンス役へ剣を手渡す。"),
-    cue("costume","暗転中に、下手袖で冬アナが白いシフォンケープ（またはシルバー地の薄いストール）を衣装の上から羽織る。"),
     cue("light","クライマックス：ドラマチックな照明（白または強い光）。"),
     dir("暗転明けに冬アナ・クリストフ・スヴェン・オラフの4人が下手から駆け込む。エルサは下手袖から舞台中央へ。ハンスは上手から剣を手に登場。"),
     line("ハンス","このまま逃げるのか？"),
@@ -566,9 +582,428 @@ const ACTS = [
 },
 ];
 
+const DIAGRAMS = {
+  act1: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="250" y="164" width="60" height="15" rx="2" fill="#8a6030" stroke="none" stroke-width="1.3"/><text class="rl" x="280" y="170" fill="#fff" style="font-size:9px">ドアパネル</text>
+<rect x="112" y="187" width="66" height="30" rx="2" fill="#c8a06a" stroke="none" stroke-width="1.3"/><text class="rl" x="145" y="197" fill="#3a2400" style="font-size:9px">ベッド</text>
+<rect x="392" y="187" width="66" height="30" rx="2" fill="#c8a06a" stroke="none" stroke-width="1.3"/><text class="rl" x="425" y="197" fill="#3a2400" style="font-size:9px">ベッド</text>
+<line x1="172" y1="214" x2="262" y2="231" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+<line x1="398" y1="214" x2="306" y2="231" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar2)"/>
+<text class="ar" x="282" y="242" style="fill:#888">中央へ集まる</text>
+<circle cx="145" cy="204" r="13" fill="#d44d75" stroke="#fff" stroke-width="1.5"/><text class="ini" x="145" y="206">ア</text><text class="rl" x="145" y="219" fill="#d44d75">子供アナ</text>
+<circle cx="425" cy="204" r="13" fill="#5095cc" stroke="#fff" stroke-width="1.5"/><text class="ini" x="425" y="206">エ</text><text class="rl" x="425" y="219" fill="#5095cc">子供エルサ</text>
+</svg>`, caption:`ACT1 配置。下手ベッド＝子供アナ、上手ベッド＝子供エルサ。黒板のドアパネルは『雪だるまつくろう』でノックする対象（ACT1→2暗転で撤去）。オラフは声のみで役者は立たない。`},
+  act2_coronation: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（城内の壁）</text>
+<rect x="256" y="206" width="52" height="14" rx="2" fill="#a8842a" stroke="none" stroke-width="1.3"/><text class="rl" x="282" y="212" fill="#2a1c00" style="font-size:9px">杖・玉</text>
+<circle cx="282" cy="191" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="194">エ</text><text class="rl" x="282" y="207" fill="#2070b0">大人エルサ</text>
+<circle cx="282" cy="237" r="13" fill="#6a4530" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="239">司</text><text class="rl" x="282" y="253" fill="#6a4530">司祭</text>
+<circle cx="398" cy="193" r="13" fill="#c0305a" stroke="#fff" stroke-width="1.5"/><text class="ini" x="398" y="195">ア</text><text class="rl" x="398" y="208" fill="#c0305a">夏アナ</text>
+<circle cx="196" cy="185" r="13" fill="#6a4530" stroke="#fff" stroke-width="1.5"/><text class="ini" x="196" y="187">家</text><text class="rl" x="196" y="200" fill="#6a4530">家来</text>
+<circle cx="452" cy="185" r="13" fill="#6a4530" stroke="#fff" stroke-width="1.5"/><text class="ini" x="452" y="187">家</text><text class="rl" x="452" y="200" fill="#6a4530">家来</text>
+</svg>`, caption:`ACT2 戴冠式の配置。大人エルサ中央奥、司祭中央手前、夏アナ上手寄り後方、家来は舞台奥／袖。舞踏会では大人エルサ中央、夏アナとハンスが下手寄り一角で会話。`},
+  act2_ball: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar-act2b" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（城内・舞踏会継続）</text>
+<circle cx="282" cy="193" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="195">エ</text><text class="rl" x="282" y="208" fill="#2070b0">大人エルサ</text>
+<circle cx="420" cy="215" r="13" fill="#604898" stroke="#fff" stroke-width="1.5"/><text class="ini" x="420" y="218">公</text><text class="rl" x="420" y="231" fill="#604898">公爵</text>
+<text class="sm" x="420" y="241" style="fill:#604898">夏アナを連れて舞台反対側へ</text>
+<circle cx="168" cy="233" r="13" fill="#c0305a" stroke="#fff" stroke-width="1.5"/><text class="ini" x="168" y="235">ア</text><text class="rl" x="168" y="248" fill="#c0305a">夏アナ</text>
+<line x1="380" y1="221" x2="190" y2="235" stroke="#c0305a" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar-act2b)"/><text class="ar" x="290" y="233" fill="#c0305a">振りほどいて下手寄りへ</text>
+<circle cx="120" cy="251" r="13" fill="#8a6030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="120" y="253">ハ</text><text class="rl" x="120" y="266" fill="#8a6030">ハンス</text>
+<line x1="60" y1="251" x2="104" y2="251" stroke="#8a6030" stroke-width="2" marker-end="url(#ar-act2b)"/><text class="ar" x="82" y="245" fill="#8a6030">下手袖→下手端</text>
+</svg>`, caption:`ACT2 舞踏会シーン（『とびら開けて』直前〜）。大人エルサ中央、夏アナは公爵に手を引かれ舞台反対側（上手寄り）へ連れて行かれた後、振りほどいて下手寄り一角へ。ハンスは下手袖から下手端へ登場し、夏アナと合流して『とびら開けて』のデュエットへ。`},
+  act2_door: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar-act2c" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（城内・舞踏会継続）</text>
+<circle cx="200" cy="200" r="13" fill="#c0305a" stroke="#fff" stroke-width="1.5"/><text class="ini" x="200" y="202">ア</text><text class="rl" x="200" y="215" fill="#c0305a">夏アナ</text>
+<circle cx="150" cy="218" r="13" fill="#8a6030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="150" y="220">ハ</text><text class="rl" x="150" y="233" fill="#8a6030">ハンス</text>
+<text class="sm" x="175" y="250" style="fill:#555">下手寄り一角で向き合い『とびら開けて』を歌う</text>
+<circle cx="330" cy="185" r="11" fill="none" stroke="#2070b0" stroke-width="1.5" stroke-dasharray="3 2"/><text class="ini" x="330" y="188" style="fill:#2070b0">エ</text><text class="rl" x="330" y="176" fill="#2070b0">（退場済み）</text>
+<line x1="318" y1="185" x2="80" y2="188" stroke="#2070b0" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar-act2c)"/><text class="ar" x="230" y="180" fill="#2070b0">下手袖へ</text>
+<circle cx="460" cy="240" r="11" fill="none" stroke="#604898" stroke-width="1.5" stroke-dasharray="3 2"/><text class="ini" x="460" y="243" style="fill:#604898">公</text><text class="rl" x="460" y="257" fill="#604898">（退場済み）</text>
+<line x1="472" y1="240" x2="500" y2="200" stroke="#604898" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar-act2c)"/><text class="ar" x="495" y="222" fill="#604898">上手袖へ</text>
+<text class="sm" x="282" y="270" style="fill:#888">エルサは下手袖、公爵は上手袖へそれぞれ退場し舞台上不在</text>
+</svg>`, caption:`ACT2『とびら開けて』本編。エルサは下手袖、公爵は上手袖へそれぞれ退場済みで舞台上に不在（点線の丸と矢印は退場前の位置と動線を参考表示）。夏アナとハンスの2人だけが下手寄り一角に残り、デュエットを歌う。`},
+  act3: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar5" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（舞踏会継続）</text>
+<circle cx="282" cy="194" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="196">エ</text><text class="rl" x="282" y="209" fill="#2070b0">エルサ</text>
+<circle cx="168" cy="222" r="13" fill="#c0305a" stroke="#fff" stroke-width="1.5"/><text class="ini" x="168" y="225">ア</text><text class="rl" x="168" y="238" fill="#c0305a">夏アナ</text>
+<circle cx="120" cy="238" r="13" fill="#8a6030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="120" y="241">ハ</text><text class="rl" x="120" y="254" fill="#8a6030">ハンス</text>
+<circle cx="452" cy="204" r="13" fill="#604898" stroke="#fff" stroke-width="1.5"/><text class="ini" x="452" y="206">公</text><text class="rl" x="452" y="219" fill="#604898">公爵</text>
+<circle cx="452" cy="239" r="13" fill="#6a4530" stroke="#fff" stroke-width="1.5"/><text class="ini" x="452" y="242">家</text><text class="rl" x="452" y="255" fill="#6a4530">家来</text>
+<line x1="452" y1="214" x2="500" y2="204" stroke="#604898" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar5)"/><text class="ar" x="470" y="198" fill="#604898">上手袖へ退場</text>
+<line x1="270" y1="204" x2="120" y2="261" stroke="#2070b0" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar5)"/><text class="ar" x="170" y="238" fill="#2070b0">逃走</text>
+<text class="sm" x="430" y="187" style="fill:#2070b0">→レット時 上手袖から再登場</text>
+</svg>`, caption:`ACT3 逃走の配置。エルサ中央やや奥、アナ・ハンス下手寄り、公爵上手端、家来上手。公爵・家来は上手袖へ退場。エルサは下手へ逃走後、上手袖から再登場して舞台奥中央に立ち『レット・イット・ゴー』へ。`},
+  act4: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar6" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<circle cx="282" cy="197" r="13" fill="#b86020" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="199">ク</text><text class="rl" x="282" y="213" fill="#b86020">クリストフ（待機・薪割り仕草）</text>
+<circle cx="352" cy="207" r="13" fill="#9a6840" stroke="#fff" stroke-width="1.5"/><text class="ini" x="352" y="210">ス</text><text class="rl" x="352" y="223" fill="#9a6840">スヴェン</text>
+<circle cx="150" cy="247" r="13" fill="#7a1030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="150" y="249">ア</text><text class="rl" x="150" y="262" fill="#7a1030">冬アナ</text>
+<line x1="168" y1="238" x2="270" y2="204" stroke="#444" stroke-width="2" marker-end="url(#ar6)"/><text class="ar" x="222" y="233" fill="#444">駆け寄る</text>
+<circle cx="418" cy="242" r="13" fill="#b09000" stroke="#fff" stroke-width="1.5"/><text class="ini" x="418" y="244">オ</text><text class="rl" x="418" y="257" fill="#b09000">オラフ</text>
+<line x1="470" y1="244" x2="438" y2="242" stroke="#b09000" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar6)"/><text class="ar" x="470" y="235" fill="#b09000">陰から登場</text>
+</svg>`, caption:`ACT4 配置。ドアフレームは使用しない。クリストフは舞台上（野外）で待機し薪割りをするような仕草、スヴェンはその横。アナは肩掛けバッグを身に着けて下手から小走りで登場し、クリストフに駆け寄る。オラフは袖／小道具の陰からひょっこり登場。`},
+  act5_ice: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar7" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#bfe3f2" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#144a68" style="font-size:9px">白・水色パネル（氷の城・ACT3と同じパネル再利用）</text>
+<circle cx="282" cy="190" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="193">エ</text><text class="rl" x="282" y="206" fill="#2070b0">エルサ</text>
+<line x1="500" y1="180" x2="302" y2="187" stroke="#2070b0" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar7)"/><text class="ar" x="410" y="175" fill="#2070b0">上手袖から先行入場</text>
+<circle cx="178" cy="221" r="13" fill="#7a1030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="178" y="223">ア</text><text class="rl" x="178" y="237" fill="#7a1030">冬アナ</text>
+<circle cx="138" cy="239" r="13" fill="#b86020" stroke="#fff" stroke-width="1.5"/><text class="ini" x="138" y="242">ク</text><text class="rl" x="138" y="255" fill="#b86020">クリストフ</text>
+<circle cx="214" cy="247" r="13" fill="#b09000" stroke="#fff" stroke-width="1.5"/><text class="ini" x="214" y="250">オ</text><text class="rl" x="214" y="263" fill="#b09000">オラフ</text>
+<circle cx="150" cy="258" r="13" fill="#9a6840" stroke="#fff" stroke-width="1.5"/><text class="ini" x="150" y="260">ス</text><text class="rl" x="150" y="273" fill="#9a6840">スヴェン</text>
+<line x1="78" y1="233" x2="130" y2="233" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar7)"/><text class="ar" x="92" y="228" fill="#444">下手から</text>
+</svg>`, caption:`ACT5 氷の城の配置。エルサは上手袖から先行入場し舞台奥中央へ。冬アナ・クリストフ・オラフ・スヴェンは下手から登場。冬アナがひとりエルサに近づき『生まれてはじめて（リプライズ）』。`},
+  act5_troll: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar8" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<circle cx="282" cy="220" r="13" fill="#7a1030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="222">ア</text><text class="rl" x="282" y="235" fill="#7a1030">冬アナ</text>
+<circle cx="330" cy="226" r="13" fill="#b86020" stroke="#fff" stroke-width="1.5"/><text class="ini" x="330" y="228">ク</text><text class="rl" x="330" y="241" fill="#b86020">クリストフ</text>
+<circle cx="210" cy="205" r="13" fill="#386838" stroke="#fff" stroke-width="1.5"/><text class="ini" x="210" y="207">ト</text><text class="rl" x="210" y="221" fill="#386838">トロール</text>
+<circle cx="282" cy="197" r="13" fill="#386838" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="199">ト</text><text class="rl" x="282" y="213" fill="#386838">トロール</text>
+<circle cx="354" cy="205" r="13" fill="#386838" stroke="#fff" stroke-width="1.5"/><text class="ini" x="354" y="207">ト</text><text class="rl" x="354" y="221" fill="#386838">トロール</text>
+<path d="M196,220 A96,34 0 0,1 372,220" fill="none" stroke="#386838" stroke-width="1.4" stroke-dasharray="5 4"/>
+<text class="sm" x="282" y="251" style="fill:#386838;font-weight:bold">▼ 半円の客席側（手前）は開ける＝冬アナが常に見える ▼</text>
+</svg>`, caption:`ACT5『愛さえあれば』のトロール半円フォーメーション。トロール2〜3人が冬アナ・クリストフを囲むが、半円の客席側（手前）は必ず開けておき、衰弱していく冬アナの様子が客席から常に見えるようにする。`},
+  act6: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar9" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（ハンスの部屋）</text>
+<rect x="248" y="180" width="68" height="34" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="282" y="191" fill="#fff" style="font-size:9px">机（執務机）</text>
+<rect x="272" y="202" width="20" height="12" rx="2" fill="#a87038" stroke="none" stroke-width="1.3"/>
+<text class="sm" x="322" y="191" style="fill:#8a5a30">机上：書類・地図・羽ペン</text>
+<rect x="92" y="237" width="40" height="26" rx="2" fill="#d07a20" stroke="none" stroke-width="1.3"/><text class="rl" x="112" y="246" fill="#fff" style="font-size:9px">暖炉</text>
+<circle cx="282" cy="193" r="13" fill="#8a6030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="195">ハ</text><text class="rl" x="282" y="208" fill="#8a6030">ハンス</text>
+<circle cx="168" cy="244" r="13" fill="#7a1030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="168" y="246">ア</text><text class="rl" x="168" y="259" fill="#7a1030">冬アナ</text>
+<line x1="90" y1="255" x2="150" y2="246" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar9)"/><text class="ar" x="118" y="266" fill="#444">下手袖から駆け込み</text>
+<circle cx="112" cy="210" r="13" fill="#b09000" stroke="#fff" stroke-width="1.5"/><text class="ini" x="112" y="212">オ</text><text class="rl" x="112" y="225" fill="#b09000">オラフ</text>
+<line x1="82" y1="219" x2="100" y2="212" stroke="#b09000" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar9)"/><text class="ar" x="70" y="231" fill="#b09000">下手袖から駆け込み（O案）</text>
+<text class="sm" x="506" y="187" style="fill:#c8842a" transform="rotate(-90 506 187)">クリストフ・スヴェン待機</text>
+</svg>`, caption:`ACT6 ハンスの部屋の配置。机・椅子を舞台中央やや奥に設置しハンスが着席。暖炉プロップを舞台端の壁際（下手寄り）に。冬アナ・オラフはともに下手袖から駆け込む（オラフはACT6上手袖の混雑緩和のためO案採用で下手袖に統一、2026-07-04）。クリストフ・スヴェンは上手袖で待機（吹雪の中を上手から登場）。ハンスは暖炉消灯後、最寄りの下手袖へ退場し、バックステージ経由で上手袖へ移動する（舞台上を横断しない）。`},
+  act7: {svg:`<svg viewBox="0 0 620 480" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar10" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系背景パネル（城の外壁として転用）</text>
+<circle cx="282" cy="204" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="282" y="206">エ</text><text class="rl" x="282" y="219" fill="#2070b0">エルサ</text>
+<line x1="78" y1="204" x2="266" y2="204" stroke="#2070b0" stroke-width="2" marker-end="url(#ar10)"/><text class="ar" x="150" y="199" fill="#2070b0">下手袖→中央</text>
+<circle cx="404" cy="204" r="13" fill="#8a6030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="404" y="206">ハ</text><text class="rl" x="404" y="219" fill="#8a6030">ハンス</text>
+<rect x="360" y="201" width="22" height="10" rx="2" fill="#888" stroke="none" stroke-width="1.3"/><text class="rl" x="371" y="205" fill="#fff" style="font-size:9px">剣</text>
+<line x1="452" y1="204" x2="420" y2="204" stroke="#8a6030" stroke-width="2" marker-end="url(#ar10)"/><text class="ar" x="450" y="197" fill="#8a6030">上手から剣持参</text>
+<circle cx="172" cy="241" r="13" fill="#7a1030" stroke="#fff" stroke-width="1.5"/><text class="ini" x="172" y="243">ア</text><text class="rl" x="172" y="256" fill="#7a1030">冬アナ</text>
+<circle cx="138" cy="255" r="13" fill="#b86020" stroke="#fff" stroke-width="1.5"/><text class="ini" x="138" y="258">ク</text><text class="rl" x="138" y="271" fill="#b86020">クリストフ</text>
+<circle cx="216" cy="253" r="13" fill="#9a6840" stroke="#fff" stroke-width="1.5"/><text class="ini" x="216" y="255">ス</text><text class="rl" x="216" y="269" fill="#9a6840">スヴェン</text>
+<circle cx="252" cy="239" r="13" fill="#b09000" stroke="#fff" stroke-width="1.5"/><text class="ini" x="252" y="242">オ</text><text class="rl" x="252" y="255" fill="#b09000">オラフ</text>
+<line x1="78" y1="250" x2="130" y2="250" stroke="#444" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar10)"/><text class="ar" x="110" y="268" fill="#444">下手から駆け込み</text>
+<circle cx="500" cy="245" r="11" fill="none" stroke="#604898" stroke-width="1.5" stroke-dasharray="3 2"/><text class="ini" x="500" y="248" style="fill:#604898">公</text><text class="rl" x="500" y="261" fill="#604898">上手袖で待機中</text>
+<line x1="488" y1="245" x2="330" y2="215" stroke="#604898" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ar10)"/><text class="ar" x="430" y="248" fill="#604898">フィナーレ開始後、上手袖→中央</text>
+</svg>`, caption:`ACT7 クライマックスの配置。エルサは下手袖→中央、ハンスは上手から剣を手に登場。冬アナ・クリストフ・スヴェン・オラフは下手から駆け込む。机・椅子はACT6→7暗転で上手袖へ撤収済み。ウェーゼルトン公爵はACT3退場以降、上手袖で待機を継続しており、フィナーレ開始後に上手袖から登場して中央へ移動する（点線の丸と矢印は待機位置と入場動線を参考表示）。`},
+  trans5: {svg:`<svg viewBox="0 0 620 500" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar12" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系パネルへ切替（氷パネル撤去）</text>
+<circle cx="506" cy="105" r="13" fill="#2070b0" stroke="#fff" stroke-width="1.5"/><text class="ini" x="506" y="109">エ</text><text class="rl" x="506" y="146" fill="#2070b0">エルサ</text>
+<path d="M506,105 L60,105 L58,250" fill="none" stroke="#2070b0" stroke-width="2.5" marker-end="url(#ar12)"/>
+<text class="ar" x="282" y="90" style="fill:#2070b0">エルサ：上手袖→バックステージ（黒幕の裏）を横断→下手袖で待機（横断0〜6秒／40秒まで待機）</text>
+<rect x="452" y="204" width="60" height="40" rx="2" fill="#c8a06a" stroke="none" stroke-width="1.3"/><text class="rl" x="482" y="217" fill="#3a2400" style="font-size:9px">机・椅子</text>
+<line x1="450" y1="218" x2="316" y2="227" stroke="#a06010" stroke-width="2" marker-end="url(#ar12)"/><text class="ar" x="386" y="214" fill="#a06010">搬入(20〜35秒)</text>
+<rect x="250" y="220" width="64" height="30" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="282" y="230" fill="#fff" style="font-size:9px">机設置</text>
+<circle cx="58" cy="300" r="13" fill="#604898" stroke="#fff" stroke-width="1.5"/><text class="ini" x="58" y="304">小</text><text class="rl" x="58" y="327" fill="#604898">小道具係</text>
+<line x1="78" y1="285" x2="240" y2="238" stroke="#6040a0" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar12)"/><text class="ar" x="180" y="300" fill="#6040a0">書類・地図・暖炉(20〜35秒)</text>
+<line x1="30" y1="440" x2="534" y2="440" stroke="#ccc" stroke-width="1"/>
+<text class="sm" x="72" y="450" style="fill:#666;font-weight:bold">タイムライン</text>
+<text class="sm" x="70" y="462" style="fill:#555;text-anchor:middle">エルサ</text>
+<rect x="120" y="452" width="420" height="13" fill="#eee" rx="2"/>
+<rect x="120" y="452" width="373" height="13" fill="#2070b0" rx="2"/>
+<text x="307" y="462" style="font:8px sans-serif;fill:#fff;text-anchor:middle">横断→下手袖待機</text>
+<text class="sm" x="70" y="479" style="fill:#555;text-anchor:middle">大道具</text>
+<rect x="120" y="469" width="420" height="13" fill="#eee" rx="2"/>
+<rect x="120" y="469" width="233" height="13" fill="#308050" rx="2"/>
+<text x="237" y="479" style="font:8px sans-serif;fill:#fff;text-anchor:middle">氷→茶パネル</text>
+<rect x="307" y="469" width="140" height="13" fill="#a06010" rx="2"/>
+<text x="377" y="479" style="font:8px sans-serif;fill:#fff;text-anchor:middle">机椅子搬入</text>
+<text class="sm" x="70" y="496" style="fill:#555;text-anchor:middle">小道具</text>
+<rect x="120" y="486" width="420" height="13" fill="#eee" rx="2"/>
+<rect x="307" y="486" width="140" height="13" fill="#6040a0" rx="2"/>
+<text x="377" y="496" style="font:8px sans-serif;fill:#fff;text-anchor:middle">書類・暖炉セット</text>
+<line x1="120" y1="449" x2="120" y2="505" stroke="#bbb" stroke-width="0.8"/>
+<text x="120" y="514" style="font:8px sans-serif;fill:#888;text-anchor:middle">0秒</text>
+<line x1="260" y1="449" x2="260" y2="505" stroke="#bbb" stroke-width="0.8"/>
+<text x="260" y="514" style="font:8px sans-serif;fill:#888;text-anchor:middle">15秒</text>
+<line x1="400" y1="449" x2="400" y2="505" stroke="#bbb" stroke-width="0.8"/>
+<text x="400" y="514" style="font:8px sans-serif;fill:#888;text-anchor:middle">30秒</text>
+<line x1="540" y1="449" x2="540" y2="505" stroke="#bbb" stroke-width="0.8"/>
+<text x="540" y="514" style="font:8px sans-serif;fill:#888;text-anchor:middle">45秒</text>
+</svg>`, caption:`ACT5→6 暗転（45秒・全公演で最重要）。エルサは上手袖→バックステージ（黒幕の裏）を横断→下手袖待機。横断自体は実距離約7m・速歩で4〜6秒ほどで完了し、その後下手袖で40秒まで待機する（2026-07-04：バックステージ幕の新設により廊下経由の想定を廃止、横断時間を実距離ベースに修正）。上手袖担当が「エルサ通過確認」を舞台監督へ肉声報告し、その合図後に大道具が机・椅子を搬入（20〜35秒）。氷パネル→茶系パネル切替は0〜25秒、小道具係は下手袖から書類・地図・羽ペン＋暖炉を20〜35秒でセット。ハンス役は机・椅子搬入完了（35秒）後、大道具が上手袖から引き上げたことを確認してから上手袖→舞台へ移動し着席（35〜42秒）。35秒で未完了なら延長合図で最大60秒。`},
+  trans6: {svg:`<svg viewBox="0 0 620 500" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:560px">
+<style>.ini{fill:#fff;font:bold 11px 'Noto Sans JP',sans-serif;text-anchor:middle}.rl{font:9px 'Noto Sans JP',sans-serif;text-anchor:middle}.lbl{font:9.5px 'Noto Sans JP',sans-serif;fill:#555;text-anchor:middle}.plbl{fill:#fff;text-anchor:middle}.pl2{text-anchor:middle}.sm{font:8.5px 'Noto Sans JP',sans-serif;fill:#666;text-anchor:middle}.ar{font:9px 'Noto Sans JP',sans-serif;fill:#444;text-anchor:middle}</style>
+<defs><marker id="ar17" markerWidth="10" markerHeight="10" refX="7.5" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="context-stroke"/></marker></defs>
+<rect x="30" y="40" width="504" height="392" fill="#ffffff" stroke="#333" stroke-width="2"/>
+<rect x="142" y="46" width="280" height="30" rx="2" fill="#2a5a3a"/>
+<text class="plbl" x="282" y="66" style="font-size:13px;letter-spacing:4px">黒 板</text>
+<text class="sm" x="282" y="35" style="fill:#888">▲ 舞台奥（黒板側）</text>
+<rect x="30" y="80" width="504" height="84" fill="#2b2b2b" fill-opacity="0.08" stroke="#333" stroke-width="1.2" stroke-dasharray="3 2"/>
+<path d="M30,164 L44,157 L58,164 L72,157 L86,164 L100,157 L114,164 L128,157 L142,164 L156,157 L170,164 L184,157 L198,164 L212,157 L226,164 L240,157 L254,164 L268,157 L282,164 L296,157 L310,164 L324,157 L338,164 L352,157 L366,164 L380,157 L394,164 L408,157 L422,164 L436,157 L450,164 L464,157 L478,164 L492,157 L506,164 L520,157 L534,164" fill="none" stroke="#000" stroke-width="2.6"/>
+<rect x="86" y="164" width="392" height="112" fill="#fafcff" stroke="#4a7cc0" stroke-width="1.5"/>
+<rect x="30" y="276" width="504" height="156" fill="#f7f7f5" stroke="#999" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text class="lbl" x="58" y="178" style="fill:#9060c0" transform="rotate(-90 58 178)">下手袖・窓側</text>
+<text class="lbl" x="506" y="178" style="fill:#c8842a" transform="rotate(-90 506 178)">上手袖・廊下側</text>
+<text class="sm" x="282" y="106" style="fill:#333;font-weight:bold">バックステージ（黒幕の裏・幅9m×奥行1.5m）</text>
+<text class="sm" x="282" y="120" style="fill:#555">（大道具・小道具の収納／上手⇔下手の横断可）</text>
+<text class="lbl" x="282" y="360" style="fill:#999">客席エリア（椅子3〜4列・奥行3.5m）</text>
+<text class="sm" x="282" y="410" style="fill:#999">客席から見て：左＝下手（窓側）　／　右＝上手（廊下側）</text>
+<rect x="96" y="164" width="384" height="14" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="288" y="170" fill="#fff" style="font-size:9px">茶系パネルはそのまま（城の外壁として転用）</text>
+<rect x="250" y="187" width="64" height="34" rx="2" fill="#8a5a30" stroke="none" stroke-width="1.3"/><text class="rl" x="282" y="198" fill="#fff" style="font-size:9px">机</text>
+<line x1="316" y1="195" x2="500" y2="198" stroke="#a06010" stroke-width="2" marker-end="url(#ar17)"/><text class="ar" x="410" y="190" fill="#a06010">机・椅子を上手袖へ撤収（0〜20秒）</text>
+<text class="sm" x="500" y="224" style="fill:#c8842a">ハンスは上手袖で剣を受け取りスタンバイ</text>
+<rect x="92" y="237" width="40" height="26" rx="2" fill="#d07a20" stroke="none" stroke-width="1.3"/><text class="rl" x="112" y="246" fill="#fff" style="font-size:9px">暖炉</text>
+<line x1="90" y1="235" x2="62" y2="215" stroke="#c05010" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ar17)"/><text class="ar" x="70" y="228" fill="#c05010">下手奥へ撤去（0〜10秒）</text>
+<text class="sm" x="282" y="261" style="fill:#555">大道具係（机・椅子）／下手袖担当1名（暖炉）／目安45秒（暗転内）</text>
+<line x1="30" y1="440" x2="534" y2="440" stroke="#ccc" stroke-width="1"/>
+<text class="sm" x="72" y="450" style="fill:#666;font-weight:bold">タイムライン</text>
+<text class="sm" x="70" y="462" style="fill:#555;text-anchor:middle">大道具</text>
+<rect x="120" y="452" width="420" height="13" fill="#eee" rx="2"/>
+<rect x="120" y="452" width="187" height="13" fill="#a06010" rx="2"/>
+<text x="213" y="462" style="font:8px sans-serif;fill:#fff;text-anchor:middle">机・椅子撤収</text>
+<text class="sm" x="70" y="479" style="fill:#555;text-anchor:middle">下手袖担当</text>
+<rect x="120" y="469" width="420" height="13" fill="#eee" rx="2"/>
+<rect x="120" y="469" width="93" height="13" fill="#c05010" rx="2"/>
+<text x="166" y="479" style="font:8px sans-serif;fill:#fff;text-anchor:middle">暖炉撤去</text>
+<line x1="120" y1="449" x2="120" y2="486" stroke="#bbb" stroke-width="0.8"/>
+<text x="120" y="497" style="font:8px sans-serif;fill:#888;text-anchor:middle">0秒</text>
+<line x1="260" y1="449" x2="260" y2="486" stroke="#bbb" stroke-width="0.8"/>
+<text x="260" y="497" style="font:8px sans-serif;fill:#888;text-anchor:middle">15秒</text>
+<line x1="400" y1="449" x2="400" y2="486" stroke="#bbb" stroke-width="0.8"/>
+<text x="400" y="497" style="font:8px sans-serif;fill:#888;text-anchor:middle">30秒</text>
+<line x1="540" y1="449" x2="540" y2="486" stroke="#bbb" stroke-width="0.8"/>
+<text x="540" y="497" style="font:8px sans-serif;fill:#888;text-anchor:middle">45秒</text>
+</svg>`, caption:`ACT6→ACT7（クライマックス前）。茶系パネルはそのまま残し（城の外壁として転用）、机・椅子を上手袖へ撤収（0〜20秒）。同時に下手袖担当1名が暖炉プロップを下手奥へ引き込みエルサの動線を確保（0〜10秒）。ハンスは上手袖で剣を受け取りスタンバイ。目安45秒（暗転内）（2026-07-04修正：台本・役割書と照合し20秒→45秒に統一。暖炉撤去の記載を追加）。`},
+};
+
+/* ===================== ACT間の転換（暗転）データ ===================== */
+/* 舞台構成.md「7. 場面転換マトリクス」「6. ACT5→6 暗転（45秒）エルサ動線」の目安時間に基づく。
+   演技・セリフの時間とは別枠で、実際に転換にかかる時間をタイムラインへ計上する。 */
+const TRANSITIONS = {
+  1: trans("ACT1→ACT2 転換（暗転）",30,
+    ["ベッド代わりの椅子/ベンチを撤去し、茶系背景パネルを城内の壁として後方に設置"],
+    [{dept:"stage",text:"キャスト交代：子供アナ役が退場し、夏アナ・大人エルサ・ハンス・司祭/家来・ウェーゼルトン公爵役（別キャスト）が配置につく。"},
+     {dept:"set",text:"セットを戴冠式の配置へ変更（茶系背景パネルを城内の壁として後方に配置）。担当：大道具係＋役者（ハンス役・公爵役）。目安30秒。"},
+     {dept:"props",text:"ドアパネルを撤去。杖・玉を大人エルサの登場位置にセット。白手袋は開演30分前に手渡し済み。"},
+     {dept:"stage",text:"大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。"}]
+  ),
+  2: trans("ACT2→ACT3 転換（短い暗転）",12,
+    ["転換なし（茶系パネルそのまま）。エルサ・公爵が舞台中央・上手端の定位置へ入り直す時間として短い暗転のみ挟む"],
+    [{dept:"props",text:"不要な小道具を片付け。舞踏会→逃走シーンへの切り替えは照明で行う（茶系背景パネルはそのまま）。"},
+     {dept:"stage",text:"エルサ・公爵が定位置に入ったことを確認してから照明・役者入場の合図を出す。目安10〜15秒。"}]
+  ),
+  3: trans("ACT3→ACT4 転換（暗転）",10,
+    ["白・水色パネルを撤去するのみ（ドアフレームは廃止済みのため搬入なし）"],
+    [{dept:"set",text:"白・水色パネルを撤去し、ACT4（納屋のある野外）の配置へ変更。担当：大道具係。目安10秒程度。"},
+     {dept:"props",text:"人参は小道具係が管理し、この暗転中にアナ役者へ手渡す。"},
+     {dept:"stage",text:"大道具・小道具の転換完了を確認してから照明・役者入場の合図を出す。"}]
+  ),
+  4: trans("ACT4→ACT5 転換（暗転）",30,
+    ["ACT3と同じ白・水色パネルを前面に再設置（氷の城）"],
+    [{dept:"set",text:"白・水色パネルを前面に再設置。担当：大道具係。目安30秒（ACT3と同じパネルを再利用）。"},
+     {dept:"stage",text:"大道具の転換完了を確認してから照明・役者入場の合図を出す。"}]
+  ),
+  5: trans("ACT5→ACT6 転換（暗転・全公演で最重要）",45,
+    ["全公演中で最も複雑な転換。エルサの動線を最優先に確保する",
+     "0〜6秒：エルサが上手袖→バックステージ（黒幕の裏）を横断→下手袖到着",
+     "上手袖担当が「エルサ通過確認」を舞台監督へ報告→机・椅子搬出GOの合図",
+     "20〜35秒：大道具が机・椅子を上手袖から搬入、氷パネル→茶系パネルへ切替",
+     "20〜35秒：小道具係が下手袖から書類・地図・羽ペン＋暖炉プロップをセット",
+     "35〜42秒：机・椅子の搬入完了・大道具が上手袖から引き上げたのを確認後、ハンス役が着席",
+     "0〜8秒：トロール役は「来た袖に戻る」原則で来た袖へ退場（両袖均等キャスティングが前提）",
+     "35秒時点で未完了なら「延長合図（手を2回叩く）」→最大+15秒（計60秒）"],
+    [{dept:"stage",text:"トロール役は「来た袖に戻る」原則で退場。暗転直後0〜8秒でそれぞれの袖へ。エルサの上手→下手横断（0〜6秒）と重ならないよう最優先で完了させる。"},
+     {dept:"set",text:"セットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネル）。机・椅子を執務机として舞台中央やや奥に配置（上手袖から搬入・目安15秒）。"},
+     {dept:"props",text:"机の上に書類・地図風の紙・羽ペン風の小道具。暖炉プロップ（LED）を壁際に設置。ハンスの剣は小道具係が預かる（帯剣しない）。"},
+     {dept:"stage",text:"大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。目安45秒（ゲネプロで計測、最大60秒）。"}]
+  ),
+  6: trans("ACT6→ACT7 転換（クライマックス前の暗転）",45,
+    ["茶系パネルはそのまま残す（城の外壁として転用）",
+     "0〜20秒：大道具が机・椅子を上手袖へ撤収",
+     "0〜10秒：下手袖担当1名が暖炉プロップを下手奥へ引き込みエルサの動線を確保",
+     "エルサは下手袖奥で待機継続（追加横断なし）。ハンスは上手袖で剣を受け取りスタンバイ",
+     "冬アナ一行は短距離で下手袖へ、ウェーゼルトン公爵は上手袖のまま待機",
+     "舞台監督補佐が子供アナ・子供エルサをバックステージ経由で下手袖の目隠しスクリーン内側へ誘導",
+     "残り5〜10秒で全員スタンバイ完了"],
+    [{dept:"set",text:"机・椅子を舞台袖へ撤収。茶系背景パネルはそのまま残す（城の外壁として転用）。"},
+     {dept:"props",text:"舞台袖でハンス役へ剣を手渡す。"},
+     {dept:"costume",text:"下手袖で冬アナが白いシフォンケープ（またはシルバー地の薄いストール）を衣装の上から羽織る（45秒以内に完了できるかゲネプロでタイムテスト要）。"},
+     {dept:"stage",text:"暗転45秒の動線：①エルサは下手袖奥で待機継続②大道具が机・椅子を撤収③ハンスは上手袖で剣を受け取りスタンバイ④冬アナ一行は下手袖へ⑤ウェーゼルトン公爵は上手袖待機⑥子供アナ・子供エルサは目隠しスクリーン内側へ誘導。"}]
+  ),
+};
+
 /* ===================== タイムライン構築 ===================== */
 function beatDur(b){
-  if(b.k==="song") return b.dur;
+  if(b.k==="song" || b.k==="trans") return b.dur;
   if(b.k==="cue") return 0;
   const len=(b.text||"").length;
   if(b.k==="line") return Math.max(1.5, len/5.5);
@@ -577,6 +1012,7 @@ function beatDur(b){
 }
 
 const FLAT=[];
+const TRANS_SEGMENTS=[];
 let clock=0;
 ACTS.forEach(act=>{
   const actStart=clock;
@@ -587,6 +1023,13 @@ ACTS.forEach(act=>{
     FLAT.push(Object.assign({},b,{actId:act.id,actName:act.name,start,end,dur:d}));
   });
   act.startSec=actStart; act.endSec=clock;
+  const tr=TRANSITIONS[act.id];
+  if(tr){
+    const start=clock, end=clock+tr.dur;
+    clock=end;
+    FLAT.push(Object.assign({},tr,{actId:act.id,actName:act.name,start,end,dur:tr.dur}));
+    TRANS_SEGMENTS.push({fromAct:act.id,start,end,label:tr.label});
+  }
 });
 const TOTAL=clock;
 
@@ -594,8 +1037,11 @@ const TOTAL=clock;
 const deptState={}; DEPT_ORDER.forEach(d=>deptState[d]=null);
 let sceneState={act:ACTS[0].id,title:ACTS[0].scene,people:ACTS[0].people};
 FLAT.forEach(b=>{
-  if(b.scene){ sceneState={act:b.actId,title:b.scene,people:(ACTS.find(a=>a.id===b.actId)||{}).people}; }
-  else {
+  if(b.k==="trans"){
+    sceneState={act:b.actId,title:"🔧 転換中："+b.label,people:(ACTS.find(a=>a.id===b.actId)||{}).people};
+  } else if(b.scene){
+    sceneState={act:b.actId,title:b.scene,people:(ACTS.find(a=>a.id===b.actId)||{}).people};
+  } else {
     const act=ACTS.find(a=>a.id===b.actId);
     if(sceneState.act!==b.actId){ sceneState={act:b.actId,title:act.scene,people:act.people}; }
   }
@@ -604,15 +1050,46 @@ FLAT.forEach(b=>{
     deptState.sound = "♪『"+b.title+"』 再生中（歌："+b.singer+"）";
     (b.cues||[]).forEach(c=>{ deptState[c.dept]=c.text; });
   }
+  if(b.k==="trans"){
+    (b.cues||[]).forEach(c=>{ deptState[c.dept]=c.text; });
+  }
   b.deptSnap=Object.assign({},deptState);
   b.sceneSnap=Object.assign({},sceneState);
 });
 const mainBeats=FLAT.filter(b=>b.k!=="cue");
 
+// 場面タイトル → 舞台構成図のキー（一致しない場合はACTごとの既定図にフォールバック）
+const SCENE_TO_DIAGRAM = {
+  "夜の子ども部屋":"act1",
+  "戴冠式の朝／城の広間":"act2_coronation",
+  "戴冠式":"act2_coronation",
+  "舞踏会":"act2_ball",
+  "とびら開けて":"act2_door",
+  "王宮の広間から雪山へ":"act3",
+  "野外の納屋 → 雪の森":"act4",
+  "オラフ登場":"act4",
+  "氷の城 → トロールの村":"act5_ice",
+  "トロールの村":"act5_troll",
+  "ハンスの部屋":"act6",
+  "吹雪の城の外 → 春の訪れ":"act7",
+  "フィナーレ":"act7",
+};
+const ACT_DEFAULT_DIAGRAM = {1:"act1",2:"act2_coronation",3:"act3",4:"act4",5:"act5_ice",6:"act6",7:"act7"};
+const TRANS_DIAGRAM = {5:"trans5",6:"trans6"};
+
+function pickDiagram(cueRef){
+  if(cueRef.k==="trans"){
+    return DIAGRAMS[TRANS_DIAGRAM[cueRef.actId] || ACT_DEFAULT_DIAGRAM[cueRef.actId]];
+  }
+  const title=cueRef.sceneSnap.title;
+  return DIAGRAMS[SCENE_TO_DIAGRAM[title]] || DIAGRAMS[ACT_DEFAULT_DIAGRAM[cueRef.sceneSnap.act]];
+}
+
 /* ===================== UI 構築 ===================== */
 const timelineEl=document.getElementById("timeline");
 const ticksEl=document.getElementById("ticks");
 const boardEl=document.getElementById("board");
+const layoutSvgEl=document.getElementById("layoutSvg");
 
 ACTS.forEach(act=>{
   const pct=((act.endSec-act.startSec)/TOTAL*100);
@@ -624,6 +1101,19 @@ ACTS.forEach(act=>{
   seg.dataset.act=act.id;
   seg.innerHTML=`<span>ACT${act.id}</span>`;
   timelineEl.appendChild(seg);
+
+  const tr=TRANS_SEGMENTS.find(s=>s.fromAct===act.id);
+  if(tr){
+    const tpct=((tr.end-tr.start)/TOTAL*100);
+    const tseg=document.createElement("div");
+    tseg.className="transseg";
+    tseg.style.width=Math.max(tpct,0.6)+"%";
+    tseg.dataset.transStart=tr.start;
+    tseg.dataset.transEnd=tr.end;
+    tseg.title=tr.label+"（"+Math.round(tr.end-tr.start)+"秒）";
+    tseg.innerHTML=`<span>転換</span>`;
+    timelineEl.appendChild(tseg);
+  }
 });
 const playhead=document.createElement("div");
 playhead.className="playhead";
@@ -679,6 +1169,10 @@ function render(){
     const act=ACTS.find(a=>a.id==seg.dataset.act);
     seg.classList.toggle("active", t>=act.startSec && t<act.endSec || (t>=TOTAL && act.id===ACTS.length));
   });
+  document.querySelectorAll(".transseg").forEach(seg=>{
+    const s=parseFloat(seg.dataset.transStart), e=parseFloat(seg.dataset.transEnd);
+    seg.classList.toggle("active", t>=s && t<e);
+  });
 
   const cueRef=findBeat(FLAT,t);
   const mainB=findBeat(mainBeats,t);
@@ -701,6 +1195,14 @@ function render(){
       <div class="song-notes">${(mainB.notes||[]).map(n=>"<div>"+n+"</div>").join("")}
         <ul>${(mainB.cues||[]).map(c=>"<li>"+DEPTS[c.dept].label+"："+c.text+"</li>").join("")}</ul>
       </div>`;
+  } else if(mainB.k==="trans"){
+    const elapsed=Math.max(0,Math.min(mainB.dur, t-mainB.start));
+    const pctTrans=Math.round(elapsed/mainB.dur*100);
+    const remain=Math.max(0,Math.round(mainB.dur-elapsed));
+    lineArea.innerHTML=`
+      <div class="trans-badge">🔧 転換中：${mainB.label}（残り${remain}秒）</div>
+      <div class="trans-bar"><i style="width:${pctTrans}%"></i></div>
+      <div class="trans-notes"><ol>${(mainB.notes||[]).map(n=>"<li>"+n+"</li>").join("")}</ol></div>`;
   } else if(mainB.k==="line"){
     lineArea.innerHTML=`<div class="line-speaker">${mainB.sp}</div><div class="line-text">${mainB.text}</div>`;
   } else {
@@ -712,10 +1214,23 @@ function render(){
   const nxt=mainBeats[idx+1];
   const prevEl=document.getElementById("nextPreview");
   if(nxt){
-    const label = nxt.k==="song" ? ("♪ 『"+nxt.title+"』（"+nxt.singer+"）") : (nxt.k==="line" ? (nxt.sp+"「"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":"")+"」") : ("（演技）"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":"")));
+    const label = nxt.k==="song" ? ("♪ 『"+nxt.title+"』（"+nxt.singer+"）")
+      : nxt.k==="trans" ? ("🔧 "+nxt.label+"（約"+nxt.dur+"秒）")
+      : nxt.k==="line" ? (nxt.sp+"「"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":"")+"」")
+      : ("（演技）"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":""));
     prevEl.innerHTML=`<b>${fmt(nxt.start)} 〜</b>　次：${label}`;
   } else {
     prevEl.textContent="この後：フィナーレの幕引き。";
+  }
+
+  // 舞台構成図
+  const diag=pickDiagram(cueRef);
+  if(diag){
+    if(layoutSvgEl.dataset.cur!==diag.svg){
+      layoutSvgEl.innerHTML=diag.svg;
+      layoutSvgEl.dataset.cur=diag.svg;
+    }
+    document.getElementById("layoutCaption").textContent=diag.caption;
   }
 
   // 係ボード
@@ -725,7 +1240,8 @@ function render(){
     const textEl=el.querySelector(".dept-text");
     const isFresh = cueRef.k==="cue" && cueRef.dept===key && Math.abs(t-cueRef.start) < 6;
     const isSongFresh = cueRef.k==="song" && cueRef.start<=t && t < cueRef.start+6 && (cueRef.cues||[]).some(c=>c.dept===key);
-    el.classList.toggle("hot", isFresh||isSongFresh || (key==="sound" && cueRef.k==="song"));
+    const isTransFresh = cueRef.k==="trans" && cueRef.start<=t && t<cueRef.end && (cueRef.cues||[]).some(c=>c.dept===key);
+    el.classList.toggle("hot", isFresh||isSongFresh||isTransFresh || (key==="sound" && cueRef.k==="song"));
     if(txt){ textEl.textContent=txt; textEl.classList.remove("empty"); }
     else { textEl.textContent="まだ指示なし"; textEl.classList.add("empty"); }
   });
