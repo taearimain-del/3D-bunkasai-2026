@@ -1,0 +1,780 @@
+<meta charset="UTF-8" />
+<title>アナと雪の女王 進行シミュレーター</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --bg:#14161c;
+    --panel:#1e212b;
+    --panel-2:#262a36;
+    --line:#343a4a;
+    --ink:#eef0f4;
+    --ink-dim:#9aa3b5;
+    --ink-faint:#6b7286;
+    --accent:#e0763f;
+    --accent-ice:#7ec8e3;
+    --dept-light:#f2c14e;
+    --dept-sound:#b98ce0;
+    --dept-set:#7f9e6b;
+    --dept-props:#cf8a5c;
+    --dept-stage:#9aa8c9;
+    --dept-video:#4fd1c5;
+    --dept-costume:#e0709c;
+    --font-display:"Shippori Mincho","Yu Mincho","Hiragino Mincho ProN",serif;
+    --font-body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+    --font-mono:ui-monospace,"SF Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    padding:20px 16px 60px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px;}
+
+  /* ---- header ---- */
+  header{display:flex;flex-direction:column;gap:6px;padding:4px 4px 14px;border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:12px;letter-spacing:.14em;color:var(--dept-video);text-transform:uppercase;}
+  h1{font-family:var(--font-display);font-weight:700;font-size:clamp(22px,3.6vw,32px);margin:0;text-wrap:balance;color:var(--ink);}
+  .sub{color:var(--ink-dim);font-size:13.5px;display:flex;flex-wrap:wrap;gap:6px 18px;}
+  .sub b{color:var(--ink);font-weight:600;}
+  #timeNote{color:var(--accent-ice);}
+
+  /* ---- transport ---- */
+  .console{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;}
+
+  .timeline-shell{position:relative;}
+  .timeline{
+    position:relative;height:46px;border-radius:8px;overflow:hidden;
+    display:flex;cursor:pointer;border:1px solid var(--line);
+  }
+  .actseg{
+    position:relative;display:flex;align-items:center;justify-content:center;
+    font-size:12px;color:rgba(255,255,255,.82);letter-spacing:.02em;
+    border-right:1px solid rgba(0,0,0,.35);
+    transition:filter .15s;
+  }
+  .actseg:last-child{border-right:none;}
+  .actseg span{position:relative;z-index:2;padding:0 4px;text-align:center;text-wrap:balance;}
+  .actseg.active{filter:brightness(1.28);}
+  .playhead{
+    position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--accent-ice);
+    box-shadow:0 0 10px 1px var(--accent-ice);pointer-events:none;z-index:5;
+  }
+  .playhead::before{
+    content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+    width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;
+    border-top:7px solid var(--accent-ice);
+  }
+  .ticks{display:flex;justify-content:space-between;font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:10.5px;color:var(--ink-faint);padding:0 1px;}
+
+  .transport{display:flex;flex-wrap:wrap;align-items:center;gap:14px;}
+  .transport-group{display:flex;align-items:center;gap:8px;}
+  button.tbtn{
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:8px 14px;font-family:var(--font-body);font-size:14px;cursor:pointer;transition:background .15s,border-color .15s;
+  }
+  button.tbtn:hover{border-color:var(--accent);}
+  button.tbtn:focus-visible{outline:2px solid var(--accent-ice);outline-offset:2px;}
+  button.tbtn.play{background:var(--accent);border-color:var(--accent);color:#1a1006;font-weight:700;min-width:74px;}
+  button.tbtn.play:hover{filter:brightness(1.08);}
+  select#speed{
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:8px 10px;font-family:var(--font-mono);font-size:13px;
+  }
+  .clock{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-size:20px;color:var(--ink);letter-spacing:.02em;}
+  .clock .sep{color:var(--ink-faint);}
+  .clock .tot{color:var(--ink-dim);font-size:14px;}
+  .actnow{font-size:13px;color:var(--dept-video);margin-left:auto;white-space:nowrap;}
+  input#seek{
+    background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:8px;
+    padding:8px 8px;font-family:var(--font-mono);width:70px;font-size:13px;text-align:center;
+  }
+
+  /* ---- main grid ---- */
+  .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;}
+  @media (max-width:860px){.grid{grid-template-columns:1fr;}}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
+  .card h2{font-family:var(--font-display);font-size:14px;margin:0 0 10px;color:var(--ink-dim);font-weight:600;letter-spacing:.03em;}
+
+  .scene-card{display:flex;flex-direction:column;gap:4px;}
+  .scene-act{font-size:12px;color:var(--ink-faint);letter-spacing:.06em;}
+  .scene-title{font-family:var(--font-display);font-size:21px;color:var(--ink);text-wrap:balance;}
+  .scene-people{font-size:12.5px;color:var(--ink-dim);}
+
+  .stage-card{min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:14px;position:relative;overflow:hidden;}
+  .stage-card::before{
+    content:"";position:absolute;inset:0;
+    background:radial-gradient(ellipse at 50% -10%,rgba(224,118,63,.14),transparent 60%);
+    pointer-events:none;
+  }
+  .line-speaker{font-family:var(--font-display);font-size:18px;color:var(--accent);font-weight:700;position:relative;}
+  .line-text{font-size:23px;line-height:1.55;color:var(--ink);text-wrap:balance;position:relative;min-height:1.6em;}
+  .line-text.direction{font-size:16px;color:var(--ink-dim);font-style:normal;}
+  .song-badge{
+    display:inline-flex;align-items:center;gap:8px;background:rgba(126,200,227,.12);
+    border:1px solid var(--accent-ice);color:var(--accent-ice);border-radius:999px;
+    padding:5px 14px;font-size:13px;width:fit-content;position:relative;
+  }
+  .song-bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden;position:relative;}
+  .song-bar > i{display:block;height:100%;background:var(--accent-ice);border-radius:2px;transition:width .2s linear;}
+  .song-notes{font-size:13px;color:var(--ink-dim);position:relative;}
+  .song-notes ul{margin:6px 0 0;padding-left:18px;}
+  .song-notes li{margin-bottom:3px;}
+
+  .next-preview{font-size:12.5px;color:var(--ink-faint);border-top:1px dashed var(--line);padding-top:10px;margin-top:4px;position:relative;}
+  .next-preview b{color:var(--ink-dim);font-weight:600;}
+
+  /* ---- dept board ---- */
+  .board{display:flex;flex-direction:column;gap:10px;}
+  .dept{
+    background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--dept-c,var(--ink-faint));
+    border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;
+    transition:background .2s;
+  }
+  .dept.hot{background:color-mix(in srgb, var(--dept-c) 10%, var(--panel));}
+  .dot{
+    width:11px;height:11px;border-radius:50%;background:var(--dept-c,var(--ink-faint));
+    margin-top:5px;flex:none;box-shadow:0 0 0 3px color-mix(in srgb, var(--dept-c) 22%, transparent);
+    transition:box-shadow .2s,opacity .2s;opacity:.35;
+  }
+  .dept.hot .dot{opacity:1;box-shadow:0 0 8px 2px var(--dept-c);}
+  .dept-body{flex:1;min-width:0;}
+  .dept-label{font-size:11.5px;letter-spacing:.06em;color:var(--dept-c,var(--ink-dim));text-transform:uppercase;margin-bottom:3px;}
+  .dept-text{font-size:13.5px;color:var(--ink);line-height:1.5;}
+  .dept-text.empty{color:var(--ink-faint);}
+
+  footer{text-align:center;font-size:12px;color:var(--ink-faint);padding-top:8px;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important;}
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">3年D組 文化祭舞台公演</div>
+    <h1>アナと雪の女王　進行シミュレーター</h1>
+    <div class="sub">
+      台本表記：<b>上演時間 約40分</b>（ACT1〜7、各ACTの目安：5 / 5 / 8 / 6 / 10 / 1 / 5 分）
+      ／ このツールでの試算：<b id="computedTotal">計算中…</b>
+      <span id="timeNote"></span>
+    </div>
+  </header>
+
+  <div class="console">
+    <div class="timeline-shell">
+      <div class="timeline" id="timeline"></div>
+      <div class="ticks" id="ticks"></div>
+    </div>
+
+    <div class="transport">
+      <div class="transport-group">
+        <button class="tbtn play" id="playBtn">▶ 再生</button>
+        <button class="tbtn" id="resetBtn">⏮ 最初</button>
+      </div>
+      <div class="transport-group">
+        <button class="tbtn" id="prevBtn">◀ 前のセリフ</button>
+        <button class="tbtn" id="nextBtn">次のセリフ ▶</button>
+      </div>
+      <div class="transport-group">
+        <label for="speed" style="font-size:12.5px;color:var(--ink-dim);">再生速度</label>
+        <select id="speed">
+          <option value="1">等倍(実時間)</option>
+          <option value="5">×5</option>
+          <option value="15" selected>×15</option>
+          <option value="30">×30</option>
+          <option value="60">×60</option>
+        </select>
+      </div>
+      <div class="transport-group">
+        <label for="seek" style="font-size:12.5px;color:var(--ink-dim);">移動(分:秒)</label>
+        <input type="text" id="seek" placeholder="0:00" />
+        <button class="tbtn" id="seekBtn">移動</button>
+      </div>
+      <div class="clock"><span id="curTime">0:00</span><span class="sep"> / </span><span class="tot" id="totTime">--:--</span></div>
+      <div class="actnow" id="actNow">ACT1 幼い日の姉妹</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card scene-card">
+        <h2>現在の場面</h2>
+        <div class="scene-act" id="sceneAct">ACT1</div>
+        <div class="scene-title" id="sceneTitle">夜の子ども部屋</div>
+        <div class="scene-people" id="scenePeople">登場人物：子供アナ、子供エルサ、ナレーター</div>
+      </div>
+
+      <div class="card stage-card" id="stageCard">
+        <div id="lineArea"></div>
+        <div class="next-preview" id="nextPreview"></div>
+      </div>
+    </div>
+
+    <div class="board" id="board"></div>
+  </div>
+
+  <footer>台本「台本_アナと雪の女王.md」をもとに自動生成。セリフ・キューの秒数は自然な会話ペースからの試算であり、実測値ではありません。</footer>
+</div>
+
+<script>
+/* ===================== 台本データ ===================== */
+const DEPTS = {
+  light:  {label:"照明",     color:"var(--dept-light)"},
+  sound:  {label:"音響",     color:"var(--dept-sound)"},
+  set:    {label:"大道具",   color:"var(--dept-set)"},
+  props:  {label:"小道具",   color:"var(--dept-props)"},
+  stage:  {label:"舞台監督", color:"var(--dept-stage)"},
+  video:  {label:"映像担当", color:"var(--dept-video)"},
+  costume:{label:"衣装",     color:"var(--dept-costume)"},
+};
+const DEPT_ORDER = ["light","sound","stage","set","props","video","costume"];
+
+function song(title,singer,dur,notes,cues){return {k:"song",title,singer,dur,notes:notes||[],cues:cues||[]};}
+function line(sp,text,scene){return {k:"line",sp,text,scene};}
+function dir(text,scene){return {k:"dir",text,scene};}
+function cue(dept,text,scene){return {k:"cue",dept,text,scene};}
+
+const ACTS = [
+{
+  id:1, name:"ACT1　幼い日の姉妹", scene:"夜の子ども部屋", people:"子供アナ、子供エルサ、ナレーター",
+  beats:[
+    cue("video","星空・城のシルエットをホワイトボードに投影。開演の合図と同時にスタート、ACT1暗転（雪だるまつくろう終わり）で停止。客席後方・上手寄りに定位。"),
+    cue("sound","開演予定時刻の1分30秒前、舞台監督（または開場担当）の合図でイントロ（開演前BGM）の再生を開始。"),
+    cue("stage","全係の準備完了を確認してから「開演」の合図。照明係へ客席照明OFFの指示、音響係へイントロ停止の指示。"),
+    cue("light","開幕：客席の照明を消し、舞台は暗転。徐々に明るく（夜の子ども部屋のイメージ）。"),
+    dir("舞台：簡素な子ども部屋。上手のベッドで子供エルサ、下手のベッドで子供アナが眠っている。照明が明るくなると子供アナがむくりと起き上がる。"),
+    line("ナレーター","昔、アレンデールという王国にアナとエルサという仲の良い姉妹がいました。姉のエルサは、氷の魔法を操る不思議な力を持っていました。"),
+    dir("子供アナが自分のベッドを抜け出し、忍び足で子供エルサに駆け寄り体を揺さぶる。"),
+    line("子供アナ","エルサ。ねぇエルサ起きて。一緒に遊ぼうよ～。"),
+    line("子供エルサ","だめよアナ、もう寝ないと…。"),
+    line("子供アナ","え～？パパとママは寝てるし、私たちは起きてるじゃない！…そうだ、雪だるま！雪だるまを作ろう？"),
+    dir("二人は立ち上がり中央へ。子供エルサが両手を広げ雪を降らせる魔法を表現し、雪玉を積み重ねるパントマイムで雪だるまを作る。"),
+    line("子供エルサ","やあ、僕はオラフ。ぎゅ～って抱きしめて。"),
+    line("子供アナ","オラフ～！ねえ、もっと魔法見せて！"),
+    cue("sound","SE：魔法発動音（「シュワッ」「パキン」系の短い音）を再生。"),
+    dir("徐々にエスカレートする魔法。子供エルサが大きく手を振り上げた瞬間、誤って子供アナの方向へ魔法が飛び、子供アナがくずおれる。"),
+    cue("light","子供アナが魔法に当たる瞬間：一瞬だけ舞台を白くフラッシュ→すぐ暗転。"),
+    dir("子供エルサが一瞬凍りついたように立ちすくみ、すぐに駆け寄って抱き起こす。声を震わせ必死に呼びかける。"),
+    line("子供エルサ","アナ…？アナ！"),
+    line("ナレーター","アナはトロールの力でエルサの魔法の記憶を消し、一命を取り留めることができました。一方、エルサは能力を抑えるため、城に閉じこもるようになりました。"),
+    dir("子供エルサはうつむいたまま、自分の殻に閉じこもるように上手袖へと退場する。"),
+    dir("舞台には子供アナが一人残る。黒板の一角に貼られた紙製の簡易ドアパネルに向き合う位置に立つ。"),
+    song("雪だるまつくろう","子供アナ",180,
+      ["1番・2番・ラスサビ前の計3回、ドアをノックして返事を待つが応答はない"],
+      [{dept:"light",text:"各ノックの直後（計2〜3回）、一瞬（1秒程度）照明を落として戻す。「また1年が経った」ことを暗示する瞬間暗転。"},
+       {dept:"sound",text:"歌い終わりに合わせてフェードアウト。"},
+       {dept:"light",text:"歌の最後のフレーズで本当の暗転に入る→次の場面（戴冠式）の役者・小道具が配置につく。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    cue("stage","キャスト交代：本当の暗転中に子供アナ役が退場し、夏アナ・大人エルサ・ハンス・司祭/家来・ウェーゼルトン公爵役（別キャスト）が配置につく。"),
+    cue("set","暗転中にセットを戴冠式の配置へ変更（茶系背景パネルを城内の壁として後方に配置）。"),
+    cue("props","暗転中にドアパネルを撤去。杖・玉を大人エルサの登場位置にセット。白手袋は開演30分前に大人エルサ役へ手渡し済み。"),
+    cue("stage","大道具・小道具の転換完了を確認してから、照明係に点灯・役者に入場の合図を出す。"),
+  ]
+},
+{
+  id:2, name:"ACT2　戴冠式とハンスとの出会い", scene:"戴冠式の朝／城の広間", people:"夏アナ、大人エルサ、ハンス、家来/司祭、ウェーゼルトン公爵、ナレーター",
+  beats:[
+    cue("video","アレンデール王国の旗や城の紋章を投影。ACT2の照明点灯と同時にスタート、舞踏会（とびら開けて）の暗転で停止。"),
+    dir("戴冠式当日の朝。夏アナと家来のやり取りはすべてバックステージ（黒板手前の黒幕の裏）での声のみの掛け合い。夏アナは『生まれてはじめて』歌い出し直前まで舞台に出てこない。"),
+    line("ナレーター","三年後、エルサが王位を継ぐ戴冠式の日が来ました。アナは目を覚まします。"),
+    cue("light","家来役はバックステージから呼びかけるのみ（舞台上には出ない）。"),
+    line("家来","王女！アナ王女！お目覚めください！今日は女王の戴冠式でございます！"),
+    line("夏アナ","え…たいかんしき…？―そうだ戴冠式！やっとエルサに会える！"),
+    dir("夏アナのセリフもバックステージから声のみ。ここで暗転し、舞台上の配置を完成させる。"),
+    cue("light","戴冠式直前：照明は明るく厳かな白または淡い黄色に切り替える。夏アナが正装で登場するまで約20秒。"),
+    song("生まれてはじめて","夏アナ",150,
+      ["上手→中央→下手と舞台上を巡りながら歌う。終盤、中央へ戻ったところでハンスと正面から軽くぶつかる"],
+      [{dept:"sound",text:"二番から再生。ハンスとぶつかる直前にフェードアウト。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    line("ハンス","大丈夫？怪我はないかい？", "ハンスとの出会い"),
+    line("夏アナ","ええ私は大丈夫よ、こちらこそごめんなさい。"),
+    line("ハンス","よかった。僕はサザンアイルズのハンス王子です。"),
+    line("夏アナ","アレンデールのアナ王女です。"),
+    line("ハンス","王女様！？私のご無礼をどうかお許しください！"),
+    line("夏アナ","えっ！ああいや全然！私って結構ドジだしおっちょこちょいだし。姉のエルサじゃなくてよかったわね。…いけない！もうすぐ戴冠式が始まっちゃう！私もう行かなきゃ！さようなら、また会えるといいわね！"),
+    cue("light","戴冠式：正面から白または淡い黄色の照明（厳かな雰囲気）。司祭は舞台中央手前に立ち開始を告げる。"),
+    cue("stage","照明が付いた直後「司祭入場」の合図。司祭はその時点で舞台中央へ登場。"),
+    dir("配置：司祭は舞台中央手前、大人エルサは正面奥で一礼、夏アナはやや後方または上手寄り、家来役は奥または袖。司祭登場から約5秒後にセリフ開始。","戴冠式"),
+    line("司祭","アレンデールのエルサ女王です。"),
+    dir("大人エルサが両手で杖と玉を受け取り深く一礼。すぐに置き直し、急いで手袋をはめる（焦りの演技）。"),
+    cue("light","大人エルサが手袋をはめ終えた瞬間（約3秒後）に舞台全体を暗転。大人エルサ・夏アナは中央で待機、照明を付けて舞踏会へ。"),
+    cue("props","照明が消えた瞬間に杖と玉を素早く回収（白手袋はACT3で使う演出小道具のためこの時点では回収しない）。"),
+    dir("消灯中に司祭と家来役は舞台袖へ。再び照明が付くと同じ広間が舞踏会の場面に変わる。"),
+    cue("light","舞踏会：暖かいオレンジ・黄色系の照明でパーティーの雰囲気。","舞踏会"),
+    dir("セット変更なし。大人エルサは中央、夏アナが近づく形で会話が始まる。"),
+    line("エルサ","久しぶりね、アナ。元気？"),
+    line("夏アナ","もちろん元気よ！"),
+    line("エルサ","よかった。そのドレスもとても素敵よ。"),
+    line("夏アナ","ありがとう。でもエルサのほうがもっともーっと素敵！"),
+    line("エルサ","ふふ、ありがとう。…ところで、なんだか甘い香りがしない？"),
+    line("夏アナ","このにおい…"),
+    dir("二人はくんくんと鼻を動かして香りをたどり、はっと顔を見合わせて同時に目を輝かせる。"),
+    line("夏アナ・エルサ","チョコレートだ！"),
+    dir("ウェーゼルトン公爵がもみ手をしながら大げさな足取りで大人エルサに歩み寄る。"),
+    line("ウェーゼルトン公爵","女王様、貿易を通してつながりの深い私と是非ダンスを！"),
+    dir("演技注記：公爵のコミカルな演技はどれだけふざけてもよい。時間にだけは注意。"),
+    line("エルサ","ええと…"),
+    line("夏アナ","あー、エルサはダンスが苦手なのよ～だからやめておいたほうが"),
+    line("エルサ","え、ええ、そうなのよ。だからアナが代わりに踊るわ。"),
+    line("夏アナ","そうそう！代わりに私がーってなんで私！？"),
+    line("ウェーゼルトン公爵","ふむ、承知いたしましたぞ。では行きましょうか王女殿下！"),
+    dir("公爵が夏アナの手を強引につかみ引っ張る。その隙にエルサは「あら、少し失礼するわね」と下手袖へ静かに下がっていく。"),
+    line("夏アナ","なんでぇ～！"),
+    dir("公爵はぎこちないステップで一人踊り続けるがやがて相手がいないことに気づき、とぼとぼと上手袖へ退場。舞台がいったん無人になる。"),
+    line("ナレーター","踊り終えたアナはハンスと再会し、庭で互いの境遇が似ていることを知り、二人の距離が近づいていきます。"),
+    dir("夏アナが上手袖からそっと戻り、ハンスも入れ替わりで登場。歌いながら距離を縮め、サビで手をつないで同時に一回転する「シンクロ振付」を入れる。"),
+    song("とびら開けて","夏アナ・ハンス（デュエット）",120,
+      ["二人でくるっと同時に一回転し、見つめ合うポーズを取る。動きは大げさになりすぎない範囲で"],
+      [{dept:"sound",text:"歌い終わりに合わせて止める。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    cue("light","歌唱後、舞台の照明を消す。アナ・ハンスは横に移動して待機。エルサが配置についたら照明を付けて次の場面へ。"),
+    cue("props","暗転中に不要な小道具を片付け。舞踏会→逃走シーンへの切り替えは照明で行う（茶系背景パネルはそのまま）。"),
+    cue("stage","大道具の転換完了を確認してから照明・役者入場の合図を出す。"),
+  ]
+},
+{
+  id:3, name:"ACT3　エルサの逃走", scene:"王宮の広間から雪山へ", people:"夏アナ、大人エルサ、ハンス、ウェーゼルトン公爵、家来",
+  beats:[
+    cue("video","「レット・イット・ゴー」中に雪の結晶や氷の城のCG映像を投影。エルサの歌い出しでスタート、歌い終わりで停止。"),
+    dir("舞台：舞踏会の続き。エルサは中央やや奥、アナとハンスは下手寄りから近づく。ウェーゼルトン公爵は上手端で様子をうかがっている。"),
+    line("夏アナ","エルサ、ちょっといい？この人はハンス、今日偶然知り合ったの。それでね、私たち結婚することにしたの！"),
+    line("エルサ","結婚？駄目よ、出会ったばかりの人となんて…"),
+    line("夏アナ","心から愛し合っていればできるわ！"),
+    line("エルサ","愛のことなんかわかっていないでしょう？とにかく駄目よ。"),
+    line("夏アナ","なんでそんなに反対するの！なにをそんなに怖がっているのよ…！"),
+    dir("エルサが立ち去ろうと背を向けたとき、アナが腕をつかみ、ゆっくりとエルサの手袋を引き抜く。"),
+    cue("sound","SE：手袋が引き抜かれた瞬間（動作の頂点）に氷の「ピシッ」という音を再生。"),
+    line("エルサ","やめて…！"),
+    dir("エルサが素手でアナを振り払う。床に氷が広がる演技＋照明の青白いフラッシュで表現（実際に何かを置く必要はない）。"),
+    cue("sound","SE：氷が広がる低い振動音（「ズン…ゴゴゴ」系）を1〜2秒再生。"),
+    cue("light","エルサの「やめて…！」直後、舞台全体を青白くフラッシュ（0.3秒）→暗く冷たい青紫色に切り替える。"),
+    dir("演技指示：ここではコミカル感を出してはいけない。ウェーゼルトン公爵はのけぞり、緊迫感のある演技で叫ぶ。"),
+    line("ウェーゼルトン公爵","…魔法だ！この国は危険だ！女王を捕まえろ！逃がすな！"),
+    line("夏アナ","エルサ！…こうなったのは私のせい。私が追いかける。ハンスはこの国をお願い！"),
+    line("ハンス","わかったよ、アナ！"),
+    dir("公爵は家来をけしかけ上手袖へ退場。エルサは下手袖へ、アナ・ハンスも続く。舞台がいったん無人になる。エルサはバックステージ（黒幕の裏）を経由して上手袖へ横断（4〜6秒）。"),
+    cue("light","全員退場からエルサ再登場までの4〜6秒間、冷たい青紫の暗色を維持（意図的な「無人の間」）。照明・音響は一切操作しない。エルサ登場を確認後、音響へ『レット・イット・ゴー』イントロ開始の合図。"),
+    dir("エルサが上手袖から再登場。ノースマウンテンの山頂のイメージ。マントを羽織ったまま、素手の両手を見つめ、ゆっくり指を開く。表情が少しずつ晴れていく。"),
+    cue("set","大道具2名がバックステージ経由でエルサの背後を通り、白・水色の布・パネルを展開（雪山・氷の城）。歌い出しから8〜16小節（目安20〜30秒）で完了させる。"),
+    song("レット・イット・ゴー ～ありのままで～","エルサ",240,
+      ["歌い始めは静かに、腕を体に沿わせて。サビへ向け動きが大きくなる。中盤（約2分経過）でマントを一気に脱ぎ捨てアイスドレスを披露し、その場で一回転"],
+      [{dept:"sound",text:"大人エルサの歌い終わりに合わせて止める。"},
+       {dept:"light",text:"歌唱開始直後、暗めの青白色に。約2分経過のサビ「ありのままで♪」で一気に明るく強い白青色に（氷の宮殿完成のクライマックス）。"},
+       {dept:"sound",text:"氷の城が完成するキラキラした効果音（任意・省略可）を短く再生。"},
+       {dept:"light",text:"マントを脱いでアイスドレスを見せた瞬間、最も明るく青白く輝かせる。歌い終わったら暗転。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    dir("暗転―脱いだマントを小道具係が回収。夏アナ役は退場し冬アナ役（別キャスト）がACT4へスタンバイ（衣装共用のため早替え不要）。エルサは上手袖へ退場しACT4の間（約6分）待機。"),
+    cue("set","暗転中に白・水色パネルを撤去し、ACT4（納屋のある野外）の配置へ変更。"),
+    cue("props","ロープ・金づちは開演前にアナのバッグへ。人参は小道具係が管理し、この暗転中にアナ役者へ手渡す。"),
+    cue("stage","大道具・小道具の転換完了を確認してから照明・役者入場の合図を出す。"),
+  ]
+},
+{
+  id:4, name:"ACT4　クリストフ・オラフとの旅", scene:"野外の納屋 → 雪の森", people:"冬アナ、クリストフ、スヴェン、オラフ",
+  beats:[
+    cue("video","雪景色や森の背景画像・映像を投影。ACT4照明点灯と同時にスタート。「あこがれの夏」歌唱終了後の暗転で停止。"),
+    cue("light","暗転から明るく（昼間の野外のイメージ）。"),
+    dir("クリストフはスヴェンとともに舞台上（野外）で薪割りの仕草。冬アナが肩掛けバッグを身に着け小走りで登場し、クリストフのもとへ駆け寄る。"),
+    dir("アナに気づいたクリストフは迷惑そうに振り返る。"),
+    line("冬アナ","急にごめんなさい、ノースマウンテンまで道案内をしてほしいの"),
+    line("クリストフ","無理だね、今ロープも金づちも持ってないんだ。あとめんどくさい。"),
+    dir("アナがロープと金づちをクリストフに押しつけ、人参をスヴェンに差し出す。スヴェンが飛びつこうとしクリストフが押さえる。以降3人は歩き回りながらセリフを続ける。"),
+    line("冬アナ","ノースマウンテンに連れて行きなさい。私ならこの冬を終わらせられる"),
+    line("クリストフ","なんで女王は国を凍らせたんだ？"),
+    line("冬アナ","その日のうちにあったばかりの人と婚約したからすごく怒っちゃって"),
+    line("クリストフ","そんな男と婚約したのか？知らない奴には気を付けなきゃダメだろ。"),
+    line("冬アナ","知らない人じゃないもん…待って、あれって…雪だるま？"),
+    dir("舞台の袖から、オラフがひょっこりと姿を現す。手足をぎこちなく揺らしながら三人に近づく（まだ鼻はついていない）。","オラフ登場"),
+    line("オラフ","やあみんな、僕はオラフ！ぎゅ～って抱きしめて！"),
+    line("冬アナ","オラフ！？"),
+    line("オラフ","そう、僕はオラフ！君は？"),
+    line("冬アナ","私はアナよ"),
+    line("オラフ","アナ！じゃあそこのロバみたいな顔の人は？"),
+    line("冬アナ","スヴェンよ。"),
+    line("オラフ","スヴェン！じゃあそのトナカイさんは？"),
+    line("冬アナ","スヴェンよ。"),
+    line("クリストフ","おい"),
+    line("オラフ","へええ、どっちもスヴェンっていう名前なんだねぇ！覚えやすくていいね！"),
+    line("冬アナ","うーん、何か足りないわね…あっ、これだわ！"),
+    dir("アナが人参を取り出し、オラフの顔に鼻として刺す（人参は1本のみ使い回す）。スヴェンが反応して飛びかかろうとし、クリストフが必死に押さえる。"),
+    cue("props","人参は1本のみを使い回し袖で小道具係が管理。オラフの鼻への装着は面ファスナーまたはクリップ式固定具。スヴェンは実際には触れない距離を保つ。"),
+    line("オラフ","わあ！ちょうどお鼻がほしかったんだ～！このほうがずっといいよ！"),
+    line("冬アナ","ねえオラフ、エルサがあなたを作ったんだよね？"),
+    line("オラフ","うん！なんで？"),
+    line("冬アナ","エルサがどこにいるか知ってる？"),
+    line("オラフ","うん！なんで？"),
+    line("冬アナ","そこに連れて行ってほしいの"),
+    line("オラフ","うん！なんで？"),
+    line("クリストフ","あー！俺が教えてやるよ！夏を取り戻したいんだ！"),
+    line("オラフ","夏！？はぁ～、なんでかわからないけど、僕ずぅーっと夏にあこがれてたんだよ～。お日様が光って、太陽は熱々で～。"),
+    line("クリストフ","そうなのか？暑さとは縁がなさそうだけどな"),
+    line("オラフ","そうさ？でも時々目をつぶって考えるんだ。暑い夏が来たらどんな感じなんだろうなぁって！"),
+    song("あこがれの夏","オラフ",120,
+      ["1番で日光浴の仕草→間奏で飲み物を飲む仕草→サビで大の字に寝転ぶ。他3人は見守る（クリストフは呆れ、アナは微笑ましく、スヴェンは首をかしげる）"],
+      [{dept:"sound",text:"オラフの歌い終わりに合わせて止める。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    cue("light","歌い終わった瞬間に照明を消し、次の場面へ移行。"),
+    cue("set","暗転中にセットをACT5（大人エルサの氷の城）の配置へ変更（青白い背景パネルを前面に出す）。"),
+    cue("stage","大道具の転換完了を確認してから照明・役者入場の合図を出す。"),
+  ]
+},
+{
+  id:5, name:"ACT5　エルサの城・トロールの村", scene:"氷の城 → トロールの村", people:"冬アナ、大人エルサ、クリストフ、スヴェン、オラフ、トロール、ナレーター",
+  beats:[
+    cue("video","前半は氷の宮殿内部の映像を投影。ACT5照明点灯と同時にスタート。トロールの村シーン移行時に映像も切り替え。ACT6暗転で停止。"),
+    line("ナレーター","アナたちはようやくエルサのいる城にたどり着きました。"),
+    cue("light","エルサの氷の城：冷たい青・水色系の照明に切り替える（寒く神秘的な雰囲気）。"),
+    dir("レット・イット・ゴーと同じ青白いパネルを背景に使い回す。エルサは上手袖から先行入場し舞台奥中央に。冬アナ一行は下手から登場。"),
+    line("冬アナ","…エルサ？私よ、アナよ。"),
+    line("エルサ","…アナ？"),
+    line("冬アナ","わあ…なんだか変わったね…あっ、もちろんいい意味で！それにここ、すごくきれい…。"),
+    line("エルサ","ありがとう。私にこんなことができるなんてね。"),
+    line("冬アナ","…私、エルサに謝りたくて来たの。お城でのこと、本当にごめんなさい。"),
+    line("エルサ","いいのよ、謝らなくていいの。だからもう帰りなさい。"),
+    line("冬アナ","エルサも一緒に帰りましょう？"),
+    line("エルサ","いいえ、私はここにいる。一人でいれば、誰も傷付けないで済む。それにあなたを守りたいの。"),
+    song("生まれてはじめて（リプライズ）","冬アナ・エルサ（デュエット）",150,
+      ["冬アナが一歩ずつ近づく→エルサが後ずさるを2〜3往復。中盤以降エルサの感情が高ぶり後ずさりが大きく速くなる"],
+      [{dept:"sound",text:"鋭い氷音（「ピキン！」）を短く再生。"},
+       {dept:"sound",text:"歌詞「いや…」「何度でも…」出現（約1分30秒経過）で音量70%に。魔法が当たる直後（白フラッシュ0.2秒）にさらに50%へ絞り、フラッシュ消失で完全停止。"},
+       {dept:"light",text:"開始時：落ち着いた青紫色。約1分経過からエルサの感情の高ぶりに合わせ青い照明を不規則に点滅（揺らぎ効果）。「いや…」「何度でも…」付近で最大の不安定さ。魔法が当たる直後に白フラッシュ（0.2秒）。歌後はやや暗めの青に戻す。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    dir("終盤、エルサの魔法が冬アナに飛ぶ。冬アナはよろめき、膝をついてくずおれる。クリストフ・オラフ・スヴェンが駆け寄る。"),
+    line("エルサ","嘘、また、私…"),
+    dir("エルサが舞台裏へ逃げる。"),
+    line("クリストフ","おいアナ、大丈夫か！"),
+    line("冬アナ","大丈夫、平気よ"),
+    line("クリストフ","おい、なんか髪が白くなってないか？エルサにやられたんじゃないのか？"),
+    line("冬アナ","ほんとだわ。"),
+    line("クリストフ","俺の友人に会いに行こう。同じようなものを治しているのを見たことがある。"),
+    line("ナレーター","クリストフはアナをトロールの村へ連れていきます。その間にも、アナの体は次第に凍っていました。"),
+    dir("クリストフが弱った冬アナに肩を貸して支え、ゆっくり歩かせる。スヴェンが心配そうに寄り添いながら進む。"),
+    cue("light","トロールの村：青系の照明からやや暖かい緑・橙系に戻す。","トロールの村"),
+    dir("トロール役が舞台の両袖から2〜3人ずつ登場。冬アナが地面に座らされる。"),
+    cue("props","キャスティング注記：トロール役は必ず両袖に均等に振り分ける（上手2〜3人・下手2〜3人）。ACT5→6の45秒暗転で「来た袖にそのまま戻る」動線を成立させるために必須。"),
+    line("クリストフ","紹介するよ、俺の家族だ。おい、みんな！"),
+    line("トロール","わ、クリストフだ！／クリストフが帰ってきた！／女の子を連れてるぞ！／クリストフにぴったりだ！"),
+    line("冬アナ","違うの、私たちそういう関係じゃなくて"),
+    line("クリストフ","そうだ。別の目的が…"),
+    song("愛さえあれば","トロール（クリストフはリアクションのみで参加）",180,
+      ["トロールが半円フォーメーション（手前は開ける）。1番・2番でソロが進み出て一言→戻る。サビで群舞。冬アナは徐々に衰弱する芝居を見せる"],
+      [{dept:"sound",text:"歌い終わりに合わせて止める。"}]
+    ),
+    cue("sound","♪ 曲終了。"),
+    dir("曲が終わった瞬間、冬アナが力尽きて座り込む。"),
+    line("クリストフ","アナ！"),
+    line("トロール","この子から魔法の力を感じる。このままでは命が危ない。"),
+    line("冬アナ","え…"),
+    line("トロール","姉さんの氷のかけらが心に刺さっている。そのままにしておけば永遠に凍りついてしまう。凍った心を解かせるのは真実の愛だけだ。"),
+    line("冬アナ","真実の愛…？"),
+    line("トロール","大好きな人のキスじゃない？"),
+    line("クリストフ","…！今すぐハンスのところに連れて行くぞ！"),
+    cue("stage","トロール役は「来た袖に戻る」原則で退場。暗転直後（目安0〜8秒）にそれぞれの袖へ。エルサの上手→下手横断（目安0〜6秒）と重ならないよう最優先で完了させる。"),
+    cue("light","暗転→次の場面（ハンスの部屋）の役者が配置につく→照明を付ける。"),
+    cue("set","暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネル）。机・椅子を執務机として舞台中央やや奥に配置。"),
+    cue("props","机の上に書類・地図風の紙・羽ペン風の小道具。暖炉プロップ（LED）を壁際に設置。ハンスの剣は小道具係が預かる（帯剣しない）。"),
+    cue("stage","大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。"),
+  ]
+},
+{
+  id:6, name:"ACT6　ハンスの裏切り", scene:"ハンスの部屋", people:"冬アナ、ハンス、オラフ（エルサはACT5→6暗転で横断済み・下手袖でACT7スタンバイ中）",
+  beats:[
+    cue("video","嵐や吹雪の映像を投影。ACT6照明点灯と同時にスタート。暖炉消灯以降は嵐を強調。ACT7暗転で一時停止。"),
+    cue("light","ハンスの部屋：暖かい照明（暖炉の火が灯っているイメージ）。"),
+    dir("教室の机が執務机として舞台中央やや奥に。ハンスは椅子に腰かけ書類に何かを書き込んでいる。"),
+    dir("冬アナが息を切らせながら駆け込んでくる。ハンスは驚いて立ち上がる。"),
+    dir("演出注：冬アナはACT5で力尽きた状態から気力を振り絞って立ち上がった設定。体はふらつき、息が荒い。「駆け込む」は速度でなく焦りの表現。"),
+    line("ハンス","アナ…大丈夫か？"),
+    line("冬アナ","ハンス…！助けて。エルサの魔法が体に刺さって、このままじゃ凍ってしまう。真実の愛のキスが必要なの…！"),
+    dir("ハンスが顔を寄せるが寸前で動きを止め、すっと身を引く。表情が冷たい笑みに変わり、一歩また一歩と離れていく。"),
+    line("ハンス","僕が王になるためにはどこかの王女と結婚するしかない。君は愛に飢えていたから、出会ってすぐに結婚を決めただけだ。僕たちが結婚した後エルサには事故に遭ってもらうつもりだった。"),
+    dir("ハンスは舞台端の暖炉へ歩み、蓋を閉める（またはLEDスイッチを切る）。"),
+    cue("light","ハンスが暖炉の火を消す瞬間に合わせて、舞台全体を一気に暗く冷たい青紫色に切り替える。"),
+    line("冬アナ","そんな、全部嘘だったなんて…そんな計画、上手くいくはずないわ。"),
+    line("ハンス","大丈夫、もう上手くいったさ"),
+    dir("ハンスは最寄りの下手袖（暖炉のすぐそば）へ退場。以降バックステージ経由で上手袖へ移動し、ACT7クライマックスで剣を受け取ってスタンバイする。"),
+    dir("部屋が凍りつき始め冬アナが床にくずおれたとき、オラフが下手袖から勢いよく駆け込んでくる。すぐに異変に気づき暖炉に駆け寄る。"),
+    line("オラフ","アナ！あ、暖炉の火が消えてる！"),
+    dir("オラフが暖炉に薪をくべる（またはLEDスイッチを入れる）。約2秒で完了。火が灯った瞬間、冬アナのそばに戻り温める仕草で寄り添う。"),
+    cue("light","オラフが暖炉に火を灯した瞬間、冷たい青紫から暖かみのあるオレンジ・黄系へ素早く（約1秒）切り替える。「希望の光が戻る」イメージ。"),
+    line("オラフ","ハンスのキスはどうなったの？"),
+    line("冬アナ","私が間違ってた。ハンスは運命の人じゃなかった。"),
+    line("オラフ","愛っていうのは自分より人のことを大切にすることだよ"),
+    dir("オラフが袖から外の様子をうかがうと、吹雪の中クリストフとスヴェンが上手から歩いてくるのが見える。オラフが冬アナを振り返る。"),
+    line("冬アナ","…クリストフのところへ行きたいの"),
+    line("オラフ","…わかった！クリストフが運命の人なんだね！はやくいこう！"),
+    dir("冬アナが下手方向へ飛び出すと、クリストフとスヴェンがちょうど上手から駆けつけ、舞台中央やや下手寄りで出会う。"),
+  ]
+},
+{
+  id:7, name:"ACT7　真実の愛とフィナーレ", scene:"吹雪の城の外 → 春の訪れ", people:"冬アナ、エルサ、ハンス、オラフ、クリストフ、スヴェン",
+  beats:[
+    cue("video","クライマックス中は吹雪・嵐の映像。エルサの「そうよ、愛よ！」直後に春・花・光の映像へ切り替え（最大の演出ポイント）。"),
+    cue("stage","暗転45秒の動線：①エルサは下手袖奥で待機継続（追加横断なし）②大道具が机・椅子を上手袖へ撤収（目安0〜20秒）③ハンスは上手袖で剣を受け取りスタンバイ④冬アナ一行は短距離で下手袖へ⑤ウェーゼルトン公爵は上手袖のまま待機⑥子供アナ・子供エルサは舞台監督補佐がバックステージ経由で下手袖の目隠しスクリーン内側へ誘導。残り5〜10秒で全員スタンバイ完了。"),
+    cue("set","暗転中に机・椅子を舞台袖へ撤収。茶系背景パネルはそのまま残す（城の外壁として転用）。"),
+    cue("props","暗転中に、舞台袖でハンス役へ剣を手渡す。"),
+    cue("costume","暗転中に、下手袖で冬アナが白いシフォンケープ（またはシルバー地の薄いストール）を衣装の上から羽織る。"),
+    cue("light","クライマックス：ドラマチックな照明（白または強い光）。"),
+    dir("暗転明けに冬アナ・クリストフ・スヴェン・オラフの4人が下手から駆け込む。エルサは下手袖から舞台中央へ。ハンスは上手から剣を手に登場。"),
+    line("ハンス","このまま逃げるのか？"),
+    line("エルサ","妹をお願い"),
+    line("ハンス","アナは僕の腕の中で息を引き取った。君がアナの心を凍らせて殺したんだ。すべて君のせいだ。"),
+    line("エルサ","そんな、嘘…アナが…"),
+    dir("ハンスが剣を引き抜き振りかざしたその時―"),
+    line("冬アナ","やめて！"),
+    dir("冬アナがエルサをかばい二人の間へ飛び込み、ハンスに手をかざしたまま全身を静止（氷の像の演技）。剣は腕の手前20cm以上で止め、実際には接触させない。冬アナは約10〜15秒姿勢を崩さない。"),
+    cue("sound","SE：氷結音（「ジュワッ」または「ズバン！」）を再生。"),
+    cue("light","「やめて！」直後、舞台全体を瞬間的に白くフラッシュ（0.3秒）。その後冷たい青白色に戻し、冬アナの白いケープを照射して「氷の像」感を強調。"),
+    line("エルサ","いや、いやよ、そんな…私を助けるためになんということをするの…"),
+    dir("エルサが凍りついた冬アナにすがりつき涙を流す。しばしの静寂の後、氷が足元からゆっくりと解けていく。"),
+    line("冬アナ","大切な人だからよ、エルサ"),
+    line("エルサ","アナ…！アナ！？よかった…！"),
+    line("オラフ","真実の愛が凍り付いた心を解かしたんだ！"),
+    line("エルサ","愛が氷を解かす？…そうよ、愛よ！"),
+    dir("エルサが手を広げた瞬間、舞台全体が明るく輝く。青白から暖色へ一気に切り替わる。冬アナも立ち上がり春の訪れを象徴する。"),
+    cue("light","「そうよ、愛よ！」完了直後、舞台全体を暖色（オレンジ・黄色・明るい白系）に急速（1秒以内）に切り替える。春の到来・氷の融解・希望の復活を表現。音響がBGMを盛り上げる。"),
+    dir("冬アナのもとへやってきたハンスに対し―"),
+    line("冬アナ","心が凍っているのはあなたのほうだったわね！"),
+    dir("冬アナが拳を振り抜くと同時にハンスがのけぞって尻もちをつく（実際には当てない）。ハンスは這うように舞台袖へ退場。"),
+    cue("light","フィナーレ：最も明るく、暖かい照明。","フィナーレ"),
+    dir("クリストフ、オラフ、スヴェンが駆け寄り、全員が舞台中央に集まる。"),
+    line("エルサ","アナ、一緒に帰りましょう。"),
+    line("冬アナ","うん！"),
+    line("オラフ","ねえ、愛ってさ…夏みたいなもんだったんだね。よくわかんないけど、あったかいんだ。"),
+    dir("全員が舞台中央に並ぶ。子供アナ・子供エルサも下手端（列の先頭）に合流する。"),
+    cue("props","子供アナ・子供エルサはACT6→7暗転で下手袖の目隠しスクリーン内側へ誘導済み。フィナーレ開始で他キャストと同時に下手袖から歩み出て列の先頭に並ぶ（舞台中央横断なし）。"),
+    cue("stage","ウェーゼルトン公爵はフィナーレ開始後、舞台監督の合図で上手袖から登場し中央へ移動、キャスト紹介の列に合流。"),
+    song("フィナーレBGM","全員（キャスト紹介）",150,
+      ["ナレーターが役名・役者名を下手→上手方向、出演ACT順に読み上げ：子供アナ→子供エルサ→夏アナ→大人エルサ→ハンス→クリストフ→スヴェン→オラフ→ウェーゼルトン公爵→トロール→ナレーター→家来/司祭。呼ばれた役者は半歩前に出て5秒お辞儀し列へ戻る。全員紹介後、最後に全員で1回お辞儀して幕"],
+      [{dept:"sound",text:"フィナーレBGMを再生（最低120秒、または尺が足りない場合はループ）。キャスト紹介・お辞儀が終わったら舞台監督の合図で10〜15秒かけてフェードアウト。"}]
+    ),
+    cue("light","幕が下りたら照明を消し、客席の照明を戻す。"),
+  ]
+},
+];
+
+/* ===================== タイムライン構築 ===================== */
+function beatDur(b){
+  if(b.k==="song") return b.dur;
+  if(b.k==="cue") return 0;
+  const len=(b.text||"").length;
+  if(b.k==="line") return Math.max(1.5, len/5.5);
+  if(b.k==="dir") return Math.max(2, len/10);
+  return 2;
+}
+
+const FLAT=[];
+let clock=0;
+ACTS.forEach(act=>{
+  const actStart=clock;
+  act.beats.forEach(b=>{
+    const d=beatDur(b);
+    const start=clock, end=clock+d;
+    clock=end;
+    FLAT.push(Object.assign({},b,{actId:act.id,actName:act.name,start,end,dur:d}));
+  });
+  act.startSec=actStart; act.endSec=clock;
+});
+const TOTAL=clock;
+
+// dept & scene の前方補完スナップショット
+const deptState={}; DEPT_ORDER.forEach(d=>deptState[d]=null);
+let sceneState={act:ACTS[0].id,title:ACTS[0].scene,people:ACTS[0].people};
+FLAT.forEach(b=>{
+  if(b.scene){ sceneState={act:b.actId,title:b.scene,people:(ACTS.find(a=>a.id===b.actId)||{}).people}; }
+  else {
+    const act=ACTS.find(a=>a.id===b.actId);
+    if(sceneState.act!==b.actId){ sceneState={act:b.actId,title:act.scene,people:act.people}; }
+  }
+  if(b.k==="cue"){ deptState[b.dept]=b.text; }
+  if(b.k==="song"){
+    deptState.sound = "♪『"+b.title+"』 再生中（歌："+b.singer+"）";
+    (b.cues||[]).forEach(c=>{ deptState[c.dept]=c.text; });
+  }
+  b.deptSnap=Object.assign({},deptState);
+  b.sceneSnap=Object.assign({},sceneState);
+});
+const mainBeats=FLAT.filter(b=>b.k!=="cue");
+
+/* ===================== UI 構築 ===================== */
+const timelineEl=document.getElementById("timeline");
+const ticksEl=document.getElementById("ticks");
+const boardEl=document.getElementById("board");
+
+ACTS.forEach(act=>{
+  const pct=((act.endSec-act.startSec)/TOTAL*100);
+  const hueSeed=(act.id*47)%360;
+  const seg=document.createElement("div");
+  seg.className="actseg";
+  seg.style.width=pct+"%";
+  seg.style.background=`linear-gradient(180deg, hsl(${hueSeed} 38% 22%), hsl(${hueSeed} 30% 14%))`;
+  seg.dataset.act=act.id;
+  seg.innerHTML=`<span>ACT${act.id}</span>`;
+  timelineEl.appendChild(seg);
+});
+const playhead=document.createElement("div");
+playhead.className="playhead";
+timelineEl.appendChild(playhead);
+
+function fmt(t){
+  t=Math.max(0,Math.round(t));
+  const m=Math.floor(t/60), s=t%60;
+  return m+":"+String(s).padStart(2,"0");
+}
+[0,0.25,0.5,0.75,1].forEach(f=>{
+  const s=document.createElement("span");
+  s.textContent=fmt(TOTAL*f);
+  ticksEl.appendChild(s);
+});
+
+document.getElementById("totTime").textContent=fmt(TOTAL);
+document.getElementById("computedTotal").textContent="約"+Math.round(TOTAL/60)+"分（自然な会話ペースでの試算）";
+const noteEl=document.getElementById("timeNote");
+if(TOTAL/60 > 47 || TOTAL/60 < 33){
+  noteEl.textContent = "※ 台本の「約40分」との差が大きめです。特にACT2・ACT6は台本のタイム表記に対しセリフ量が多く、実際はもっとかかる可能性があります。";
+}
+
+DEPT_ORDER.forEach(key=>{
+  const d=DEPTS[key];
+  const el=document.createElement("div");
+  el.className="dept";
+  el.id="dept-"+key;
+  el.style.setProperty("--dept-c",d.color);
+  el.innerHTML=`<div class="dot"></div><div class="dept-body"><div class="dept-label">${d.label}</div><div class="dept-text empty">まだ指示なし</div></div>`;
+  boardEl.appendChild(el);
+});
+
+/* ===================== 再生・描画ロジック ===================== */
+let t=0, playing=false, speed=15, lastTs=null;
+
+function findBeat(arr,time){
+  let lo=0,hi=arr.length-1,ans=arr[0];
+  while(lo<=hi){
+    const mid=(lo+hi)>>1;
+    if(arr[mid].start<=time){ans=arr[mid]; lo=mid+1;} else {hi=mid-1;}
+  }
+  return ans;
+}
+
+function render(){
+  t=Math.min(Math.max(t,0),TOTAL);
+  document.getElementById("curTime").textContent=fmt(t);
+  const pct=t/TOTAL*100;
+  playhead.style.left=pct+"%";
+
+  document.querySelectorAll(".actseg").forEach(seg=>{
+    const act=ACTS.find(a=>a.id==seg.dataset.act);
+    seg.classList.toggle("active", t>=act.startSec && t<act.endSec || (t>=TOTAL && act.id===ACTS.length));
+  });
+
+  const cueRef=findBeat(FLAT,t);
+  const mainB=findBeat(mainBeats,t);
+  const scene=cueRef.sceneSnap;
+  const act=ACTS.find(a=>a.id===scene.act);
+
+  document.getElementById("actNow").textContent=act.name;
+  document.getElementById("sceneAct").textContent="ACT"+scene.act;
+  document.getElementById("sceneTitle").textContent=scene.title;
+  document.getElementById("scenePeople").textContent="登場人物："+scene.people;
+
+  // 現在のセリフ／演技／歌
+  const lineArea=document.getElementById("lineArea");
+  if(mainB.k==="song"){
+    const elapsed=Math.max(0,Math.min(mainB.dur, t-mainB.start));
+    const pctSong=Math.round(elapsed/mainB.dur*100);
+    lineArea.innerHTML=`
+      <div class="song-badge">♪ 歌唱中：『${mainB.title}』（${mainB.singer}）</div>
+      <div class="song-bar"><i style="width:${pctSong}%"></i></div>
+      <div class="song-notes">${(mainB.notes||[]).map(n=>"<div>"+n+"</div>").join("")}
+        <ul>${(mainB.cues||[]).map(c=>"<li>"+DEPTS[c.dept].label+"："+c.text+"</li>").join("")}</ul>
+      </div>`;
+  } else if(mainB.k==="line"){
+    lineArea.innerHTML=`<div class="line-speaker">${mainB.sp}</div><div class="line-text">${mainB.text}</div>`;
+  } else {
+    lineArea.innerHTML=`<div class="line-speaker" style="color:var(--ink-dim);">（ト書き・演技中）</div><div class="line-text direction">${mainB.text}</div>`;
+  }
+
+  // 次のセリフ予告
+  const idx=mainBeats.indexOf(mainB);
+  const nxt=mainBeats[idx+1];
+  const prevEl=document.getElementById("nextPreview");
+  if(nxt){
+    const label = nxt.k==="song" ? ("♪ 『"+nxt.title+"』（"+nxt.singer+"）") : (nxt.k==="line" ? (nxt.sp+"「"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":"")+"」") : ("（演技）"+nxt.text.slice(0,26)+(nxt.text.length>26?"…":"")));
+    prevEl.innerHTML=`<b>${fmt(nxt.start)} 〜</b>　次：${label}`;
+  } else {
+    prevEl.textContent="この後：フィナーレの幕引き。";
+  }
+
+  // 係ボード
+  DEPT_ORDER.forEach(key=>{
+    const el=document.getElementById("dept-"+key);
+    const txt=cueRef.deptSnap[key];
+    const textEl=el.querySelector(".dept-text");
+    const isFresh = cueRef.k==="cue" && cueRef.dept===key && Math.abs(t-cueRef.start) < 6;
+    const isSongFresh = cueRef.k==="song" && cueRef.start<=t && t < cueRef.start+6 && (cueRef.cues||[]).some(c=>c.dept===key);
+    el.classList.toggle("hot", isFresh||isSongFresh || (key==="sound" && cueRef.k==="song"));
+    if(txt){ textEl.textContent=txt; textEl.classList.remove("empty"); }
+    else { textEl.textContent="まだ指示なし"; textEl.classList.add("empty"); }
+  });
+}
+
+function loop(ts){
+  if(!playing) return;
+  if(lastTs==null) lastTs=ts;
+  const dt=(ts-lastTs)/1000;
+  lastTs=ts;
+  t+=dt*speed;
+  if(t>=TOTAL){ t=TOTAL; playing=false; document.getElementById("playBtn").textContent="▶ 再生"; render(); return; }
+  render();
+  requestAnimationFrame(loop);
+}
+
+document.getElementById("playBtn").addEventListener("click",()=>{
+  playing=!playing;
+  document.getElementById("playBtn").textContent = playing ? "⏸ 一時停止" : "▶ 再生";
+  if(playing){ lastTs=null; requestAnimationFrame(loop); }
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{ t=0; render(); });
+document.getElementById("prevBtn").addEventListener("click",()=>{
+  const cur=findBeat(mainBeats,t);
+  const idx=mainBeats.indexOf(cur);
+  const target=mainBeats[Math.max(0,idx-1)];
+  t=target.start; render();
+});
+document.getElementById("nextBtn").addEventListener("click",()=>{
+  const cur=findBeat(mainBeats,t);
+  const idx=mainBeats.indexOf(cur);
+  const target=mainBeats[Math.min(mainBeats.length-1,idx+1)];
+  t=target.start; render();
+});
+document.getElementById("speed").addEventListener("change",e=>{ speed=parseFloat(e.target.value); });
+document.getElementById("seekBtn").addEventListener("click",()=>{
+  const v=document.getElementById("seek").value.trim();
+  const m=v.match(/^(\d+):(\d{1,2})$/);
+  let sec=null;
+  if(m) sec=parseInt(m[1])*60+parseInt(m[2]);
+  else if(/^\d+$/.test(v)) sec=parseInt(v);
+  if(sec!=null){ t=sec; render(); }
+});
+timelineEl.addEventListener("click",e=>{
+  const rect=timelineEl.getBoundingClientRect();
+  const frac=(e.clientX-rect.left)/rect.width;
+  t=Math.min(Math.max(frac,0),1)*TOTAL;
+  render();
+});
+
+render();
+</script>
