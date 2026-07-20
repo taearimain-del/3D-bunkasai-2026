@@ -107,6 +107,19 @@
   .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;align-items:start;}
   @media (max-width:860px){.grid{grid-template-columns:1fr;}}
 
+  /* ---- モバイル用タブ切り替え（860px以下：3パネルを縦に並べず1つずつ表示） ---- */
+  .mobile-tabs{display:none;}
+  @media (max-width:860px){
+    .mobile-tabs{display:flex;gap:8px;margin-bottom:2px;}
+    .mobile-tabs button{
+      flex:1;background:var(--panel-2);color:var(--ink-dim);border:1px solid var(--line);
+      border-radius:8px;padding:9px 6px;font-family:var(--font-body);font-size:12.5px;cursor:pointer;
+    }
+    .mobile-tabs button.active{background:var(--accent);color:#1a1006;border-color:var(--accent);font-weight:700;}
+    .tab-panel{display:none !important;}
+    .tab-panel.active{display:flex !important;}
+  }
+
   .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;}
   .card h2{font-family:var(--font-display);font-size:14px;margin:0 0 10px;color:var(--ink-dim);font-weight:600;letter-spacing:.03em;}
 
@@ -231,28 +244,35 @@
     </div>
   </div>
 
+  <div class="mobile-tabs" id="mobileTabs">
+    <button data-tab="line" class="active">セリフ</button>
+    <button data-tab="scene">場面</button>
+    <button data-tab="layout">舞台構成</button>
+    <button data-tab="board">係の指示</button>
+  </div>
+
   <div class="grid">
     <div style="display:flex;flex-direction:column;gap:16px;">
-      <div class="card scene-card">
+      <div class="card scene-card tab-panel" data-tab="scene">
         <h2>現在の場面</h2>
         <div class="scene-act" id="sceneAct">ACT1</div>
         <div class="scene-title" id="sceneTitle">夜の子ども部屋</div>
         <div class="scene-people" id="scenePeople">登場人物：子供アナ、子供エルサ、ナレーター</div>
       </div>
 
-      <div class="card stage-card" id="stageCard">
+      <div class="card stage-card tab-panel active" id="stageCard" data-tab="line">
         <div id="lineArea"></div>
         <div class="next-preview" id="nextPreview"></div>
       </div>
 
-      <div class="card layout-card">
+      <div class="card layout-card tab-panel" data-tab="layout">
         <h2>舞台構成（教室レイアウト・上から見た図）</h2>
         <div class="layout-svg-wrap" id="layoutSvg"></div>
         <div class="layout-caption" id="layoutCaption"></div>
       </div>
     </div>
 
-    <div class="board" id="board"></div>
+    <div class="board tab-panel" id="board" data-tab="board"></div>
   </div>
 
   <footer>台本「台本_アナと雪の女王.md」・「舞台構成.md」をもとに自動生成。セリフ・キューの秒数、ACT間の転換時間は台本・舞台構成資料の目安をもとにした試算であり、実測値ではありません。</footer>
@@ -1290,6 +1310,15 @@ timelineEl.addEventListener("click",e=>{
   const frac=(e.clientX-rect.left)/rect.width;
   t=Math.min(Math.max(frac,0),1)*TOTAL;
   render();
+});
+
+// モバイル表示：タブ切り替え（セリフ／場面／舞台構成／係の指示を1つずつ表示）
+document.getElementById("mobileTabs").addEventListener("click",e=>{
+  const btn=e.target.closest("button[data-tab]");
+  if(!btn) return;
+  const tab=btn.dataset.tab;
+  document.querySelectorAll("#mobileTabs button").forEach(b=>b.classList.toggle("active", b===btn));
+  document.querySelectorAll(".tab-panel").forEach(p=>p.classList.toggle("active", p.dataset.tab===tab));
 });
 
 render();
