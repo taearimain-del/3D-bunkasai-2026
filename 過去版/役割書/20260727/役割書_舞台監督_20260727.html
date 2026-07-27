@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">舞台監督</div>
+<h2>役割書 — 舞台監督</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>舞台監督は<strong>公演全体の進行を管理する司令塔</strong>。</p>
+<p>照明・音響・大道具・小道具・役者のすべてに指示を出す。</p>
+<ul><li>「誰が何をいつやるか」を全員に伝える役</li><li>本番中は声が出せないため、手信号でコントロールする</li><li>練習から本番まで、計画どおりに進んでいるかを常に確認・修正する</li></ul>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1人</td>
+<td>舞台監督本体（本番中の全指示を担当）</td>
+</tr>
+<tr>
+<td>1人（できれば）</td>
+<td>副監督（タイム計測・メモ・舞台監督のサポート）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：1〜2人</strong></p>
+<hr>
+<h2>合図の方法</h2>
+<p>セリフ中は声を出せないため、<strong>手信号</strong>で各係に合図を出す。</p>
+<p>事前に全係と統一しておき、リハーサルで必ず練習すること。</p>
+<table class="cast-table">
+<thead><tr><th>合図</th><th>意味</th></tr></thead><tbody>
+<tr>
+<td>手を上げる</td>
+<td>「準備してください」</td>
+</tr>
+<tr>
+<td>手を下ろす</td>
+<td>「今すぐ操作してください（実行）」</td>
+</tr>
+<tr>
+<td>人差し指を立てる</td>
+<td>「1分前」</td>
+</tr>
+<tr>
+<td>両手を広げる</td>
+<td>「止まれ・ちょっと待って」</td>
+</tr>
+<tr>
+<td>親指を立てる</td>
+<td>「OK・次へ進んでいい」</td>
+</tr>
+<tr>
+<td>手を2回叩く</td>
+<td>「暗転を延長します（+15秒）」</td>
+</tr>
+</tbody></table>
+<p><strong>フラッシュ合図（ACT1・ACT5）</strong>：ACT1・ACT5：子供アナ／冬アナが倒れる演技を舞台監督が目視し、フラッシュの合図を照明係に出す（照明係キュー#2・#18参照。舞台監督が「手を下ろす」合図を出したタイミングでフラッシュ→暗転／フラッシュ→青照明に戻す）。</p>
+<hr>
+<h2>場面転換の4ステップ（毎回この順番で）</h2>
+<p>暗転が入るたびに、必ずこの順序で確認・指示する：</p>
+<p>1. <strong>役者が舞台袖に引っ込んだか確認</strong></p>
+<p>2. <strong>大道具・小道具に転換の合図を出す</strong></p>
+<p>3. <strong>各係から「完了」のサインが来たら照明係に点灯の合図</strong></p>
+<p>4. <strong>役者に「入れ」の合図を出す</strong></p>
+<blockquote class="narrator">⚠️ 手順3で全係の完了を確認しないまま次に進まないこと。</blockquote>
+<blockquote class="narrator">※ 歌唱中に同時進行する場面（レット・イット・ゴー）は別フロー参照（下記「歌唱中同時操作シーン対応」セクション）。</blockquote>
+<hr>
+<h2>本番当日のチェックリスト</h2>
+<h3>開演前（全係に確認）</h3>
+<ul><li>[ ] 照明係が操作パネルの前にいる</li><li>[ ] 音響係がPC・音源を起動・確認済み</li><li>[ ] 大道具がACT1の初期配置になっている</li><li>[ ] 小道具がすべて所定の位置にある（役割書_小道具係参照）</li><li>[ ] アナの肩掛けバッグ内にロープ・金づちが収納されているか目視確認（ドアフレーム廃止に伴い小道具はバッグ収納に変更。2026-07-05更新）</li><li>[ ] 黒板の一角にドアパネルが設置されている（ACT1『雪だるまつくろう』用）</li><li>[ ] 子供アナ・子供エルサが ACT1 の衣装を着ている</li><li>[ ] 役者全員が舞台袖に集合している</li><li>[ ] 暖炉プロップのLEDライトが点灯確認済み</li><li>[ ] ハンスの剣を小道具係が預かっている（ACT6クライマックス前の暗転でハンスへ手渡す段取りを確認）</li><li>[ ] 音響係との合図確認済み（生まれてはじめてのフェードアウトトリガー：ハンスが立ち上がる動きを目視）</li><li>[ ] ウェーゼルトン公爵役へフィナーレ前の動線を声がけ済み（ACT2/3退場後・ACT6→7暗転中も上手袖で待機を継続し、フィナーレ開始後に舞台監督の合図で上手袖から登場する）</li></ul>
+<h3>本番中</h3>
+<ul><li>[ ] 各ACTの暗転で4ステップを確実に実行した</li><li>[ ] ACT1→2の暗転で小道具係によるドアパネル撤去が完了しているか確認した</li><li>[ ] ACT3→4の暗転でエルサのマント回収が完了しているか確認した</li><li>[ ] タイム計測は副監督に任せる</li><li>[ ] ACT5→6暗転（45秒）：大道具・小道具・エルサ動線の完了を確認した（ゲネプロで計測・記録済みのタイムと照合）</li><li>[ ] ACT6：ハンスの暖炉消灯動作を目視して照明係に合図を出す</li></ul>
+<hr>
+<h2>リハーサル管理</h2>
+<p>舞台監督はリハーサルで「本番どおりに動けているか」を確認し、問題があれば次回までに修正する。</p>
+<h3>リハーサルごとのチェック項目</h3>
+<table class="cast-table">
+<thead><tr><th>チェック内容</th><th>確認方法</th></tr></thead><tbody>
+<tr>
+<td>暗転の時間が 30秒〜1分以内に収まっているか</td>
+<td>タイム計測（副監督が計る）</td>
+</tr>
+<tr>
+<td>小道具の受け渡しミスがないか</td>
+<td>各シーンを見て確認</td>
+</tr>
+<tr>
+<td>照明・音響のキューのタイミングがズレていないか</td>
+<td>台本のキューと照らし合わせる</td>
+</tr>
+<tr>
+<td>役者のセリフや立ち位置に問題がないか</td>
+<td>通し稽古中にメモする</td>
+</tr>
+<tr>
+<td>場面転換の動線が渋滞していないか</td>
+<td>舞台袖と舞台の動きを観察</td>
+</tr>
+<tr>
+<td>ACT5→6転換（45秒）が完了できているか</td>
+<td>ゲネプロで必ず計測・秒数を記録する</td>
+</tr>
+<tr>
+<td>延長合図（手を2回叩く）が全係に伝わっているか</td>
+<td>使用シーンを全員で事前確認</td>
+</tr>
+</tbody></table>
+<h3>リハーサル後にやること</h3>
+<p>1. 問題点をメモにまとめ、関係する係に伝える</p>
+<p>2. 「次の練習までに直す」こと・「本番まで練習が必要なこと」を区別してリスト化</p>
+<p>3. 全体的なタイム（合計上演時間）を記録する</p>
+<h3>練習スケジュールの目安</h3>
+<table class="cast-table">
+<thead><tr><th>時期</th><th>練習内容</th></tr></thead><tbody>
+<tr>
+<td>7月〜8月前半</td>
+<td>パート別練習（役者は台本読み・各係は準備・制作）</td>
+</tr>
+<tr>
+<td>8月後半</td>
+<td>ACTごとの部分通し（照明・音響のタイミングを合わせる）</td>
+</tr>
+<tr>
+<td>9月前半</td>
+<td>全体通し稽古（衣装・小道具も含めた本番と同じ形式）</td>
+</tr>
+<tr>
+<td>9月10日（目安）</td>
+<td>ゲネプロ（本番前日の最終リハーサル）。時間を計測する</td>
+</tr>
+<tr>
+<td>本番前日</td>
+<td>会場のセットアップ・全小道具の配置確認</td>
+</tr>
+</tbody></table>
+<h3>ゲネプロ（最終リハーサル）でチェックすること</h3>
+<ul><li>[ ] 全体の上演時間が 35〜45 分に収まっているか</li><li>[ ] すべての暗転が 1分以内に完了しているか</li><li>[ ] ACT5→6転換（45秒）の完了時間を計測・記録した（机椅子搬入・小道具セット・エルサ動線すべて含む）</li><li>[ ] すべての係が台本のキューを見ずに動けているか</li><li>[ ] トラブルが起きたときの対応（代役・カット案）を確認した</li></ul>
+<hr>
+<h2>歌唱中同時操作シーン対応</h2>
+<p>暗転のない歌唱中に大道具・照明が同時に動く唯一のシーン（レット・イット・ゴー）の合図フロー。</p>
+<h3>レット・イット・ゴー 歌唱中合図フロー（暗転なし）</h3>
+<pre><code>1. 大人エルサが歌い出しの1フレーズ前（前奏終了）でスタンバイ
+2. 歌い出しの瞬間：照明係へ「照明GO」合図（手のひらを上に向けて合図）
+3. 同時：大道具係へ「パネル展開GO」合図（舞台内ライト点滅1回）
+4. 大道具係は上手2名が黒スタッフ服で、8小節を目安にパネルを展開</code></pre>
+<p><strong>マント脱ぎ照明合図（キュー#12b）</strong>：</p>
+<ul><li>大人エルサが両腕を広げる（マントを脱ぐ直前）のタイミングで照明係へ「最大輝度GO」合図（照明卓隣に立ち肩タップ）</li><li>担当：舞台監督または副監督</li></ul>
+<h3>ACT5→6 暗転（45秒）のタイムライン</h3>
+<pre><code>暗転開始
+  0〜 6秒：大人エルサが上手袖→バックステージ→下手袖への横断を完了（上手袖担当が横断完了を確認。台本ACT5末尾のト書きと一致させたタイム）
+  0〜20秒：大道具4名が上手・下手両袖から氷パネルを撤去→茶系パネルに切替
+ 20〜35秒：大道具2名が上手袖から机・椅子を搬入（大人エルサ横断完了確認後・8秒経過後）
+ 20〜35秒：小道具2名が下手袖から書類・地図・羽ペンをセット。暖炉プロップを舞台端の壁際に設置・LED点灯
+           ※ 下手袖：大人エルサは上手寄り1.5m、小道具は下手寄りで並行作業
+ 35〜40秒：大人エルサが下手袖から舞台中央へ移動・震えのポーズ
+ 35〜42秒：ハンス入場：机・椅子搬入完了（35秒）後、大道具が上手袖から引き上げたことを確認してから上手袖→舞台（机）へ移動し着席（35〜42秒）→照明点灯まで書き物の演技で待機
+           ※ 上手袖は大道具の搬入とハンスの入場が同じ動線を使うため、「机・椅子搬入完了→大道具引き上げ→ハンス入場」の順序を厳守すること
+ 40〜45秒：全員スタンバイ完了・点灯待ち</code></pre>
+<p><strong>合図の順序</strong>：</p>
+<p>1. 暗転と同時に「上手袖担当→大人エルサ横断開始」</p>
+<p>2. 上手袖担当が「エルサ横断完了確認」（6秒経過後）を肉声で舞台監督に報告</p>
+<p>3. エルサ横断完了確認後（6秒経過後）かつ8秒以降（トロール退場完了後）に「机・椅子搬入GO」合図を出す。これによりトロール退場（0〜8秒）・机搬入（20〜35秒）の動線衝突を排除する</p>
+<p>4. 35秒時点でパネル切替未完了の場合は即「延長合図（手を2回叩く）」→最大+15秒</p>
+<h3>ACT6内クライマックス前暗転（45秒）のタイムライン</h3>
+<pre><code>暗転開始
+  0〜15秒：舞台監督補佐が子供アナ・子供エルサをバックステージ経由で下手袖へ誘導完了
+  0〜20秒：大道具が机・椅子を上手袖へ撤収
+  0〜10秒：下手袖担当1名が暖炉プロップを下手奥へ引き込み、エルサの動線を確保
+  0〜30秒：冬アナのシフォンケープ着替えを担当スタッフ1名が専任で介助（同時進行）
+  大人エルサ：ACT5→6で既に下手袖待機済み。ACT6→7暗転では移動不要。暗転開始と同時に舞台へ出るキューを待つ
+    ※解決済：ACT6中のエルサ上手袖戻りなし（2026-07-05確認、台本ACT6にエルサ登場・上手袖移動の記述がないため。エルサはACT5→6暗転で下手袖へ横断済みのままACT7スタンバイを継続する）
+  ハンス：上手袖で剣を受け取りスタンバイ
+  冬アナ・クリストフ・スヴェン・オラフ：下手袖へ移動
+  ウェーゼルトン公爵：ACT2/3退場後、上手袖で待機を継続。フィナーレ開始後に舞台監督の合図で上手袖から登場
+ 30〜40秒：全員の位置・衣装を舞台監督が確認
+ 35〜40秒：全員が定位置へのスタンバイを完了
+ 40〜45秒：全員スタンバイ完了
+ 45秒：明転・ACT7開始</code></pre>
+<p><strong>下手袖の人数</strong>：最大7名（大人エルサ・冬アナ・クリストフ・スヴェン・オラフ・子供アナ・子供エルサ）が集まるため、エルサ・冬アナ一行に加えて子供アナ・子供エルサの立ち位置も事前に決めておくこと。</p>
+<h3>本番1週間前チェック（ACT6→7暗転）</h3>
+<ul><li>[ ] 本番1週間前にACT6→7暗転シミュレーションを単体で実施し、45秒以内に完了できるか検証・記録する</li></ul>
+<h3>ACT4→ACT5暗転（大人エルサ入場方向）</h3>
+<ul><li>暗転中に大人エルサへ「上手から入る」合図を出す</li><li>アナ一行の下手スタンバイを確認してから、両方へ「GO」合図を出す順序で実施</li></ul>
+<hr>
+<h2>トラブル対応</h2>
+<table class="cast-table">
+<thead><tr><th>トラブル</th><th>対応</th></tr></thead><tbody>
+<tr>
+<td>役者がセリフを忘れた</td>
+<td>舞台袖から小声でヒントを出す担当を事前に決めておく</td>
+</tr>
+<tr>
+<td>照明の操作ミス</td>
+<td>次のキューで自然に修正。本番中は急がない</td>
+</tr>
+<tr>
+<td>音響の曲が出ない</td>
+<td>音響係に両手広げの「止まれ」合図 → 待つ</td>
+</tr>
+<tr>
+<td>小道具を置き忘れた</td>
+<td>即興で役者がセリフを変えるか省略する（事前に「○○がないときはこうする」を決めておく）</td>
+</tr>
+<tr>
+<td>時間が大幅に押している</td>
+<td>事前に「削れるセリフ・シーン」を決めておき、舞台監督の合図で実行する</td>
+</tr>
+<tr>
+<td>ACT5→6転換が45秒を超えそう</td>
+<td>35秒時点でパネル未完了なら即「延長合図（手を2回叩く）」。最大+15秒（計60秒）上限</td>
+</tr>
+</tbody></table>
+</body>
+</html>
