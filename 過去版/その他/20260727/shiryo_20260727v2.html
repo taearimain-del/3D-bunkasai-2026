@@ -386,7 +386,7 @@
   // 定期実行タスクの実際の設定はこの後Claude本体が別途行う予定のため、暫定的に毎時0分としている。
   // 実際の設定が決まり次第、この定数だけを差し替えれば表示に反映される（他ロジックからは独立）。
   (function () {
-    const NEXT_CHECK_MINUTE = 47;
+    const NEXT_CHECK_MINUTE = 0;
     const el = document.getElementById('next-check-countdown');
     if (!el) return;
     function render() {
