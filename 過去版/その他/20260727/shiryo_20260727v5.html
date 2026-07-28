@@ -555,7 +555,7 @@
       listEl.innerHTML = '<p class="comment-empty">まだコメントはありません。</p>';
       return;
     }
-    const items = Object.values(data).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+    const items = Object.values(data).sort((a, b) => (a.ts || 0) - (b.ts || 0));
     for (const item of items) {
       const el = document.createElement('div');
       el.className = 'comment-item';
