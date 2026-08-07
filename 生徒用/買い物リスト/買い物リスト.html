@@ -172,6 +172,8 @@ const SHOPPING_ITEMS = [
   { id: 'panel-hatome',      category: '① 大道具：パネル関連（新規）', name: 'ハトメ（グロメット）セット（打ち具付き）1式' },
   { id: 'panel-ring-hook',   category: '① 大道具：パネル関連（新規）', name: 'カーテンリング または S字フック（小） 15〜20個程度（3枚のパネル分、各4〜6点×3枚＋予備）' },
   { id: 'panel-tape',        category: '① 大道具：パネル関連（新規）', name: '布テープ or ガムテープ 1〜2巻' },
+  { id: 'panel-color-ice',   category: '① 大道具：パネル関連（新規）', name: '氷・雪パネル用の着色材料（絵の具または水性塗料、青・白・水色系）：模造紙 or 布を氷雪パネルの色合いに仕上げるため' },
+  { id: 'panel-color-troll', category: '① 大道具：パネル関連（新規）', name: 'トロール村パネル用の着色材料（絵の具または水性塗料、緑系）：模造紙を「岩と苔のイメージ」に着色するため' },
 
   { id: 'set-danboru', category: '② 大道具：既存セット', name: '段ボール（大判数枚）' },
   { id: 'set-nuno',    category: '② 大道具：既存セット', name: '布 or 追加の模造紙（城内パネル用）' },
@@ -183,16 +185,25 @@ const SHOPPING_ITEMS = [
   { id: 'prop-kinobou',       category: '③ 小道具', name: '木の棒（杖・剣の芯材）' },
   { id: 'prop-rope-kanazuchi',category: '③ 小道具', name: 'ロープ・金づち（模造でよい）' },
   { id: 'prop-led',           category: '③ 小道具', name: '電池式LEDライト＋電池（暖炉プロップ内蔵用）' },
+  { id: 'prop-ninjin-koteigu',category: '③ 小道具', name: '人参の固定具（面ファスナー〔マジックテープ〕 または クリップ式固定具）：人参の装着用、多少の動きでは外れない設計にするため' },
 
   { id: 'deco-gayoushi',    category: '④ 教室装飾用の資材', name: '白・水色・青の画用紙・模造紙（追加分）' },
   { id: 'deco-led',         category: '④ 教室装飾用の資材', name: '電池式LEDイルミネーションライト 2〜3本' },
   { id: 'deco-tape',        category: '④ 教室装飾用の資材', name: '壁を傷めないテープ類（マスキングテープ等）' },
   { id: 'deco-cellophane',  category: '④ 教室装飾用の資材', name: 'セロファン（あれば）' },
+
+  { id: 'screen-stand', category: '⑤ 目隠しスクリーン（ACT7 下手袖の子供アナ・子供エルサ待機用）', name: '独立式スタンド または 突っ張り棒（目隠しスクリーンを自立させる骨組み用）' },
+
+  { id: 'kuromaku-sheet',  category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕シート' },
+  { id: 'kuromaku-kanagu', category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕の固定金具（アイボルト・S字フック・カラビナ等。壁面・柱への固定用）' },
+  { id: 'kuromaku-hasami', category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕用の布団バサミ または カーテンフック・リング（黒シートの上辺を30〜40cm間隔でワイヤーに留めるための吊り具）：背景パネル3枚とは異なり黒幕は方式変更なし・引き続き布団バサミ方式' },
 ];
 
 // ===== ローカル状態（Firebaseから読めるまでの初期値。checked/note/size/purchasedDateを保持） =====
 const state = {};
 SHOPPING_ITEMS.forEach(it => { state[it.id] = { checked: false, note: '', size: '', purchasedDate: '' }; });
+// 黒幕シートはホームセンターで購入済み（園芸用の大判シート）。Firebase側にデータがあればそちらを優先する設計は他の品目と同じ。
+state['kuromaku-sheet'] = { checked: true, note: 'ホームセンターで購入済み（園芸用シート）。サイズ未計測', size: '', purchasedDate: '' };
 
 // ===== DOM構築 =====
 const categoriesEl = document.getElementById('categories');
