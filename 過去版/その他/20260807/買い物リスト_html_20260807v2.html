@@ -162,15 +162,13 @@ footer{text-align:center; color:var(--sub); font-size:0.72rem; margin-top:28px;}
 
 <script>
 // ===== 品目データ（other/買い物リスト.md が一次ソース。品目追加時はこちらにも反映すること） =====
-// 2026-08-07：トロール村パネルのロールスクリーン方式を白紙化し、3枚すべてハトメ＋カーテンリング/S字フック方式に統一したため、
-// panel-shintou（試作用紙筒）・panel-himo（束ねる用の紐）・panel-futonbasami（布団バサミ）は削除した。
-// 布団バサミはバックステージ幕・窓の遮光では引き続き使うが、それらは学校の既存備品を流用する運用のため本リストへの新規計上は不要。
 const SHOPPING_ITEMS = [
   { id: 'panel-moroshigami', category: '① 大道具：パネル関連（新規）', name: '模造紙 20枚前後（氷雪・城内・トロール村の3種類の背景パネル用）' },
+  { id: 'panel-shintou',     category: '① 大道具：パネル関連（新規）', name: '太めの紙筒・芯（直径8〜10cm程度）試作用 1本' },
   { id: 'panel-hosoibou',    category: '① 大道具：パネル関連（新規）', name: '細い棒（直径8〜10mm程度。突っ張り棒の細いタイプ or 園芸支柱。裾に通してパネルをピンと張るため）1.5m前後のものを10本程度（3枚のパネル分、つなげて使う想定。合計約15m必要）' },
   { id: 'panel-wire',        category: '① 大道具：パネル関連（新規）', name: 'ワイヤー（パネル専用の2本目。黒幕用ワイヤーとは別）1巻' },
-  { id: 'panel-hatome',      category: '① 大道具：パネル関連（新規）', name: 'ハトメ（グロメット）セット（打ち具付き）1式' },
-  { id: 'panel-ring-hook',   category: '① 大道具：パネル関連（新規）', name: 'カーテンリング または S字フック（小） 15〜20個程度（3枚のパネル分、各4〜6点×3枚＋予備）' },
+  { id: 'panel-futonbasami', category: '① 大道具：パネル関連（新規）', name: '布団バサミ（大きめ・フック付きタイプ）10〜15個' },
+  { id: 'panel-himo',        category: '① 大道具：パネル関連（新規）', name: '紐（丈夫めのもの。パネルを束ねる・引き解け結び用）' },
   { id: 'panel-tape',        category: '① 大道具：パネル関連（新規）', name: '布テープ or ガムテープ 1〜2巻' },
 
   { id: 'set-danboru', category: '② 大道具：既存セット', name: '段ボール（大判数枚）' },
