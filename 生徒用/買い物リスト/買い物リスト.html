@@ -380,7 +380,7 @@ setSyncStatus(null);
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-  import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+  import { getDatabase, ref, onValue, update, child } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
   // 買い物リストの購入チェック・備考・サイズ・購入日を全員で共有するための保存先。
   // shiryo.htmlと同じFirebaseプロジェクトを流用し、既存の comments / kingdom / pageviews とは
@@ -402,7 +402,7 @@ setSyncStatus(null);
 
     // window経由でモジュール外（通常scriptで定義したロジック）から呼べるようにする
     window.__shoppingFbUpdate = update;
-    window.__shoppingFbRef = ref;
+    window.__shoppingFbRef = child;
     window.__shoppingFbRoot = shoppingRoot;
 
     onValue(shoppingRoot, (snap) => {
