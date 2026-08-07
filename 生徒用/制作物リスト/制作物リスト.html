@@ -511,7 +511,7 @@ setSyncStatus(null);
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
-  import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+  import { getDatabase, ref, onValue, update, child } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
 
   // 制作物リストの完成チェック・完成日・備考を全員で共有するための保存先。
   // shiryo.htmlと同じFirebaseプロジェクトを流用し、既存の comments / kingdom / pageviews / shoppingList とは
@@ -533,7 +533,7 @@ setSyncStatus(null);
 
     // window経由でモジュール外（通常scriptで定義したロジック）から呼べるようにする
     window.__productionFbUpdate = update;
-    window.__productionFbRef = ref;
+    window.__productionFbRef = child;
     window.__productionFbRoot = productionRoot;
 
     onValue(productionRoot, (snap) => {
