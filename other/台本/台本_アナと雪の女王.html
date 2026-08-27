@@ -6,8 +6,12 @@
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 @page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+@font-face {
+  font-family: 'IPAexMincho';
+  src: url('../../tools/fonts/ipaexm.ttf') format('truetype');
+}
 body {
-  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho',Georgia,serif;
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho','IPAexMincho',Georgia,serif;
   font-size: 10.5pt;
   line-height: 1.9;
   color: #1e0e00;
@@ -167,80 +171,80 @@ p.eizo-cue {
 <thead><tr><th>役名</th><th>A</th><th>B</th><th>備考</th></tr></thead><tbody>
 <tr>
 <td style="color:#d44d75;font-weight:bold">子供アナ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">りのん</td>
+<td class="cast-slot-cell">ひなた</td>
 <td>ACT1のみ。幼少期のアナ</td>
 </tr>
 <tr>
 <td style="color:#c0305a;font-weight:bold">夏アナ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">みそら</td>
+<td class="cast-slot-cell">ことね</td>
 <td>ACT2〜3。主役・歌が多い</td>
 </tr>
 <tr>
 <td style="color:#7a1030;font-weight:bold">冬アナ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">りえ</td>
+<td class="cast-slot-cell">あおい</td>
 <td>ACT4〜7。旅用衣装で通す</td>
 </tr>
 <tr>
 <td style="color:#5095cc;font-weight:bold">子供エルサ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">うらら</td>
+<td class="cast-slot-cell">ゆな</td>
 <td>ACT1のみ。幼少期のエルサ</td>
 </tr>
 <tr>
 <td style="color:#2070b0;font-weight:bold">大人エルサ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">あん</td>
+<td class="cast-slot-cell">ここな</td>
 <td>ACT2・3・5・6・7（通し）。ACT4は上手袖待機。主役・出番多い</td>
 </tr>
 <tr>
 <td style="color:#8a6030;font-weight:bold">ハンス</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">りゅう</td>
+<td class="cast-slot-cell">あゆま</td>
 <td>序盤は王子様、終盤で悪役に一変。感情の落差が見せ場</td>
 </tr>
 <tr>
 <td style="color:#b86020;font-weight:bold">クリストフ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">せいじ</td>
+<td class="cast-slot-cell">たつや</td>
 <td>不器用だが心温かい山男キャラ。ぶっきらぼうな演技を意識</td>
 </tr>
 <tr>
 <td style="color:#b09000;font-weight:bold">オラフ</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">せら</td>
+<td class="cast-slot-cell">みらい</td>
 <td>コミカルな演技を意識</td>
 </tr>
 <tr>
 <td style="color:#9a6840;font-weight:bold">スヴェン</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">あいり</td>
+<td class="cast-slot-cell">Kyo</td>
 <td>クリストフの忠実な相棒トナカイ役。言葉は使わず身振り・表情で感情を表現する</td>
 </tr>
 <tr>
 <td style="color:#604898;font-weight:bold">ウェーゼルトン公爵</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">しゅうた</td>
+<td class="cast-slot-cell">こたに</td>
 <td>コミカルな演技を意識</td>
 </tr>
 <tr>
 <td style="color:#386838;font-weight:bold">トロール</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">ゆみか・かれん・はると</td>
+<td class="cast-slot-cell">けんしん・くるみ・まお</td>
 <td>複数人で担当</td>
 </tr>
 <tr>
 <td style="color:#505050;font-weight:bold">ナレーター</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">ゆうな・わかな</td>
+<td class="cast-slot-cell">志内・こうすけ</td>
 <td>録音でも可</td>
 </tr>
 <tr>
 <td style="color:#6a4530;font-weight:bold">家来 / 司祭役</td>
-<td class="cast-slot-cell"></td>
-<td class="cast-slot-cell"></td>
+<td class="cast-slot-cell">やまと</td>
+<td class="cast-slot-cell">Kyo</td>
 <td>舞台裏から声のみも可</td>
 </tr>
 </tbody></table>
@@ -489,11 +493,13 @@ p.eizo-cue {
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「おい、なんか髪が白くなってないか？エルサにやられたんじゃないのか？」</p>
 <p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「ほんとだわ。」</p>
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「俺の友人に会いに行こう。同じようなものを治しているのを見たことがある。」</p>
-<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>クリストフはアナをトロールの村へ連れていきます。その間にも、アナの体は次第に凍っていました。</blockquote>
 <p class="stage-direction">（クリストフが弱った冬アナに肩を貸して支え、ゆっくり歩かせる。スヴェンは心配そうに二人に寄り添いながら進む。〔冬アナを支えるのは主にクリストフ。スヴェンは隣に寄り添う演技のみ。〕）</p>
+<p class="cue light-cue">💡 暗転（数秒）。</p>
+<blockquote class="narrator"><span class="char-name" style="color:#505050">ナレーター</span><br>クリストフはアナをトロールの村へ連れていきます。その間にも、アナの体は次第に凍っていました。</blockquote>
+<p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中に氷・雪パネルを撤去し、トロール村パネル（緑系）に架け替える。ハトメ＋カーテンリング（またはS字フック）でワイヤーに掛ける方式。目安15〜20秒（ゲネプロで計測）。</p>
 <h3>〔トロールの村〕</h3>
-<p class="cue light-cue">💡 トロールの村：青系の照明からやや暖かい緑・橙系に戻す。</p>
-<p class="stage-direction">（トロール役は舞台の両袖から2〜3人ずつ登場する。特定のセットは不要。クリストフに支えられていた冬アナが、ゆっくりと地面に座らされる。）</p>
+<p class="cue light-cue">💡 トロールの村：明転。暗転前の青系の照明から、やや暖かい緑・橙系へ切り替える。</p>
+<p class="stage-direction">（舞台奥に緑系のトロール村パネルが掲げられている。トロール役は舞台の両袖から2〜3人ずつ登場する。クリストフに支えられていた冬アナが、ゆっくりと地面に座らされる。）</p>
 <p class="cue shodogu-cue">📦 <strong>キャスティング注記:</strong> トロール役は<strong>必ず両袖に均等に振り分けてキャスティングすること</strong>（上手2〜3人・下手2〜3人）。これはACT5→6の45秒暗転でトロールが「来た袖にそのまま戻る」動線（エルサの上手袖→下手袖への横断と時系列で干渉しないための前提）を成立させるために必須の条件。偏ったキャスティング（例：5人が同じ袖から登場）になる場合は、事前に舞台監督へ申告し、退場動線を個別に再調整すること。</p>
 <p class="dialog"><span class="char-name" style="color:#b86020">クリストフ</span>「紹介するよ、俺の家族だ。おい、みんな！」</p>
 <p class="dialog"><span class="char-name" style="color:#386838">トロール</span>「わ、クリストフだ！」「クリストフが帰ってきた！」「女の子を連れてるぞ！」「クリストフにぴったりだ！」</p>
@@ -514,7 +520,7 @@ p.eizo-cue {
 <p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> トロール役は「来た袖に戻る」原則で退場する。上手袖から登場したトロールは暗転直後（目安0〜8秒）に上手袖へ、下手袖から登場したトロールは同じく暗転直後（目安0〜8秒）に下手袖へ、それぞれ速やかに退場する（両袖均等キャスティングが前提。上記📦キャスティング注記参照）。エルサの上手袖→バックステージ→下手袖の横断（目安0〜6秒）と時系列が重ならないよう、トロール退場を最優先で完了させること。</p>
 <p class="cue light-cue">💡 暗転→次の場面（ハンスの部屋）の役者が配置につく→照明を付ける。</p>
 <p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中にセットをACT6（ハンスの部屋）の配置へ変更（茶系背景パネルへ）。教室の机1台と椅子を執務机として舞台中央やや奥に配置する（机の前にハンスが座れる向きで）。※机・椅子の搬入・撤収はクライマックス前の暗転も含め大道具係が一貫して担当。</p>
-<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中に以下をセット：①机の上に書類・地図風の紙数枚・羽ペン風の小道具を並べる。②暖炉プロップ（段ボール製・内部LEDライト点灯済み）を舞台端の壁際に設置し、スイッチがオラフから操作しやすい向きに調整する。③ハンスの剣は小道具係が預かっておく（着席して書き物をするACT6冒頭では帯剣しない）。机・椅子の配置とハンスの着席が済んだ状態で照明点灯。</p>
+<p class="cue shodogu-cue">📦 <strong>小道具:</strong> 暗転中に以下をセット：①暖炉プロップ（段ボール製・内部LEDライト点灯済み）を舞台端の壁際に設置し、スイッチがオラフから操作しやすい向きに調整する。②ハンスの剣は小道具係が預かっておく（着席して書き物をするACT6冒頭では帯剣しない）。机・椅子の配置とハンスの着席が済んだ状態で照明点灯。</p>
 <p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 大道具・小道具すべての転換完了を確認してから照明・役者入場の合図を出す。</p>
 <hr>
 <div class="act-header"><div class="act-title">ACT 6　ハンスの裏切り</div>
@@ -523,7 +529,7 @@ p.eizo-cue {
 <p class="act-chars"><strong>【登場人物】冬アナ、ハンス、オラフ</strong>　※エルサはACT5→6暗転で横断済み。ACT6の間は下手袖でACT7スタンバイ中のため、舞台には登場しない</p>
 <p><strong>（〜約35分）</strong></p>
 <p class="cue light-cue">💡 ハンスの部屋：暖かい照明（暖炉の火が灯っているイメージ）。</p>
-<p class="stage-direction">（舞台：教室の机が執務机として舞台中央やや奥に置かれている。机の上には書類・地図風の紙・羽ペン風の小道具。舞台端の壁際に暖炉プロップが灯り、茶系背景パネルが城の室内を表す。ハンスは机の前の椅子に腰かけ、日記か書類に何かを書き込んでいる。）</p>
+<p class="stage-direction">（舞台：教室の机が執務机として舞台中央やや奥に置かれている。舞台端の壁際に暖炉プロップが灯り、茶系背景パネルが城の室内を表す。ハンスは机の前の椅子に腰かけ、何か書き物をしている仕草をしている。）</p>
 <p class="stage-direction">（冬アナが息を切らせながら駆け込んでくる。ハンスは驚いて立ち上がる。）</p>
 <p class="stage-direction">（演出注：冬アナはACT5で力尽きた状態から気力を振り絞って立ち上がった設定。入場時は体がふらつき、息が荒く、膝をつきかけてよい。「駆け込む」は速度ではなく焦りを表す表現。凍結進行中であることを身体で表現すること。）</p>
 <p class="dialog"><span class="char-name" style="color:#8a6030">ハンス</span>「アナ…大丈夫か？」</p>
@@ -553,7 +559,7 @@ p.eizo-cue {
 <p class="act-chars"><strong>【登場人物】冬アナ、エルサ、ハンス、オラフ、クリストフ、スヴェン</strong></p>
 <p><strong>（〜約40分）</strong></p>
 <p class="cue light-cue">💡 クライマックス：吹雪が舞う城の外。照明は激しい青白色。</p>
-<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 暗転中の動線（45秒）：①エルサはACT5→6暗転で既に上手袖→バックステージ→下手袖の横断を完了済みのため、追加の横断は不要。下手袖の奥（冬アナ一行の入口寄りより奥）で待機を継続する。②大道具係が机・椅子を上手袖へ撤収（目安0〜20秒）。③ハンスはACT6終盤にバックステージ経由で既に上手袖へ到着済みのため、そのまま剣を受け取ってスタンバイする（ACT6「ハンスの裏切り」暖炉消灯後の退場注記参照）。④冬アナ・クリストフ・スヴェン・オラフはACT6終盤で舞台中央やや下手寄りで合流済み（ACT6末尾のト書き参照）のため、バックステージ横断は不要。そのまま短距離で下手袖へスタンバイする。⑤ウェーゼルトン公爵はACT3退場（上手袖）以降、上手袖で待機を継続しており、この暗転中も追加の移動は発生しない。⑥子供アナ・子供エルサはこの暗転中に舞台監督補佐がバックステージ経由で下手袖へ誘導し、目隠しスクリーンの内側で待機させる（詳細はフィナーレ欄の📦注記参照）。下手袖には最大7名（エルサ・冬アナ・クリストフ・スヴェン・オラフ・子供アナ・子供エルサ）が集まるため、エルサは奥、冬アナ一行は入口寄りに、子供アナ・子供エルサは目隠しスクリーンの内側に、それぞれ分かれて並ぶこと。暗転残り5〜10秒で全員スタンバイ完了。ゲネプロ前に必ず動線テストを実施すること。</p>
+<p class="cue kantoku-cue">🎬 <strong>舞台監督:</strong> 暗転中の動線（45秒）：①エルサはACT5→6暗転で既に上手袖→バックステージ→下手袖の横断を完了済みのため、追加の横断は不要。下手袖の奥（冬アナ一行の入口寄りより奥）で待機を継続する。②大道具係が机・椅子を上手袖へ撤収（目安0〜20秒）。③ハンスはACT6終盤にバックステージ経由で既に上手袖へ到着済みのため、そのまま剣を受け取ってスタンバイする（ACT6「ハンスの裏切り」暖炉消灯後の退場注記参照）。④冬アナ・クリストフ・スヴェン・オラフはACT6終盤で舞台中央やや下手寄りで合流済み（ACT6末尾のト書き参照）のため、バックステージ横断は不要。そのまま短距離で下手袖へスタンバイする。⑤ウェーゼルトン公爵はACT3退場（上手袖）以降、上手袖で待機を継続しており、この暗転中も追加の移動は発生しない。⑥子供アナ・子供エルサはこの暗転中に舞台監督補佐がバックステージ経由で下手袖付近へ誘導し、バックステージ内（黒板手前の黒幕の裏）で待機させる（2026-08-11：専用の目隠しスクリーンは新設せず、既存のバックステージ空間をそのまま利用する方式に変更。詳細はフィナーレ欄の📦注記参照）。下手袖には最大7名（エルサ・冬アナ・クリストフ・スヴェン・オラフ・子供アナ・子供エルサ）が集まるため、エルサは奥、冬アナ一行は入口寄りに一列縦隊で並び、子供アナ・子供エルサはバックステージ内で待機すること。暗転残り5〜10秒で全員スタンバイ完了。ゲネプロ前に必ず動線テストを実施すること。</p>
 <p class="cue daidogu-cue">🎨 <strong>大道具:</strong> 暗転中に机・椅子を舞台袖へ撤収。茶系背景パネルはそのまま残す（城の外壁として転用）。</p>
 <p class="cue shodogu-cue">📦 <strong>小道具:</strong> この暗転中に、舞台袖でハンス役へ剣を手渡す（クライマックスでの登場に間に合わせる）。</p>
 <p class="cue isho-cue">👗 <strong>衣装:</strong> この暗転中に、下手袖で冬アナが白いシフォンケープ（またはシルバー地の薄いストール）を衣装の上から羽織る。ACT7の「凍りつく」演技での視覚表現に使う（下記💡参照）。※混雑する下手袖での早着替えが45秒以内に確実に完了できるか、ゲネプロで必ずタイムテストを行うこと（要確認事項。次の課題参照）。</p>
@@ -570,6 +576,7 @@ p.eizo-cue {
 <p class="cue onkyo-cue">🔊 <strong>SE:</strong> 氷結音（「ジュワッ」または「ズバン！」）を再生。凍りつくイメージ。</p>
 <p class="cue light-cue">💡 <strong>冬アナが凍り始めるセリフ「やめて！」の直後、舞台全体を瞬間的に白くフラッシュさせる（0.3秒）。その後、舞台を冷たい青白色に戻し、冬アナの白いケープを照射して「氷の像」感を強調する。</strong> 照明係は舞台監督の合図を受けてタイミングを合わせること。</p>
 <p class="dialog"><span class="char-name" style="color:#2070b0">エルサ</span>「いや、いやよ、そんな…私を助けるためになんということをするの…」</p>
+<p class="cue onkyo-cue">🔊 <strong>SE:</strong> アナの魔法が解けるとき（SE7）を再生。氷が足元から解け始めるイメージ。エルサが泣き崩れている間、静かに鳴らす。</p>
 <p class="stage-direction">（エルサは凍りついた冬アナにすがりつき、肩を震わせて涙を流す。しばしの静寂の後、冬アナの体を覆っていた氷が、足元からゆっくりと解けていく。）</p>
 <p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「大切な人だからよ、エルサ」</p>
 <p class="dialog"><span class="char-name" style="color:#2070b0">エルサ</span>「アナ…！アナ！？よかった…！」</p>
@@ -587,7 +594,7 @@ p.eizo-cue {
 <p class="dialog"><span class="char-name" style="color:#7a1030">冬アナ</span>「うん！」</p>
 <p class="dialog"><span class="char-name" style="color:#b09000">オラフ</span>「ねえ、愛ってさ…夏みたいなもんだったんだね。よくわかんないけど、あったかいんだ。」</p>
 <p class="stage-direction">（全員が舞台中央に並ぶ。子供アナ・子供エルサもこのタイミングで下手端（列の先頭）に合流する〔待機・入場経路は下記📦参照〕。）</p>
-<p class="cue shodogu-cue">📦 <strong>子供アナ・子供エルサの待機・入場:</strong> 両役はACT1退場後（子供エルサはACT1中盤、子供アナはACT1→2暗転）から本フィナーレまでの間、バックステージ（黒板手前の黒幕の裏）または廊下で舞台監督補佐同伴のもと待機する。ACT6→7暗転（45秒）の間に、舞台監督補佐がバックステージ経由で二人を下手袖へ静かに誘導し、目隠しスクリーンの内側で待機させる（この時点で客席から二人の姿は見えない）。クライマックス〜フィナーレは暗転なしで連続進行するため、二人はフィナーレ開始（「全員が舞台中央に並ぶ」の合図）で他のキャストと同時に下手袖から舞台へ歩み出て列の先頭（下手端）に並ぶ。舞台中央を横断する動きは発生しない。</p>
+<p class="cue shodogu-cue">📦 <strong>子供アナ・子供エルサの待機・入場:</strong> 両役はACT1退場後（子供エルサはACT1中盤、子供アナはACT1→2暗転）から本フィナーレまでの間、バックステージ（黒板手前の黒幕の裏）または廊下で舞台監督補佐同伴のもと待機する。ACT6→7暗転（45秒）の間に、舞台監督補佐がバックステージ経由で二人を下手袖付近へ静かに誘導し、そのままバックステージ内（黒幕の裏）で待機させる（この時点で客席から二人の姿は見えない。2026-08-11：ACT7直前の待機用に新設予定だった専用の目隠しスクリーンは廃止し、既存のバックステージ空間で待機する運用に一本化した）。クライマックス〜フィナーレは暗転なしで連続進行するため、二人はフィナーレ開始（「全員が舞台中央に並ぶ」の合図）で他のキャストと同時にバックステージ内から直接下手袖を経て舞台へ歩み出て列の先頭（下手端）に並ぶ。舞台中央を横断する動きは発生しない。</p>
 <p class="cue kantoku-cue">🎬 <strong>ウェーゼルトン公爵の待機・入場:</strong> 公爵はACT2舞踏会での退場後、ACT3〔逃走〕でも家来をけしかけながら上手袖へ退場しており、以降ACT4〜6の間は上手袖で待機を継続する（ACT6→7暗転中もこの位置から追加の移動は発生しない）。フィナーレ開始（「全員が舞台中央に並ぶ」の合図）後、舞台監督の合図で上手袖から登場し、中央へ移動してキャスト紹介の列に合流する。</p>
 <p class="cue music-cue">🎵 <strong>BGMが流れ始める</strong></p>
 <p class="cue onkyo-cue">🔊 <strong>音響:</strong> フィナーレBGMを再生（最低120秒、または尺が足りない場合はループ設定）。キャスト紹介・全員お辞儀が終わったら舞台監督の合図で10〜15秒かけてフェードアウトする。</p>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+@font-face {
+  font-family: 'IPAexMincho';
+  src: url('../../tools/fonts/ipaexm.ttf') format('truetype');
+}
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho','IPAexMincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">夏休み 練習日程</div>
+<h2>アナと雪の女王</h2>
+<p><strong>クラス：3年D組　／　作成日：2026年7月19日</strong></p>
+<hr>
+<h2>Day1　8/4（火）　キックオフ・通し稽古①</h2>
+<p>夏休み練習の初日。通し稽古①はACT1〜7を<strong>止めずに最後まで通す</strong>（以前の「止めながらでOK」という記述は撤回）。役者は台本を持ってよい。</p>
+<table class="cast-table">
+<thead><tr><th>時間帯</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>午前</td>
+<td>9:00集合・注意事項確認。通し稽古①（ACT1〜7、止めずに最後まで通す）。大道具・小道具係は材料の買い出しへ（下記「Day1の買い出しリスト」参照）</td>
+</tr>
+<tr>
+<td>午後</td>
+<td>全員で制作作業（大道具・小道具係が中心となり、買ってきた材料で背景パネル・小道具類を制作。<strong>キャストも出番のない時間ではなく、全員で制作を手伝う</strong>）</td>
+</tr>
+<tr>
+<td>最後</td>
+<td>振り返り・次回（8/7）までの宿題確認・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>午前：機材確認・材料買い出し。午後は制作を手伝う</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>通し稽古①に参加（音響再生ツールの全キュー動作確認も兼ねる）。午後は制作を手伝う</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>午前：材料買い出し。午後：買った材料で制作の中心を担う（背景パネル制作、下記「パネル巻き上げ機構」試作）</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>午前：材料買い出し。午後：ひたすら小道具制作（人参・手袋・杖・玉・ロープ・金づち・暖炉プロップ等）</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>通し稽古①の進行・タイム計測（買い出しには行かず終日稽古に付く）。午後は制作進行の取りまとめ</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>通し稽古①参加（止めずに通す）。午後は全員で制作を手伝う</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator"><strong>大道具係のDay1午後の特別課題：</strong> ACT5「エルサの城→トロールの村」の場面転換用に、新しい背景パネル（トロールの村・岩と苔のイメージ、色は緑系）を追加で作ることになった。既存の背景パネルは「布 or 模造紙をワイヤーに布団バサミで吊るす」方式（黒板手前の黒幕と同じ技術を流用、黒幕ワイヤーの20cm手前に別のワイヤーを張ってそこにパネル用の布/紙を吊るす）。トロール村パネルは、氷パネルを外さずに<strong>手前に重ねて素早く「巻いて落とす」ロールスクリーン方式</strong>（太め・直径8〜10cm程度の芯に模造紙をゆるく巻いておき、上部に吊るして紐で束ねておき、合図で紐をほどくと重力で下に広がる）を採用する予定。Day1午後は、この機構が実際に模造紙とワイヤーと紙筒（芯）で成立するか<strong>試作・検証する</strong>ことが大道具係の重要タスク。うまくいけば、この方式でトロール村パネルの本制作に進む。</blockquote>
+<h4>Day1の買い出しリスト</h4>
+<p><strong>① 大道具：パネル関連（新規）</strong></p>
+<ul><li>模造紙 20枚前後（氷雪・城内・トロール村の3種類の背景パネル用）</li><li>太めの紙筒・芯（直径8〜10cm程度）試作用 1本</li><li>細い棒（突っ張り棒の細いタイプ or 園芸支柱。裾に通してパネルをピンと張るため）数本</li><li>ワイヤー（パネル専用の2本目。黒幕用ワイヤーとは別）1巻</li><li>布団バサミ（大きめ・フック付きタイプ）10〜15個</li><li>紐（丈夫めのもの。パネルを束ねる・引き解け結び用）</li><li>布テープ or ガムテープ 1〜2巻</li></ul>
+<p><strong>② 大道具：既存セット</strong></p>
+<ul><li>段ボール（大判数枚）</li><li>布 or 追加の模造紙（城内パネル用）</li><li>スプレー塗料（茶・グレー系）</li></ul>
+<p><strong>③ 小道具</strong></p>
+<ul><li>手袋 ×2</li><li>発泡スチロール棒 or 紙筒＋オレンジ塗料（人参用）</li><li>金色スプレー、発泡スチロール球（杖・玉用）</li><li>木の棒（杖・剣の芯材）</li><li>ロープ・金づち（模造でよい）</li><li>電池式LEDライト＋電池（暖炉プロップ内蔵用）</li><li>古紙・羽根（書類・羽ペン用）</li></ul>
+<p><strong>④ 教室装飾用の資材（今日は購入のみ。制作は8月後半のいずれかの日に回す。詳細未定のため、購入だけ済ませておく位置づけ）</strong></p>
+<ul><li>白・水色・青の画用紙・模造紙（追加分）</li><li>電池式LEDイルミネーションライト 2〜3本</li><li>壁を傷めないテープ類（マスキングテープ等）</li><li>セロファン（あれば）</li></ul>
+<hr>
+<h2>Day2　8/7（金）　通し稽古②・制作</h2>
+<p>Day1と同じ構造（通し稽古→制作）で実施する。</p>
+<table class="cast-table">
+<thead><tr><th>時間帯</th><th>内容</th></tr></thead><tbody>
+<tr>
+<td>午前</td>
+<td>通し稽古②（ACT1〜7、止めずに最後まで通す）</td>
+</tr>
+<tr>
+<td>午後</td>
+<td>全員で制作（Day1の続き。大道具・小道具・パネル制作等）。ただし音響係は、用途未確定の音源3本（X1〜X3）・SE2/SE4の試聴決定会議をこの時間に並行して実施する（他の制作作業とは別行動）</td>
+</tr>
+<tr>
+<td>最後</td>
+<td>振り返り・片付け</td>
+</tr>
+</tbody></table>
+<table class="cast-table">
+<thead><tr><th>係</th><th>この日の作業内容</th></tr></thead><tbody>
+<tr>
+<td>照明</td>
+<td>通し稽古②に参加。午後は制作を手伝う</td>
+</tr>
+<tr>
+<td>音響</td>
+<td>通し稽古②に参加。午後は<strong>試聴決定会議（最優先課題）：</strong> X1〜X3・SE2/SE4を試聴し、使用するシーンを決定するか、使用しないなら削除を決定する。あわせてフィナーレBGM（選曲期限8/10）の候補探しも並行して進める</td>
+</tr>
+<tr>
+<td>大道具</td>
+<td>通し稽古②に参加。午後はDay1の続きで背景パネル（トロール村パネル含む）の制作を進める</td>
+</tr>
+<tr>
+<td>小道具</td>
+<td>通し稽古②に参加。午後はDay1の続きで小道具制作を進める</td>
+</tr>
+<tr>
+<td>舞台監督</td>
+<td>通し稽古②の進行・タイム計測。午後は制作進行の取りまとめ・音響会議のファシリテート</td>
+</tr>
+<tr>
+<td>キャスト</td>
+<td>通し稽古②参加（止めずに通す）。午後は全員で制作を手伝う</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>お盆休み中（8/8〜8/16頃）の過ごし方</h3>
+<p>グループ稽古日は設けず、各自の自主練習期間とする：</p>
+<ul><li>セリフ・歌詞の暗記を各自で進める（Day3以降は本格的な通し・パート練習に入るため、ここで仕上げておく）</li><li>歌唱シーンの自主練習（特に歌割りが決まっている曲）</li></ul>
+<hr>
+<p>Day3以降の詳細は現在ユーザーと相談しながら詰めている最中です。確定次第、このページに追記します。（Day3：8/17、Day4：8/19、Day5：8/20、Day6：8/24、Day7：8/25、Day8：8/26、Day9：8/27、Day10：8/28）</p>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>制作物リスト — アナと雪の女王</title>
+<meta name="theme-color" content="#05101f">
+<style>
+:root{
+  --bg:#05101f; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.08); --panel3:rgba(255,255,255,.13);
+  --border:rgba(176,210,240,.16); --border-strong:rgba(176,210,240,.34);
+  --text:#e9f2fb; --sub:#93a8bd;
+  --accent:#cfe7ff; --accent-hover:#e3f2ff; --accent-ink:#0a1626;
+  --good:#8fe3c9; --warn:#e8c17a; --danger:#f0897e;
+  --serif:'Hiragino Mincho ProN','Yu Mincho','YuMincho','Shippori Mincho',serif;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  background-image:
+    radial-gradient(120% 80% at 50% -8%, rgba(90,160,220,.22), transparent 55%),
+    linear-gradient(180deg,#050f1e 0%,#071a30 40%,#08243c 72%,#0a2b44 100%);
+  background-attachment:fixed;
+  color:var(--text); margin:0; padding:18px 16px 96px;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.01em;
+  line-height:1.6;
+}
+.wrap{max-width:760px; margin:0 auto;}
+h1{font-family:var(--serif); font-size:1.5rem; font-weight:600; letter-spacing:.06em; margin:0 0 6px; color:#f2f8ff;}
+.lead{color:var(--sub); font-size:0.86rem; margin:0 0 6px;}
+.status-line{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  font-size:0.78rem; color:var(--sub); margin:10px 0 20px;
+}
+.status-dot{width:8px; height:8px; border-radius:50%; background:var(--sub); flex:0 0 auto;}
+.status-dot.ok{background:var(--good); box-shadow:0 0 8px rgba(143,227,201,.7);}
+.status-dot.err{background:var(--danger);}
+
+.summary{
+  display:flex; align-items:center; gap:12px;
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:12px 16px; margin-bottom:22px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.summary .num{font-family:var(--serif); font-size:1.5rem; font-weight:600; color:#f5faff;}
+.summary .bar{flex:1; height:8px; border-radius:6px; background:rgba(255,255,255,.08); overflow:hidden;}
+.summary .bar-fill{height:100%; background:linear-gradient(90deg,#7fd4ff,#cfe7ff); border-radius:6px; transition:width .3s ease;}
+.summary .label{font-size:0.78rem; color:var(--sub); white-space:nowrap;}
+
+section{margin-bottom:26px;}
+section h2{
+  font-family:var(--serif); font-size:1.05rem; font-weight:600; letter-spacing:.06em;
+  padding-bottom:9px; margin:0 0 12px; color:#eaf4ff; position:relative;
+  display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+}
+section h2::after{
+  content:""; position:absolute; left:0; bottom:0; width:100%; height:1px;
+  background:linear-gradient(90deg, var(--border-strong), transparent 70%);
+}
+section h2 .cat-count{font-family:'Hiragino Kaku Gothic ProN',sans-serif; font-size:0.72rem; font-weight:400; color:var(--sub); letter-spacing:0;}
+
+.item{
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  margin-bottom:10px; overflow:hidden;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  transition:background-color .18s ease, border-color .18s ease;
+}
+.item.checked{border-color:rgba(143,227,201,.28);}
+.item-row{
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 14px;
+}
+.chk-btn{
+  flex:0 0 auto; width:28px; height:28px; margin-top:1px;
+  border-radius:8px; border:1.5px solid var(--border-strong);
+  background:rgba(255,255,255,.03); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  color:transparent; font-size:1rem; font-weight:700;
+  transition:all .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.chk-btn:active{transform:scale(.9);}
+.item.checked .chk-btn{
+  background:rgba(143,227,201,.18); border-color:var(--good); color:var(--good);
+}
+.item-main{flex:1; min-width:0;}
+.item-name{font-size:0.94rem; color:var(--text); word-break:break-word; font-weight:600;}
+.item.checked .item-name{color:var(--sub); text-decoration:line-through; text-decoration-color:rgba(147,168,189,.6);}
+.item-meta{
+  display:flex; flex-wrap:wrap; gap:6px 12px; margin-top:6px;
+  font-size:0.74rem; color:var(--sub);
+}
+.item-meta span{white-space:nowrap;}
+.item-meta b{color:var(--accent); font-weight:600;}
+.edit-toggle{
+  flex:0 0 auto; background:transparent; border:1px solid var(--border); color:var(--sub);
+  border-radius:20px; padding:6px 12px; font-size:0.74rem; cursor:pointer;
+  font-family:inherit; white-space:nowrap;
+  transition:all .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.edit-toggle:hover, .edit-toggle.active{background:var(--panel3); color:var(--text); border-color:var(--border-strong);}
+
+.info-panel{
+  padding:2px 14px 12px 54px; font-size:0.78rem; color:var(--sub);
+}
+.info-row{margin-top:8px;}
+.info-row .info-label{
+  display:inline-block; font-size:0.68rem; color:var(--accent); font-weight:600;
+  letter-spacing:.04em; margin-right:6px; vertical-align:top;
+}
+.info-row .info-body{color:var(--sub); white-space:pre-line;}
+
+.edit-panel{
+  display:none; padding:4px 14px 14px 54px; border-top:1px solid var(--border);
+  margin-top:2px;
+}
+.edit-panel.open{display:block;}
+.field{margin-bottom:10px;}
+.field label{display:block; font-size:0.72rem; color:var(--sub); margin-bottom:4px;}
+.field input, .field textarea{
+  width:100%; font-family:inherit; font-size:0.88rem; color:var(--text);
+  background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:8px;
+  padding:8px 10px; resize:vertical;
+}
+.field input:focus, .field textarea:focus{outline:none; border-color:var(--border-strong); background:rgba(255,255,255,.08);}
+.edit-actions{display:flex; gap:8px; margin-top:4px;}
+.save-btn{
+  background:rgba(207,231,255,.14); color:#f5faff; border:1.5px solid rgba(207,231,255,.6);
+  border-radius:20px; padding:8px 18px; font-size:0.82rem; font-weight:600; cursor:pointer;
+  font-family:inherit;
+}
+.save-btn:hover{background:rgba(207,231,255,.22);}
+.cancel-btn{
+  background:transparent; color:var(--sub); border:1px solid var(--border);
+  border-radius:20px; padding:8px 16px; font-size:0.82rem; cursor:pointer;
+  font-family:inherit;
+}
+
+.unconfirmed{
+  margin-top:6px; padding:16px 18px; border-radius:14px;
+  background:var(--panel); border:1px solid var(--border);
+}
+.unconfirmed h2{margin-top:0;}
+.unconfirmed ul{margin:0; padding-left:1.2em; font-size:0.82rem; color:var(--sub);}
+.unconfirmed li{margin-bottom:8px;}
+
+.note{
+  margin-top:34px; padding:14px 16px; border-radius:12px;
+  background:var(--panel); border:1px solid var(--border); font-size:0.78rem; color:var(--sub);
+}
+.note a{color:var(--accent);}
+footer{text-align:center; color:var(--sub); font-size:0.72rem; margin-top:28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>制作物リスト</h1>
+  <p class="lead">3年D組「アナと雪の女王」／ 大道具・小道具・教室装飾の制作進捗チェック用ツール。材料・制作手順・使用シーン・担当係・期限は既存資料からの引用（読み取り専用）です。完成チェック・完成日・備考はその場で全員に共有されます。</p>
+  <div class="status-line"><span class="status-dot" id="sync-dot"></span><span id="sync-text">同期状況を確認中…</span></div>
+
+  <div class="summary">
+    <div class="num" id="summary-num">0/0</div>
+    <div class="bar"><div class="bar-fill" id="summary-bar" style="width:0%"></div></div>
+    <div class="label">完成済み</div>
+  </div>
+
+  <div id="categories"></div>
+
+  <div class="unconfirmed" id="unconfirmed-section">
+    <h2>未確定・要確認まとめ（このリスト作成時点、既存資料の記載に基づく）</h2>
+    <ul id="unconfirmed-list"></ul>
+  </div>
+
+  <div class="note">
+    このリストの品目は <code>other/制作物リスト.md</code> を一次ソースとして管理しています。品目の追加・変更が必要な場合はまずそちらを更新してください。<br>
+    購入する材料のリストは <a href="../買い物リスト/買い物リスト.html">買い物リスト</a> を参照してください（このページは「何を」「どう作るか」の制作進捗、買い物リストは「何を買うか」の購入管理です）。<br>
+    通信環境によってはチェックの共有が反映されないことがあります（画面上の操作自体は問題なく行えます）。
+  </div>
+  <footer>3年D組 文化祭公演「アナと雪の女王」</footer>
+</div>
+
+<script>
+// ===== 品目データ（other/制作物リスト.md が一次ソース。品目追加時はこちらにも反映すること） =====
+// カテゴリ①大道具5項目・②小道具7項目・③教室装飾7項目（計19項目）。IDはカテゴリが変わっても安定させるための英数字スラッグ。
+const PRODUCTION_ITEMS = [
+  // ① 大道具：背景パネル・セット
+  { id: 'panel-koriyuki', category: '① 大道具：背景パネル・セット', name: '背景パネル：氷・雪（青白）',
+    material: '模造紙 or 青白い布・大きな画用紙、雪の結晶の切り紙（貼り付け用）、パネル専用ワイヤー、ハトメ（グロメット、打ち具付き）、カーテンリング または S字フック、支柱（園芸支柱、直径8〜10mm程度。裾に通してパネルをピンと張る用）、布テープ or ガムテープ',
+    steps: '青白い布または大きな画用紙をベースに、雪山・氷の城をイメージした色合いに仕上げ、雪の結晶を貼る。裾に支柱を通してパネルがたるまないように張る。上辺にハトメ（グロメット）を4〜6点程度打ち、カーテンリングまたはS字フックでワイヤーに掛ける（2026-08-07：布団バサミ方式から変更。見た目をすっきりさせるため、城内・トロール村パネルと統一）。設置ワイヤーは黒板手前の黒幕ワイヤーの20cm手前に別途張る。※塗装・絵付けの具体的な工程（誰が何を描くか等）は未確定。',
+    scene: 'ACT3『レット・イット・ゴー』（歌い出しに合わせて後方展開）、ACT5 エルサの城シーン（同じパネルを2回使い回す設計）',
+    staff: '大道具係', deadline: '明記なし' },
+  { id: 'panel-jonai', category: '① 大道具：背景パネル・セット', name: '背景パネル：城内（茶系）',
+    material: '段ボール（大判数枚） or 布・模造紙、スプレー塗料（茶・グレー系）、パネル専用ワイヤー、ハトメ（グロメット、打ち具付き）、カーテンリング または S字フック',
+    steps: '段ボールや布で城の壁をイメージして制作。上辺にハトメ（グロメット）を4〜6点程度打ち、カーテンリングまたはS字フックでワイヤーに掛ける（2026-08-07：布団バサミ方式から変更。氷・雪パネル、トロール村パネルと同じ方式に統一）。※具体的な絵柄・工法は未確定。',
+    scene: 'ACT2 戴冠式・ACT6 ハンスの部屋（クライマックス前の暗転後は城の外壁として転用）',
+    staff: '大道具係', deadline: '明記なし' },
+  { id: 'panel-troll', category: '① 大道具：背景パネル・セット', name: '背景パネル：トロール村',
+    material: '模造紙（緑系、岩と苔のイメージ）、パネル専用ワイヤー、ハトメ（グロメット、打ち具付き）、カーテンリング または S字フック',
+    steps: '模造紙に緑系で岩と苔をイメージして着色する。上辺にハトメ（グロメット）を4〜6点程度打ち、カーテンリングまたはS字フックでワイヤーに掛ける。氷・雪パネル、城内パネルと同じ方式に統一（2026-08-07決定）。\n経緯：当初は太めの紙筒（芯）に模造紙を巻いて吊るし、紐をほどくと重力で下に広がる「ロールスクリーン方式」を計画していたが、2026年8月4日（夏休み練習日程Day1）に予定していた試作が実施されず、未検証のまま残っていた。ユーザーと相談のうえ、ロールスクリーン方式は採用せず、氷・雪パネル・城内パネルと同じ「ワイヤーに掛ける」方式へ統一する方針（Plan B）に変更した。あわせて「洗濯バサミ／布団バサミの見た目がすっきりしない」という指摘を受け、3枚すべてをハトメ＋カーテンリング/S字フック方式（Plan C）に統一することも決定した（2026-08-07）。\nこの変更に伴い、台本ACT5「エルサの城→トロールの村」の場面転換に新しい短い暗転を追加し（従来は暗転なし・照明の色替えのみだった）、暗転中に大道具係2名がパネルを架け替える設計にした（台本・舞台構成「7. 場面転換マトリクス」参照）。',
+    scene: 'ACT5「エルサの城→トロールの村」の場面転換（新設の暗転中に大道具係がパネルを架け替える）',
+    staff: '大道具係', deadline: '明記なし（新設した暗転の所要時間（目安15〜20秒）はゲネプロで実測が必要）' },
+  { id: 'screen-kuromaku', category: '① 大道具：背景パネル・セット', name: 'バックステージ黒幕（黒板手前の暗幕）',
+    material: '黒い幕（暗幕・黒シート）、ワイヤー、ワイヤー固定金具（アイボルト・S字フック・カラビナ等。ワイヤー両端を壁面・柱に固定する用）、突っ張り棒（壁面に直接固定できない場合）、黒シート吊り具＝カーテンフック（金属製、第一候補）またはS字フック（代替）（黒シート上辺をワイヤーに掛ける用、30〜40cm間隔で取り付け）※ワイヤー固定金具（アイボルト・S字フック・カラビナ）と黒シート吊り具（カーテンフック／S字フック）は役割が異なる別の金具。2026-08-08：黒シート吊り具は当初「布団バサミ」方式を予定していたが、見た目のかっこよさを優先し不採用に決定。プラスチック製の安っぽい見た目のものは避け、金属製のカーテンフックを優先。入手できない・イメージに合わない場合はS字フックを代替とする。',
+    steps: '（舞台構成.md「10-2. ワイヤー＋黒シートの仕切り技術」より転記）\n1. 黒板の手前1.5m・教室幅いっぱい（9m）の区間の両端（壁・柱・独立スタンドなど）に、ワイヤーをピンと張る。高さは床から天井近くまで（教室の天井高2.4〜2.7m程度を想定）。\n2. ワイヤーの両端はアイボルト・S字フック・カラビナなどで壁面のフックや柱・窓枠に固定する。学校施設に直接ビス留め・釘打ちできない場合は、突っ張り棒を縦に設置し、その上下にワイヤー用のフックを取り付ける。\n3. 黒シートの上辺に30〜40cm間隔でカーテンフック（金属製、第一候補）またはS字フック（代替）を取り付け、ワイヤーに掛ける（2026-08-08：布団バサミ方式から変更。見た目をすっきりさせるため、氷・雪・城内・トロール村の背景パネル3枚と統一）。裾（下辺）は歩行の妨げにならない長さに調整し、床に着く場合は軽い重りでたるみ・めくれを防ぐ。\n4. ワイヤーは中央部がたるみやすいため、幅9mの本幕では中間2箇所程度に補助の固定点を追加する。\n5. 黒シート1枚あたりの重量は数百g〜1kg程度を想定。ワイヤー・固定金具は最大想定重量の3倍程度の耐荷重を持つものを選ぶ（安全マージン）。',
+    scene: '黒板手前1.5m・教室幅9m全体。幕の裏（黒板〜幕の間）をバックステージ空間とし、役者（エルサ・ハンス等）が上手⇔下手を横断する動線として使う。',
+    staff: '大道具係', deadline: '明記なし。⚠️舞台構成.mdに「学校許可必須」と明記されているが、許可を取得できたかどうかの記録が変更点.md等どこにもない（プロジェクト概要.md「次の課題」参照）。取得済みなら記録を残し、未取得なら至急確認すること。' },
+
+  // ② 小道具
+  { id: 'prop-door', category: '② 小道具', name: 'ドアパネル（紙製 or 段ボール製の簡易扉）',
+    material: '紙 or 段ボール',
+    steps: '紙または段ボールで簡易扉を自作する（暖炉プロップと同程度の簡易さでよい）。※具体的な形・サイズ・組み立て方は未確定。',
+    scene: 'ACT1『雪だるまつくろう』（黒板の一角に設置、ACT1→2暗転中に撤去）',
+    staff: '小道具係', deadline: '明記なし' },
+  { id: 'prop-tsue', category: '② 小道具', name: '杖（王権の杖）',
+    material: '木の棒（芯材）、金色スプレー',
+    steps: '木の棒を芯にして金色スプレーで装飾する。※装飾パーツの付け方など詳細な制作手順は未確定（手作りまたは購入のどちらでもよいとされている）。',
+    scene: 'ACT2 戴冠式（エルサが持つ）',
+    staff: '小道具係', deadline: '明記なし' },
+  { id: 'prop-tama', category: '② 小道具', name: '玉（王権の玉）',
+    material: '発泡スチロール球、金色スプレー',
+    steps: '発泡スチロール球に金色スプレーを吹き付けて制作する。※詳細な制作手順は未確定（手作りまたは購入のどちらでもよいとされている）。',
+    scene: 'ACT2 戴冠式（エルサが持つ）',
+    staff: '小道具係', deadline: '明記なし' },
+  { id: 'prop-ninjin', category: '② 小道具', name: '人参（固定具込み）',
+    material: '発泡スチロール棒 or 紙筒、オレンジ塗料、面ファスナー（マジックテープ） or クリップ式固定具',
+    steps: '発泡スチロール棒または紙筒にオレンジ塗料を塗って人参型に仕上げる。装着は面ファスナーまたはクリップ式固定具を使用し、多少の動きでは外れない設計にする。1本を用意し、下手袖の定位置で小道具係が常時管理する（2026-07-06に予備2本は不要と判断し1本運用に変更済み）。',
+    scene: 'ACT4 オラフの鼻に刺す演技（ACT3→4暗転中にアナ役者へ手渡し、装着後はACT6終了まで鼻につけたまま継続）',
+    staff: '小道具係', deadline: '明記なし' },
+  { id: 'prop-bag', category: '② 小道具', name: 'アナの肩掛けバッグ（布製）',
+    material: '布',
+    steps: '小道具係と大道具係の共同制作で手作りする。ロープ・金づちを収納できるサイズにする。※具体的な縫製・組み立て手順は未確定。',
+    scene: 'ACT4 アナが身に着けて登場し、ロープ・金づちを収納して運ぶ（2026-07-05追加。旧ドアフレーム案の廃止に伴い採用）',
+    staff: '小道具係（大道具係と共同制作）', deadline: '明記なし' },
+  { id: 'prop-ken', category: '② 小道具', name: 'ハンスの剣（模造）',
+    material: '木の棒（芯材）など（玩具コーナーで購入する場合は不要）',
+    steps: '玩具コーナーで調達 or 手作り。※手作りの場合の具体的な制作手順は未確定。安全のため、演技中は20cm以上離して相手に当てないルールを厳守する。',
+    scene: 'ACT6 クライマックス（ACT6→7暗転中にハンス役へ手渡す）',
+    staff: '小道具係', deadline: '明記なし' },
+  { id: 'prop-danro', category: '② 小道具', name: '暖炉プロップ（段ボール製・LEDライト内蔵）',
+    material: '段ボール、スプレー塗料、電池式LEDライト＋電池',
+    steps: '段ボールで暖炉の形を組み立て、スプレー塗料で装飾する。電池式LEDライトを内蔵し点灯できるようにする。オラフがスイッチを入れやすい向きに調整する。',
+    scene: 'ACT6 ハンスの部屋（舞台端の壁際に設置。照明点灯の5秒前に点灯しておく）',
+    staff: '小道具係', deadline: '明記なし' },
+
+  // ③ 教室装飾（当日、大道具係が主体で担当・有志歓迎）
+  { id: 'deco-kanban', category: '③ 教室装飾', name: '演目名看板',
+    material: '模造紙1枚（A1目安・約60×84cm）',
+    steps: '青地に白文字または白地に青文字＋雪の結晶の縁取りで制作する。青・白・水色のテーマカラーで統一する。',
+    scene: '教室入口（ドア上または横の壁に掲示）',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし' },
+  { id: 'deco-kessho', category: '③ 教室装飾', name: '雪の結晶デコレーション（大中小 計31個）',
+    material: '白・水色・青の画用紙 or 模造紙',
+    steps: '切り紙で大（15cm角）6個・中（10cm角）10個・小（5cm角）15個の計31個を作り、看板周りと壁面にランダムに散りばめる。',
+    scene: '教室入口',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし' },
+  { id: 'deco-tsurara', category: '③ 教室装飾', name: 'つらら（氷柱、計24本）',
+    material: '白・水色の画用紙',
+    steps: '三角形パーツを制作し、長め（40〜50cm）6本・中（25〜30cm）8本・短め（15cm）10本の計24本を作る。天井際から吊るし、入口に近いほど密度を上げ、間隔20〜40cmで不規則に配置する（規則正しく並べると氷柱らしさが失われるため）。',
+    scene: '廊下',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし。※本数は廊下の壁3〜5m分を想定した目安。実際の廊下の実寸が未定のため、判明次第調整すること（プロジェクト概要.md「次の課題」参照）。' },
+  { id: 'deco-koori-panel', category: '③ 教室装飾', name: '氷の壁風パネル（4〜6枚）',
+    material: '模造紙、壁を傷めないテープ類（マスキングテープ等）',
+    steps: 'ひび割れ模様を描いた模造紙パネルを4〜6枚作り、入口から左右2〜3m分の壁に貼る。',
+    scene: '廊下',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし。※枚数は目安、廊下の実寸判明後に調整すること。' },
+  { id: 'deco-led', category: '③ 教室装飾', name: 'LEDイルミネーション設置',
+    material: '電池式LEDイルミネーションライト（3〜4m）2〜3本',
+    steps: 'つらら・氷の壁風パネルの裏に這わせる（制作というより既製品の設置作業）。',
+    scene: '廊下',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし。使用方針は生徒側の判断として決定済み。ただし学校への正式な掲示・防火ルール確認は別途必要（未完了、プロジェクト概要.md「次の課題」参照）。' },
+  { id: 'deco-annai', category: '③ 教室装飾', name: '案内表示パネル（次回開始時刻・待機列案内）',
+    material: '画用紙等（未確定）',
+    steps: '無機質な貼り紙にせず、つらら型または雪の結晶型の掲示パネルとして2〜3箇所に統合する。※具体的な材質・デザイン・制作手順は未確定。',
+    scene: '廊下（次の回の開始時刻・待機列の案内）',
+    staff: '大道具係主体（有志歓迎）', deadline: '明記なし' },
+  { id: 'deco-cast-board', category: '③ 教室装飾', name: 'キャスト紹介ボード',
+    material: 'ボード（材質未確定）',
+    steps: '役名と役者名を書いたボードを手書きまたは印刷で掲示する。※具体的な材質・サイズ・制作手順は未確定。',
+    scene: '舞台周辺',
+    staff: '大道具係（役割書に明記）', deadline: '明記なし' },
+];
+
+// 未確定・要確認まとめ（other/制作物リスト.md 末尾のセクションをそのまま転記。インタラクティブ要素なし）
+const UNCONFIRMED_NOTES = [
+  'トロール村パネルの取付方式を統一（2026-08-07決定・対応済み）：ロールスクリーン方式は8/4に試作予定だったが実施されず未検証のまま白紙化し、氷・雪パネル・城内パネルと同じハトメ＋カーテンリング/S字フック方式に統一した。あわせて新設した暗転（ACT5「エルサの城→トロールの村」）の所要時間（目安15〜20秒）はゲネプロで実測が必要。',
+  'バックステージ黒幕の学校許可取得の記録がどこにもない（舞台構成.mdに「学校許可必須」と明記あり）。取得済みなら記録を残し、未取得なら至急確認すること。',
+  '廊下のLED使用について、使用方針自体は生徒側の判断として決定済み（2026-08-07）。ただし学校への正式な掲示・防火ルール確認は別途必要（未完了）。',
+  '廊下の実寸が未定のため、つらら・氷の壁風パネルの本数・枚数は目安（壁3〜5m分想定）。実寸判明後に調整が必要。',
+  '上記以外の「制作手順」欄で「未確定」と記載した項目（杖・玉の装飾詳細、ドアパネルの工法、看板・案内表示パネル・キャスト紹介ボードの詳細な作り方など）は、既存資料に手順の記載がなかったため、材料・完成イメージのみ記載している。',
+];
+
+// ===== ローカル状態（Firebaseから読めるまでの初期値。done/doneDate/noteを保持） =====
+// 「ハンスの剣（模造）」はユーザーから2026-08-07時点で完成済みとの報告を受けているため、
+// Firebase側にまだ誰も書き込んでいない状態でも、初期表示から完成扱いにする（Firebase側にデータがあればそちらを優先）。
+const state = {};
+PRODUCTION_ITEMS.forEach(it => {
+  state[it.id] = { done: false, doneDate: '', note: '' };
+});
+state['prop-ken'] = { done: true, doneDate: '', note: '完成済み（2026-08-07時点でユーザーより報告）' };
+
+// ===== DOM構築 =====
+const categoriesEl = document.getElementById('categories');
+const categoryOrder = [];
+PRODUCTION_ITEMS.forEach(it => { if (!categoryOrder.includes(it.category)) categoryOrder.push(it.category); });
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function escapeMultiline(str){
+  return escapeHtml(str).replace(/\n/g, '<br>');
+}
+
+const itemNodes = {}; // id -> {root, chk, meta, editPanel, noteInput, dateInput, editToggle}
+
+categoryOrder.forEach(cat => {
+  const items = PRODUCTION_ITEMS.filter(it => it.category === cat);
+  const section = el('section');
+  const h2 = el('h2');
+  h2.appendChild(document.createTextNode(cat));
+  const countSpan = el('span', 'cat-count');
+  countSpan.id = 'cat-count-' + cat.replace(/[^a-zA-Z0-9]/g, '');
+  h2.appendChild(countSpan);
+  section.appendChild(h2);
+
+  items.forEach(it => {
+    const item = el('div', 'item');
+    item.dataset.id = it.id;
+
+    const row = el('div', 'item-row');
+
+    const chk = el('button', 'chk-btn', '✓');
+    chk.type = 'button';
+    chk.setAttribute('aria-label', '完成済みにする');
+
+    const main = el('div', 'item-main');
+    const nameEl = el('div', 'item-name', escapeHtml(it.name));
+    const metaEl = el('div', 'item-meta');
+    main.appendChild(nameEl);
+    main.appendChild(metaEl);
+
+    const editToggle = el('button', 'edit-toggle', '詳細・編集');
+    editToggle.type = 'button';
+
+    row.appendChild(chk);
+    row.appendChild(main);
+    row.appendChild(editToggle);
+    item.appendChild(row);
+
+    // 読み取り専用の情報パネル（材料・制作手順・使用シーン・担当係・期限）
+    const infoPanel = el('div', 'info-panel');
+    infoPanel.innerHTML = `
+      <div class="info-row"><span class="info-label">材料</span><span class="info-body">${escapeMultiline(it.material)}</span></div>
+      <div class="info-row"><span class="info-label">制作手順</span><span class="info-body">${escapeMultiline(it.steps)}</span></div>
+      <div class="info-row"><span class="info-label">使用シーン／設置場所</span><span class="info-body">${escapeMultiline(it.scene)}</span></div>
+      <div class="info-row"><span class="info-label">担当係</span><span class="info-body">${escapeMultiline(it.staff)}</span></div>
+      <div class="info-row"><span class="info-label">期限</span><span class="info-body">${escapeMultiline(it.deadline)}</span></div>
+    `;
+
+    // 編集パネル（完成日・備考。開閉は詳細・編集ボタンで共有）
+    const editPanel = el('div', 'edit-panel');
+    editPanel.innerHTML = `
+      <div class="field">
+        <label>いつ作ったか（完成日）</label>
+        <input type="date" class="date-input">
+      </div>
+      <div class="field">
+        <label>備考</label>
+        <textarea class="note-input" rows="2" placeholder="備考を入力（進捗・担当者・注意点など）"></textarea>
+      </div>
+      <div class="edit-actions">
+        <button type="button" class="save-btn">保存</button>
+        <button type="button" class="cancel-btn">閉じる</button>
+      </div>
+    `;
+
+    item.appendChild(infoPanel);
+    item.appendChild(editPanel);
+    section.appendChild(item);
+
+    const dateInput = editPanel.querySelector('.date-input');
+    const noteInput = editPanel.querySelector('.note-input');
+    const saveBtn = editPanel.querySelector('.save-btn');
+    const cancelBtn = editPanel.querySelector('.cancel-btn');
+
+    itemNodes[it.id] = { root: item, chk, metaEl, editPanel, dateInput, noteInput, editToggle };
+
+    chk.addEventListener('click', () => {
+      const cur = state[it.id];
+      setDone(it.id, !cur.done);
+    });
+
+    editToggle.addEventListener('click', () => {
+      const open = editPanel.classList.toggle('open');
+      editToggle.classList.toggle('active', open);
+      if (open) {
+        dateInput.value = state[it.id].doneDate || '';
+        noteInput.value = state[it.id].note || '';
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      editPanel.classList.remove('open');
+      editToggle.classList.remove('active');
+    });
+
+    saveBtn.addEventListener('click', () => {
+      setFields(it.id, {
+        doneDate: dateInput.value,
+        note: noteInput.value.trim(),
+      });
+      editPanel.classList.remove('open');
+      editToggle.classList.remove('active');
+    });
+  });
+
+  categoriesEl.appendChild(section);
+});
+
+// 未確定・要確認まとめ（静的テキスト）
+const unconfirmedList = document.getElementById('unconfirmed-list');
+UNCONFIRMED_NOTES.forEach(note => {
+  const li = el('li', null, escapeHtml(note));
+  unconfirmedList.appendChild(li);
+});
+
+function renderItem(id){
+  const s = state[id];
+  const n = itemNodes[id];
+  if (!s || !n) return;
+  n.root.classList.toggle('checked', !!s.done);
+
+  const metaParts = [];
+  if (s.done) metaParts.push('<span>✓ 完成済み</span>');
+  if (s.doneDate) metaParts.push(`<span>完成日: <b>${escapeHtml(s.doneDate)}</b></span>`);
+  if (s.note) metaParts.push(`<span>備考: <b>${escapeHtml(s.note)}</b></span>`);
+  n.metaEl.innerHTML = metaParts.join('');
+
+  renderSummary();
+}
+
+function renderSummary(){
+  const total = PRODUCTION_ITEMS.length;
+  const done = PRODUCTION_ITEMS.filter(it => state[it.id].done).length;
+  document.getElementById('summary-num').textContent = `${done}/${total}`;
+  document.getElementById('summary-bar').style.width = total ? `${(done / total) * 100}%` : '0%';
+
+  categoryOrder.forEach(cat => {
+    const items = PRODUCTION_ITEMS.filter(it => it.category === cat);
+    const catDone = items.filter(it => state[it.id].done).length;
+    const countEl = document.getElementById('cat-count-' + cat.replace(/[^a-zA-Z0-9]/g, ''));
+    if (countEl) countEl.textContent = `${catDone}/${items.length}`;
+  });
+}
+
+// 初期描画（Firebase接続前のローカル状態。ハンスの剣は完成済みで表示される）
+PRODUCTION_ITEMS.forEach(it => renderItem(it.id));
+
+// ===== 更新関数（Firebaseへ書き込み。失敗しても画面上はローカル状態を反映し続ける） =====
+let fbUpdate = null; // Firebaseのupdate関数への参照（module読み込み後にセット）
+let fbRef = null;
+let fbProductionRoot = null;
+
+function setDone(id, done){
+  state[id].done = done;
+  renderItem(id);
+  pushToFirebase(id, { done });
+}
+
+function setFields(id, fields){
+  Object.assign(state[id], fields);
+  renderItem(id);
+  pushToFirebase(id, fields);
+}
+
+function pushToFirebase(id, fields){
+  if (!fbUpdate || !fbRef || !fbProductionRoot) return;
+  try {
+    fbUpdate(fbRef(fbProductionRoot, id), fields).catch(() => {});
+  } catch (e) { /* 静かに失敗させる */ }
+}
+
+const syncDot = document.getElementById('sync-dot');
+const syncText = document.getElementById('sync-text');
+function setSyncStatus(ok, msg){
+  syncDot.classList.remove('ok', 'err');
+  if (ok === true) { syncDot.classList.add('ok'); syncText.textContent = msg || '全員と共有中'; }
+  else if (ok === false) { syncDot.classList.add('err'); syncText.textContent = msg || 'オフライン（この端末のみ）'; }
+  else { syncText.textContent = msg || '同期状況を確認中…'; }
+}
+setSyncStatus(null);
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getDatabase, ref, onValue, update, child } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+
+  // 制作物リストの完成チェック・完成日・備考を全員で共有するための保存先。
+  // shiryo.htmlと同じFirebaseプロジェクトを流用し、既存の comments / kingdom / pageviews / shoppingList とは
+  // 別の子ノード productionList/{itemId} に保存する（2026-08-07〜）。
+  const firebaseConfig = {
+    apiKey: "AIzaSyCT3kB44SweowSshAxHKCo2wKM5XqsD2SQ",
+    authDomain: "d-bunkasai.firebaseapp.com",
+    databaseURL: "https://d-bunkasai-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "d-bunkasai",
+    storageBucket: "d-bunkasai.firebasestorage.app",
+    messagingSenderId: "709713875911",
+    appId: "1:709713875911:web:8ee19207018491ea60ffe2"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const productionRoot = ref(db, 'productionList');
+
+    // window経由でモジュール外（通常scriptで定義したロジック）から呼べるようにする
+    window.__productionFbUpdate = update;
+    window.__productionFbRef = child;
+    window.__productionFbRoot = productionRoot;
+
+    onValue(productionRoot, (snap) => {
+      const data = snap.val() || {};
+      if (typeof window.__applyProductionListData === 'function') {
+        window.__applyProductionListData(data);
+      }
+      if (typeof window.__setProductionSyncStatus === 'function') {
+        window.__setProductionSyncStatus(true);
+      }
+    }, () => {
+      // ルール未設定・読み取り拒否時は静かに失敗し、ローカル状態のみで動作を続ける
+      if (typeof window.__setProductionSyncStatus === 'function') {
+        window.__setProductionSyncStatus(false);
+      }
+    });
+  } catch (e) {
+    if (typeof window.__setProductionSyncStatus === 'function') {
+      window.__setProductionSyncStatus(false, '接続エラー（この端末のみで動作中）');
+    }
+  }
+</script>
+
+<script>
+  // module scriptからの橋渡し（Firebase読み込み完了後にセットされる）
+  window.__applyProductionListData = function (data) {
+    fbUpdate = window.__productionFbUpdate;
+    fbRef = window.__productionFbRef;
+    fbProductionRoot = window.__productionFbRoot;
+    PRODUCTION_ITEMS.forEach(it => {
+      const remote = data[it.id];
+      if (remote && typeof remote === 'object') {
+        // Firebase側にデータがあればローカルの初期値（ハンスの剣のdefault trueなど）より優先する
+        state[it.id] = {
+          done: !!remote.done,
+          doneDate: remote.doneDate || '',
+          note: remote.note || '',
+        };
+        renderItem(it.id);
+      }
+    });
+  };
+  window.__setProductionSyncStatus = function (ok, msg) {
+    setSyncStatus(ok, msg);
+  };
+</script>
+</body>
+</html>

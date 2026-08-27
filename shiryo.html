@@ -62,6 +62,7 @@
     color:var(--sub); font-size:0.88rem;
   }
   .note a{ color:var(--accent); }
+  #next-check-countdown{ display:inline-block; margin-top:2px; font-size:0.82rem; color:var(--accent); letter-spacing:.02em; }
   .comments-list{
     max-height:340px; overflow-y:auto; margin-top:16px;
     display:flex; flex-direction:column; gap:10px;
@@ -73,6 +74,13 @@
   .comment-text{ font-size:0.9rem; white-space:pre-wrap; word-break:break-word; }
   .comment-date{ font-size:0.72rem; color:var(--sub); margin-top:5px; letter-spacing:.04em; }
   .comment-empty{ color:var(--sub); font-size:0.88rem; }
+  .comment-reply{
+    margin-top:10px; padding:10px 14px; border-radius:0 10px 10px 0;
+    background:rgba(207,231,255,.07); border-left:2px solid var(--line-strong);
+  }
+  .comment-reply-label{ font-size:0.72rem; color:var(--accent); letter-spacing:.08em; font-weight:600; margin-bottom:4px; }
+  .comment-reply-text{ font-size:0.88rem; white-space:pre-wrap; word-break:break-word; }
+  .comment-reply-date{ font-size:0.68rem; color:var(--sub); margin-top:5px; letter-spacing:.04em; }
   .comment-form{ margin-top:14px; display:flex; flex-direction:column; gap:10px; }
   .comment-form textarea{
     width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:10px;
@@ -219,14 +227,13 @@
   </div>
 </section>
 <div class="wrap" id="resources">
-  <h1>資料一覧</h1>
   <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-27 09:25</small></p>
 
   <h2>全体資料</h2>
   <ul>
-    <li><a class="doc" href="生徒用/pdf/企画書.pdf"><span class="name">企画書</span><span class="desc">演目概要・演出方針・スケジュール・予算計画など（更新: 2026-07-25 09:24）</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/配役表.pdf"><span class="name">配役表</span><span class="desc">キャスト・スタッフ一覧（更新: 2026-07-25 09:24）</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/舞台構成.pdf"><span class="name">舞台構成</span><span class="desc">教室レイアウト・場面転換・役者動線（更新: 2026-07-25 09:24）</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/企画書.pdf"><span class="name">企画書</span><span class="desc">演目概要・演出方針・スケジュール・予算計画など（更新: 2026-08-11 22:00）</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/配役表.pdf"><span class="name">配役表</span><span class="desc">キャスト・スタッフ一覧（更新: 2026-08-08 01:11）</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/舞台構成.pdf"><span class="name">舞台構成</span><span class="desc">教室レイアウト・場面転換・役者動線（更新: 2026-08-11 22:00）</span></a></li>
   </ul>
 
   <h2>台本</h2>
@@ -237,12 +244,20 @@
 
   <h2>係別 役割書</h2>
   <ul>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_照明係.pdf"><span class="name">照明係</span><span class="desc">更新: 2026-07-05 16:18</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_音響係.pdf"><span class="name">音響係</span><span class="desc">更新: 2026-07-25 09:24</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_大道具係.pdf"><span class="name">大道具係</span><span class="desc">更新: 2026-07-10 11:30</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_小道具係.pdf"><span class="name">小道具係</span><span class="desc">更新: 2026-07-16 15:32</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_舞台監督.pdf"><span class="name">舞台監督</span><span class="desc">更新: 2026-07-25 09:24</span></a></li>
-    <li><a class="doc" href="生徒用/pdf/役割書/役割書_キャスト.pdf"><span class="name">キャスト用（配役・歌割り早見表）</span><span class="desc">更新: 2026-07-22 09:46</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_照明係.pdf"><span class="name">照明係</span><span class="desc">更新: 2026-07-27 18:16</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_音響係.pdf"><span class="name">音響係</span><span class="desc">更新: 2026-08-03 18:01</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_大道具係.pdf"><span class="name">大道具係</span><span class="desc">更新: 2026-08-11 22:00</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_小道具係.pdf"><span class="name">小道具係</span><span class="desc">更新: 2026-08-07 22:48</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_舞台監督.pdf"><span class="name">舞台監督</span><span class="desc">更新: 2026-07-27 18:16</span></a></li>
+    <li><a class="doc" href="生徒用/pdf/役割書/役割書_キャスト.pdf"><span class="name">キャスト用（配役・歌割り早見表）</span><span class="desc">更新: 2026-07-27 18:16</span></a></li>
+  </ul>
+
+  <h2>ツール</h2>
+  <ul>
+    <li><a class="doc" href="生徒用/音響ツール/音響再生ツール.html"><span class="name">音響再生ツール</span></a></li>
+    <li><a class="doc" href="生徒用/進行シミュレーター/進行シミュレーター.html"><span class="name">進行シミュレーター</span></a></li>
+    <li><a class="doc" href="生徒用/買い物リスト/買い物リスト.html"><span class="name">買い物リスト</span><span class="desc">購入チェック・備考・サイズ・購入日を全員で共有できる対話型ツール（更新: 2026-08-07 22:48）</span></a></li>
+    <li><a class="doc" href="生徒用/制作物リスト/制作物リスト.html"><span class="name">制作物リスト</span><span class="desc">大道具・小道具・教室装飾の完成チェック・完成日・備考を全員で共有できる対話型ツール（更新: 2026-08-07 23:48）</span></a></li>
   </ul>
 
   <h2>重要な変更点（まとめ）</h2>
@@ -251,21 +266,16 @@
     ・主要キャスト4役（夏アナ・ハンス・子供エルサ・司祭家来）は7月11日（土）決定目標<br>
     ・安全面：暖炉はLED代用プロップ、剣は模造品、トロール衣装は場面転換用に即脱ぎ設計<br>
     ・プロジェクター演出は方針転換により不使用に決定。映像担当の役割・映像再生ツールは廃止<br>
-    ・夏休みの練習日程は見直し中のため、日程表は一旦非公開
+    ・夏休みの練習日程は見直し中のため、日程表は一旦非公開<br>
+    ・「ご質問・気になる点」欄のコメントに、AIによる回答が表示できるようになりました（1時間ごとに確認・回答）
   </div>
   <p class="lead" style="margin:8px 0 0;"><a href="生徒用/html/変更点.html">→ もっと詳しい変更点はこちら</a></p>
 
-  <div class="note">
-    本番用の音響再生ツールは <a href="生徒用/音響ツール/音響再生ツール.html">こちら</a> からご覧いただけます（生徒の操作端末用）。
-  </div>
-
-  <div class="note">
-    上演の進行を秒単位で再現する<b>進行シミュレーター</b>は <a href="生徒用/進行シミュレーター/進行シミュレーター.html">こちら</a> からご覧いただけます。上演時間40分の内訳、ACT間の転換（暗転）にかかる時間、その時々のセリフ・場面・各係（照明/音響/大道具/小道具/舞台監督/衣装）への指示、教室レイアウトの舞台構成図が連動して確認できます。
-  </div>
-
   <h2>ご質問・気になる点</h2>
   <div class="note">
-    気になる点・ご質問があれば、下記に匿名でコメントを投稿できます（名前の入力は不要・即時反映されます）。
+    気になる点・ご質問があれば、下記に匿名でコメントを投稿できます（名前の入力は不要・即時反映されます）。<br>
+    返信は1時間ごとにAIがまとめて確認し、順次回答します。投稿直後には反映されない場合がありますので、あらかじめご了承ください。<br>
+    <span id="next-check-countdown"></span>
   </div>
 
   <div id="comments-list" class="comments-list"></div>
@@ -365,6 +375,27 @@
       setTimeout(resize, 400);
       requestAnimationFrame(tick);
     })();
+  })();
+</script>
+
+<script>
+  // ===== 次のAI回答チェックまでの残り時間表示（「ご質問・気になる点」欄） =====
+  // NEXT_CHECK_MINUTE：毎時何分にAIの定期回答チェックが走るかの設定値（0〜59）。
+  // 定期実行タスクの実際の設定はこの後Claude本体が別途行う予定のため、暫定的に毎時0分としている。
+  // 実際の設定が決まり次第、この定数だけを差し替えれば表示に反映される（他ロジックからは独立）。
+  (function () {
+    const NEXT_CHECK_MINUTE = 47;
+    const el = document.getElementById('next-check-countdown');
+    if (!el) return;
+    function render() {
+      const now = new Date();
+      const next = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), NEXT_CHECK_MINUTE, 0, 0);
+      if (next <= now) next.setHours(next.getHours() + 1);
+      const diffMin = Math.max(1, Math.ceil((next - now) / 60000));
+      el.textContent = `次の回答チェックまで あと${diffMin}分`;
+    }
+    render();
+    setInterval(render, 60000);
   })();
 </script>
 
@@ -523,12 +554,19 @@
       listEl.innerHTML = '<p class="comment-empty">まだコメントはありません。</p>';
       return;
     }
-    const items = Object.values(data).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+    const items = Object.values(data).sort((a, b) => (b.ts || 0) - (a.ts || 0));
     for (const item of items) {
       const el = document.createElement('div');
       el.className = 'comment-item';
       const date = item.ts ? new Date(item.ts).toLocaleString('ja-JP') : '';
-      el.innerHTML = `<div class="comment-text">${escapeHtml(item.text || '')}</div><div class="comment-date">${escapeHtml(date)}</div>`;
+      let html = `<div class="comment-text">${escapeHtml(item.text || '')}</div><div class="comment-date">${escapeHtml(date)}</div>`;
+      // reply（AIによる回答）があれば、コメント本文の下に区別できる形で追加表示する。
+      // reply/repliedAtは投稿フォームからは書き込まれず、別途の定期実行タスクがcomments/{key}に書き込む想定。
+      if (item.reply) {
+        const repliedDate = item.repliedAt ? new Date(item.repliedAt).toLocaleString('ja-JP') : '';
+        html += `<div class="comment-reply"><div class="comment-reply-label">AIより回答</div><div class="comment-reply-text">${escapeHtml(item.reply)}</div>${repliedDate ? `<div class="comment-reply-date">${escapeHtml(repliedDate)}</div>` : ''}</div>`;
+      }
+      el.innerHTML = html;
       listEl.appendChild(el);
     }
   });

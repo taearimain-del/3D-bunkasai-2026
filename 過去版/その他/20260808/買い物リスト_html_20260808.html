@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>買い物リスト — アナと雪の女王</title>
+<meta name="theme-color" content="#05101f">
+<style>
+:root{
+  --bg:#05101f; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.08); --panel3:rgba(255,255,255,.13);
+  --border:rgba(176,210,240,.16); --border-strong:rgba(176,210,240,.34);
+  --text:#e9f2fb; --sub:#93a8bd;
+  --accent:#cfe7ff; --accent-hover:#e3f2ff; --accent-ink:#0a1626;
+  --good:#8fe3c9; --warn:#e8c17a; --danger:#f0897e;
+  --serif:'Hiragino Mincho ProN','Yu Mincho','YuMincho','Shippori Mincho',serif;
+}
+*{box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  background-image:
+    radial-gradient(120% 80% at 50% -8%, rgba(90,160,220,.22), transparent 55%),
+    linear-gradient(180deg,#050f1e 0%,#071a30 40%,#08243c 72%,#0a2b44 100%);
+  background-attachment:fixed;
+  color:var(--text); margin:0; padding:18px 16px 96px;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.01em;
+  line-height:1.6;
+}
+.wrap{max-width:720px; margin:0 auto;}
+h1{font-family:var(--serif); font-size:1.5rem; font-weight:600; letter-spacing:.06em; margin:0 0 6px; color:#f2f8ff;}
+.lead{color:var(--sub); font-size:0.86rem; margin:0 0 6px;}
+.status-line{
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  font-size:0.78rem; color:var(--sub); margin:10px 0 20px;
+}
+.status-dot{width:8px; height:8px; border-radius:50%; background:var(--sub); flex:0 0 auto;}
+.status-dot.ok{background:var(--good); box-shadow:0 0 8px rgba(143,227,201,.7);}
+.status-dot.err{background:var(--danger);}
+
+.summary{
+  display:flex; align-items:center; gap:12px;
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:12px 16px; margin-bottom:22px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.summary .num{font-family:var(--serif); font-size:1.5rem; font-weight:600; color:#f5faff;}
+.summary .bar{flex:1; height:8px; border-radius:6px; background:rgba(255,255,255,.08); overflow:hidden;}
+.summary .bar-fill{height:100%; background:linear-gradient(90deg,#7fd4ff,#cfe7ff); border-radius:6px; transition:width .3s ease;}
+.summary .label{font-size:0.78rem; color:var(--sub); white-space:nowrap;}
+
+section{margin-bottom:26px;}
+section h2{
+  font-family:var(--serif); font-size:1.05rem; font-weight:600; letter-spacing:.06em;
+  padding-bottom:9px; margin:0 0 12px; color:#eaf4ff; position:relative;
+  display:flex; align-items:baseline; justify-content:space-between; gap:8px;
+}
+section h2::after{
+  content:""; position:absolute; left:0; bottom:0; width:100%; height:1px;
+  background:linear-gradient(90deg, var(--border-strong), transparent 70%);
+}
+section h2 .cat-count{font-family:'Hiragino Kaku Gothic ProN',sans-serif; font-size:0.72rem; font-weight:400; color:var(--sub); letter-spacing:0;}
+
+.item{
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  margin-bottom:10px; overflow:hidden;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  transition:background-color .18s ease, border-color .18s ease;
+}
+.item.checked{border-color:rgba(143,227,201,.28);}
+.item-row{
+  display:flex; align-items:flex-start; gap:12px;
+  padding:12px 14px;
+}
+.chk-btn{
+  flex:0 0 auto; width:28px; height:28px; margin-top:1px;
+  border-radius:8px; border:1.5px solid var(--border-strong);
+  background:rgba(255,255,255,.03); cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  color:transparent; font-size:1rem; font-weight:700;
+  transition:all .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.chk-btn:active{transform:scale(.9);}
+.item.checked .chk-btn{
+  background:rgba(143,227,201,.18); border-color:var(--good); color:var(--good);
+}
+.item-main{flex:1; min-width:0;}
+.item-name{font-size:0.94rem; color:var(--text); word-break:break-word;}
+.item.checked .item-name{color:var(--sub); text-decoration:line-through; text-decoration-color:rgba(147,168,189,.6);}
+.item-meta{
+  display:flex; flex-wrap:wrap; gap:6px 12px; margin-top:6px;
+  font-size:0.74rem; color:var(--sub);
+}
+.item-meta span{white-space:nowrap;}
+.item-meta b{color:var(--accent); font-weight:600;}
+.edit-toggle{
+  flex:0 0 auto; background:transparent; border:1px solid var(--border); color:var(--sub);
+  border-radius:20px; padding:6px 12px; font-size:0.74rem; cursor:pointer;
+  font-family:inherit; white-space:nowrap;
+  transition:all .15s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.edit-toggle:hover, .edit-toggle.active{background:var(--panel3); color:var(--text); border-color:var(--border-strong);}
+
+.edit-panel{
+  display:none; padding:4px 14px 14px 54px; border-top:1px solid var(--border);
+  margin-top:2px;
+}
+.edit-panel.open{display:block;}
+.field{margin-bottom:10px;}
+.field label{display:block; font-size:0.72rem; color:var(--sub); margin-bottom:4px;}
+.field input, .field textarea{
+  width:100%; font-family:inherit; font-size:0.88rem; color:var(--text);
+  background:rgba(255,255,255,.05); border:1px solid var(--border); border-radius:8px;
+  padding:8px 10px; resize:vertical;
+}
+.field input:focus, .field textarea:focus{outline:none; border-color:var(--border-strong); background:rgba(255,255,255,.08);}
+.edit-actions{display:flex; gap:8px; margin-top:4px;}
+.save-btn{
+  background:rgba(207,231,255,.14); color:#f5faff; border:1.5px solid rgba(207,231,255,.6);
+  border-radius:20px; padding:8px 18px; font-size:0.82rem; font-weight:600; cursor:pointer;
+  font-family:inherit;
+}
+.save-btn:hover{background:rgba(207,231,255,.22);}
+.cancel-btn{
+  background:transparent; color:var(--sub); border:1px solid var(--border);
+  border-radius:20px; padding:8px 16px; font-size:0.82rem; cursor:pointer;
+  font-family:inherit;
+}
+
+.note{
+  margin-top:34px; padding:14px 16px; border-radius:12px;
+  background:var(--panel); border:1px solid var(--border); font-size:0.78rem; color:var(--sub);
+}
+.note a{color:var(--accent);}
+footer{text-align:center; color:var(--sub); font-size:0.72rem; margin-top:28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>買い物リスト</h1>
+  <p class="lead">3年D組「アナと雪の女王」／ 制作に必要な材料の購入チェック用ツール。チェック・備考・サイズ・購入日はその場で全員に共有されます。</p>
+  <div class="status-line"><span class="status-dot" id="sync-dot"></span><span id="sync-text">同期状況を確認中…</span></div>
+
+  <div class="summary">
+    <div class="num" id="summary-num">0/0</div>
+    <div class="bar"><div class="bar-fill" id="summary-bar" style="width:0%"></div></div>
+    <div class="label">購入済み</div>
+  </div>
+
+  <div id="categories"></div>
+
+  <div class="note">
+    このリストの品目は <code>other/買い物リスト.md</code> を一次ソースとして管理しています。品目の追加・変更が必要な場合はまずそちらを更新してください。<br>
+    通信環境によってはチェックの共有が反映されないことがあります（画面上の操作自体は問題なく行えます）。
+  </div>
+  <footer>3年D組 文化祭公演「アナと雪の女王」</footer>
+</div>
+
+<script>
+// ===== 品目データ（other/買い物リスト.md が一次ソース。品目追加時はこちらにも反映すること） =====
+// 2026-08-07：トロール村パネルのロールスクリーン方式を白紙化し、3枚すべてハトメ＋カーテンリング/S字フック方式に統一したため、
+// panel-shintou（試作用紙筒）・panel-himo（束ねる用の紐）・panel-futonbasami（布団バサミ）は削除した。
+// 布団バサミはバックステージ幕・窓の遮光では引き続き使うが、それらは学校の既存備品を流用する運用のため本リストへの新規計上は不要。
+const SHOPPING_ITEMS = [
+  { id: 'panel-moroshigami', category: '① 大道具：パネル関連（新規）', name: '模造紙 20枚前後（氷雪・城内・トロール村の3種類の背景パネル用）' },
+  { id: 'panel-hosoibou',    category: '① 大道具：パネル関連（新規）', name: '細い棒（直径8〜10mm程度。突っ張り棒の細いタイプ or 園芸支柱。裾に通してパネルをピンと張るため）1.5m前後のものを10本程度（3枚のパネル分、つなげて使う想定。合計約15m必要）' },
+  { id: 'panel-wire',        category: '① 大道具：パネル関連（新規）', name: 'ワイヤー（パネル専用の2本目。黒幕用ワイヤーとは別）1巻' },
+  { id: 'panel-hatome',      category: '① 大道具：パネル関連（新規）', name: 'ハトメ（グロメット）セット（打ち具付き）1式' },
+  { id: 'panel-ring-hook',   category: '① 大道具：パネル関連（新規）', name: 'カーテンリング または S字フック（小） 15〜20個程度（3枚のパネル分、各4〜6点×3枚＋予備）' },
+  { id: 'panel-tape',        category: '① 大道具：パネル関連（新規）', name: '布テープ or ガムテープ 1〜2巻' },
+  { id: 'panel-color-ice',   category: '① 大道具：パネル関連（新規）', name: '氷・雪パネル用の着色材料（絵の具または水性塗料、青・白・水色系）：模造紙 or 布を氷雪パネルの色合いに仕上げるため' },
+  { id: 'panel-color-troll', category: '① 大道具：パネル関連（新規）', name: 'トロール村パネル用の着色材料（絵の具または水性塗料、緑系）：模造紙を「岩と苔のイメージ」に着色するため' },
+
+  { id: 'set-danboru', category: '② 大道具：既存セット', name: '段ボール（大判数枚）' },
+  { id: 'set-nuno',    category: '② 大道具：既存セット', name: '布 or 追加の模造紙（城内パネル用）' },
+  { id: 'set-spray',   category: '② 大道具：既存セット', name: 'スプレー塗料（茶・グレー系）' },
+
+  { id: 'prop-tebukuro',      category: '③ 小道具', name: '手袋 ×2' },
+  { id: 'prop-ninjin',        category: '③ 小道具', name: '発泡スチロール棒 or 紙筒＋オレンジ塗料（人参用）' },
+  { id: 'prop-tsue-tama',     category: '③ 小道具', name: '金色スプレー、発泡スチロール球（杖・玉用）' },
+  { id: 'prop-kinobou',       category: '③ 小道具', name: '木の棒（杖・剣の芯材）' },
+  { id: 'prop-rope-kanazuchi',category: '③ 小道具', name: 'ロープ・金づち（模造でよい）' },
+  { id: 'prop-led',           category: '③ 小道具', name: '電池式LEDライト＋電池（暖炉プロップ内蔵用）' },
+  { id: 'prop-ninjin-koteigu',category: '③ 小道具', name: '人参の固定具（面ファスナー〔マジックテープ〕 または クリップ式固定具）：人参の装着用、多少の動きでは外れない設計にするため' },
+
+  { id: 'deco-gayoushi',    category: '④ 教室装飾用の資材', name: '白・水色・青の画用紙・模造紙（追加分）' },
+  { id: 'deco-led',         category: '④ 教室装飾用の資材', name: '電池式LEDイルミネーションライト 2〜3本' },
+  { id: 'deco-tape',        category: '④ 教室装飾用の資材', name: '壁を傷めないテープ類（マスキングテープ等）' },
+  { id: 'deco-cellophane',  category: '④ 教室装飾用の資材', name: 'セロファン（あれば）' },
+
+  { id: 'screen-stand', category: '⑤ 目隠しスクリーン（ACT7 下手袖の子供アナ・子供エルサ待機用）', name: '独立式スタンド または 突っ張り棒（目隠しスクリーンを自立させる骨組み用）' },
+
+  { id: 'kuromaku-sheet',  category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕シート' },
+  { id: 'kuromaku-kanagu', category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕の固定金具（アイボルト・S字フック・カラビナ等。壁面・柱への固定用）' },
+  { id: 'kuromaku-hasami', category: '⑥ バックステージ黒幕（黒板手前の暗幕）', name: '黒幕用の布団バサミ または カーテンフック・リング（黒シートの上辺を30〜40cm間隔でワイヤーに留めるための吊り具）：背景パネル3枚とは異なり黒幕は方式変更なし・引き続き布団バサミ方式' },
+];
+
+// ===== ローカル状態（Firebaseから読めるまでの初期値。checked/note/size/purchasedDateを保持） =====
+const state = {};
+SHOPPING_ITEMS.forEach(it => { state[it.id] = { checked: false, note: '', size: '', purchasedDate: '' }; });
+// 黒幕シートはホームセンターで購入済み（園芸用の大判シート）。Firebase側にデータがあればそちらを優先する設計は他の品目と同じ。
+state['kuromaku-sheet'] = { checked: true, note: 'ホームセンターで購入済み（園芸用シート）。サイズ未計測', size: '', purchasedDate: '' };
+
+// ===== DOM構築 =====
+const categoriesEl = document.getElementById('categories');
+const categoryOrder = [];
+SHOPPING_ITEMS.forEach(it => { if (!categoryOrder.includes(it.category)) categoryOrder.push(it.category); });
+
+function el(tag, cls, html){
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (html !== undefined) e.innerHTML = html;
+  return e;
+}
+
+const itemNodes = {}; // id -> {root, chk, name, meta, editPanel, noteInput, sizeInput, dateInput, editToggle}
+
+categoryOrder.forEach(cat => {
+  const items = SHOPPING_ITEMS.filter(it => it.category === cat);
+  const section = el('section');
+  const h2 = el('h2');
+  h2.appendChild(document.createTextNode(cat));
+  const countSpan = el('span', 'cat-count');
+  countSpan.id = 'cat-count-' + cat.replace(/[^a-zA-Z0-9]/g, '');
+  h2.appendChild(countSpan);
+  section.appendChild(h2);
+
+  items.forEach(it => {
+    const item = el('div', 'item');
+    item.dataset.id = it.id;
+
+    const row = el('div', 'item-row');
+
+    const chk = el('button', 'chk-btn', '✓');
+    chk.type = 'button';
+    chk.setAttribute('aria-label', '購入済みにする');
+
+    const main = el('div', 'item-main');
+    const nameEl = el('div', 'item-name', it.name);
+    const metaEl = el('div', 'item-meta');
+    main.appendChild(nameEl);
+    main.appendChild(metaEl);
+
+    const editToggle = el('button', 'edit-toggle', '編集');
+    editToggle.type = 'button';
+
+    row.appendChild(chk);
+    row.appendChild(main);
+    row.appendChild(editToggle);
+    item.appendChild(row);
+
+    const editPanel = el('div', 'edit-panel');
+    editPanel.innerHTML = `
+      <div class="field">
+        <label>サイズ（実際に買ったもの。例：直径9cm、12cm×8cm）</label>
+        <input type="text" class="size-input" placeholder="サイズを入力">
+      </div>
+      <div class="field">
+        <label>購入日</label>
+        <input type="date" class="date-input">
+      </div>
+      <div class="field">
+        <label>備考</label>
+        <textarea class="note-input" rows="2" placeholder="備考を入力（購入場所・値段・残数など）"></textarea>
+      </div>
+      <div class="edit-actions">
+        <button type="button" class="save-btn">保存</button>
+        <button type="button" class="cancel-btn">閉じる</button>
+      </div>
+    `;
+    item.appendChild(editPanel);
+    section.appendChild(item);
+
+    const sizeInput = editPanel.querySelector('.size-input');
+    const dateInput = editPanel.querySelector('.date-input');
+    const noteInput = editPanel.querySelector('.note-input');
+    const saveBtn = editPanel.querySelector('.save-btn');
+    const cancelBtn = editPanel.querySelector('.cancel-btn');
+
+    itemNodes[it.id] = { root: item, chk, nameEl, metaEl, editPanel, sizeInput, dateInput, noteInput, editToggle };
+
+    chk.addEventListener('click', () => {
+      const cur = state[it.id];
+      setChecked(it.id, !cur.checked);
+    });
+
+    editToggle.addEventListener('click', () => {
+      const open = editPanel.classList.toggle('open');
+      editToggle.classList.toggle('active', open);
+      if (open) {
+        sizeInput.value = state[it.id].size || '';
+        dateInput.value = state[it.id].purchasedDate || '';
+        noteInput.value = state[it.id].note || '';
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      editPanel.classList.remove('open');
+      editToggle.classList.remove('active');
+    });
+
+    saveBtn.addEventListener('click', () => {
+      setFields(it.id, {
+        size: sizeInput.value.trim(),
+        purchasedDate: dateInput.value,
+        note: noteInput.value.trim(),
+      });
+      editPanel.classList.remove('open');
+      editToggle.classList.remove('active');
+    });
+  });
+
+  categoriesEl.appendChild(section);
+});
+
+function renderItem(id){
+  const s = state[id];
+  const n = itemNodes[id];
+  if (!s || !n) return;
+  n.root.classList.toggle('checked', !!s.checked);
+
+  const metaParts = [];
+  if (s.checked) metaParts.push('<span>✓ 購入済み</span>');
+  if (s.size) metaParts.push(`<span>サイズ: <b>${escapeHtml(s.size)}</b></span>`);
+  if (s.purchasedDate) metaParts.push(`<span>購入日: <b>${escapeHtml(s.purchasedDate)}</b></span>`);
+  if (s.note) metaParts.push(`<span>備考: <b>${escapeHtml(s.note)}</b></span>`);
+  n.metaEl.innerHTML = metaParts.join('');
+
+  renderSummary();
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderSummary(){
+  const total = SHOPPING_ITEMS.length;
+  const done = SHOPPING_ITEMS.filter(it => state[it.id].checked).length;
+  document.getElementById('summary-num').textContent = `${done}/${total}`;
+  document.getElementById('summary-bar').style.width = total ? `${(done / total) * 100}%` : '0%';
+
+  categoryOrder.forEach(cat => {
+    const items = SHOPPING_ITEMS.filter(it => it.category === cat);
+    const catDone = items.filter(it => state[it.id].checked).length;
+    const countEl = document.getElementById('cat-count-' + cat.replace(/[^a-zA-Z0-9]/g, ''));
+    if (countEl) countEl.textContent = `${catDone}/${items.length}`;
+  });
+}
+
+// 初期描画（Firebase接続前のローカル状態）
+SHOPPING_ITEMS.forEach(it => renderItem(it.id));
+
+// ===== 更新関数（Firebaseへ書き込み。失敗しても画面上はローカル状態を反映し続ける） =====
+let fbUpdate = null; // Firebaseのupdate関数への参照（module読み込み後にセット）
+let fbRef = null;
+let fbShoppingRoot = null;
+
+function setChecked(id, checked){
+  state[id].checked = checked;
+  renderItem(id);
+  pushToFirebase(id, { checked });
+}
+
+function setFields(id, fields){
+  Object.assign(state[id], fields);
+  renderItem(id);
+  pushToFirebase(id, fields);
+}
+
+function pushToFirebase(id, fields){
+  if (!fbUpdate || !fbRef || !fbShoppingRoot) return;
+  try {
+    fbUpdate(fbRef(fbShoppingRoot, id), fields).catch(() => {});
+  } catch (e) { /* 静かに失敗させる */ }
+}
+
+const syncDot = document.getElementById('sync-dot');
+const syncText = document.getElementById('sync-text');
+function setSyncStatus(ok, msg){
+  syncDot.classList.remove('ok', 'err');
+  if (ok === true) { syncDot.classList.add('ok'); syncText.textContent = msg || '全員と共有中'; }
+  else if (ok === false) { syncDot.classList.add('err'); syncText.textContent = msg || 'オフライン（この端末のみ）'; }
+  else { syncText.textContent = msg || '同期状況を確認中…'; }
+}
+setSyncStatus(null);
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+  import { getDatabase, ref, onValue, update, child } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-database.js";
+
+  // 買い物リストの購入チェック・備考・サイズ・購入日を全員で共有するための保存先。
+  // shiryo.htmlと同じFirebaseプロジェクトを流用し、既存の comments / kingdom / pageviews とは
+  // 別の子ノード shoppingList/{itemId} に保存する（2026-08-07〜）。
+  const firebaseConfig = {
+    apiKey: "AIzaSyCT3kB44SweowSshAxHKCo2wKM5XqsD2SQ",
+    authDomain: "d-bunkasai.firebaseapp.com",
+    databaseURL: "https://d-bunkasai-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "d-bunkasai",
+    storageBucket: "d-bunkasai.firebasestorage.app",
+    messagingSenderId: "709713875911",
+    appId: "1:709713875911:web:8ee19207018491ea60ffe2"
+  };
+
+  try {
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const shoppingRoot = ref(db, 'shoppingList');
+
+    // window経由でモジュール外（通常scriptで定義したロジック）から呼べるようにする
+    window.__shoppingFbUpdate = update;
+    window.__shoppingFbRef = child;
+    window.__shoppingFbRoot = shoppingRoot;
+
+    onValue(shoppingRoot, (snap) => {
+      const data = snap.val() || {};
+      if (typeof window.__applyShoppingListData === 'function') {
+        window.__applyShoppingListData(data);
+      }
+      if (typeof window.__setShoppingSyncStatus === 'function') {
+        window.__setShoppingSyncStatus(true);
+      }
+    }, () => {
+      // ルール未設定・読み取り拒否時は静かに失敗し、ローカル状態のみで動作を続ける
+      if (typeof window.__setShoppingSyncStatus === 'function') {
+        window.__setShoppingSyncStatus(false);
+      }
+    });
+  } catch (e) {
+    if (typeof window.__setShoppingSyncStatus === 'function') {
+      window.__setShoppingSyncStatus(false, '接続エラー（この端末のみで動作中）');
+    }
+  }
+</script>
+
+<script>
+  // module scriptからの橋渡し（Firebase読み込み完了後にセットされる）
+  window.__applyShoppingListData = function (data) {
+    fbUpdate = window.__shoppingFbUpdate;
+    fbRef = window.__shoppingFbRef;
+    fbShoppingRoot = window.__shoppingFbRoot;
+    SHOPPING_ITEMS.forEach(it => {
+      const remote = data[it.id];
+      if (remote && typeof remote === 'object') {
+        state[it.id] = {
+          checked: !!remote.checked,
+          note: remote.note || '',
+          size: remote.size || '',
+          purchasedDate: remote.purchasedDate || '',
+        };
+        renderItem(it.id);
+      }
+    });
+  };
+  window.__setShoppingSyncStatus = function (ok, msg) {
+    setSyncStatus(ok, msg);
+  };
+</script>
+</body>
+</html>

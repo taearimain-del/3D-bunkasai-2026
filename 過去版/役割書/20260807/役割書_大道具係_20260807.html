@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>役割書</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 20mm 24mm 24mm 24mm; }
+@font-face {
+  font-family: 'IPAexMincho';
+  src: url('../../tools/fonts/ipaexm.ttf') format('truetype');
+}
+body {
+  font-family: 'Hiragino Mincho ProN','Yu Mincho','MS Mincho','IPAexMincho',Georgia,serif;
+  font-size: 10.5pt;
+  line-height: 1.9;
+  color: #1e0e00;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px 0 30px;
+  background: #fff;
+}
+
+/* タイトル：中央揃え・大文字 */
+.title-block { text-align: center; margin-bottom: 28px; padding-bottom: 0; }
+.title-label { font-size: 9pt; letter-spacing: 0.5em; color: #7a5a2a; margin-bottom: 14px; display: block; }
+.title-main { font-size: 38pt; font-weight: 700; color: #5a1500; letter-spacing: 0.08em; line-height: 1.25; margin: 8px 0 12px; display: block; }
+.title-sub { font-size: 10pt; color: #6a4820; letter-spacing: 0.2em; display: block; }
+.title-divider {
+  border: none;
+  border-top: 1px solid #b0802a;
+  margin: 18px 0 6px;
+}
+.title-divider + * { margin-top: 0; }
+
+/* 見出し：下線のみ・中央 */
+h2 {
+  font-size: 12.5pt; font-weight: 700; color: #3a1000;
+  margin: 30px 0 12px; padding: 0 0 8px 0;
+  border-bottom: 2px solid #b0802a;
+  background: none; letter-spacing: 0.1em;
+  text-align: center;
+}
+h3 { font-size: 10.5pt; font-weight: 700; color: #5a3000; margin: 18px 0 8px; padding-left: 0; border-left: none; border-bottom: 1px dotted #c0a060; padding-bottom: 4px; }
+hr { border: none; border-top: 1px solid #d0b880; margin: 24px 0; }
+
+/* キャスト表 */
+.char-legend { font-size: 9pt; margin: 8px 0 10px; line-height: 2.0; }
+.char-legend .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 3px; vertical-align: middle; position: relative; top: -1px; }
+table.cast-table { border-collapse: collapse; width: 100%; font-size: 9.5pt; margin: 8px 0 6px; }
+table.cast-table th { background: #ede0c0; border: 1px solid #c0a060; padding: 5px 9px; font-weight: 700; text-align: left; color: #2a1000; }
+table.cast-table td { border: 1px solid #d4c4a0; padding: 4px 9px; vertical-align: middle; }
+td.cast-slot-cell { min-width: 90px; background: #faf4e4; border-bottom: 2px solid #b0802a !important; }
+p.cast-note { font-size: 9pt; color: #8a6840; margin: 6px 0 0; font-style: italic; }
+.staff-notes { background: #faf2dc; border: 1px solid #d0b880; border-left: 4px solid #b0802a; padding: 10px 14px; margin: 10px 0 14px; }
+.staff-notes ul { list-style: none; padding: 0; margin: 0; }
+.staff-notes li { font-size: 9.5pt; color: #2a1800; padding: 2px 0; line-height: 2.0; }
+.staff-notes li::before { content: '◆'; color: #b0802a; margin-right: 6px; font-size: 8pt; }
+
+/* ACTヘッダー：中央揃え・大きな飾り枠 */
+.act-header { margin: 36px 0 16px; page-break-before: auto; text-align: center; }
+.act-title {
+  font-size: 16pt; font-weight: 700; color: #5a1500;
+  padding: 12px 20px;
+  border-top: 3px double #b0802a;
+  border-bottom: 3px double #b0802a;
+  background: none;
+  letter-spacing: 0.12em;
+  display: inline-block;
+}
+.act-meta { font-size: 8.5pt; color: #8a6840; margin: 6px 0 4px; }
+.act-chars { font-size: 9.5pt; font-weight: 600; color: #3a2010; margin: 4px 0 12px; }
+
+/* セリフ */
+p.dialog { margin: 6px 0 2px; line-height: 1.9; }
+span.char-name { font-weight: 700; }
+p.stage-direction {
+  color: #7a5a38; font-size: 9.5pt; font-style: italic;
+  margin: 6px 0 6px 1.5em; padding-left: 0;
+  border-left: none;
+  line-height: 1.9;
+}
+
+/* ナレーター */
+blockquote.narrator {
+  background: #f5ead0; border: 1px solid #d0b880;
+  border-left: 4px solid #a07030;
+  padding: 8px 16px; margin: 12px 0;
+  font-size: 10pt; color: #1e0e00; line-height: 2.0;
+}
+
+/* キュー */
+p.cue { font-size: 10pt; font-weight: 700; padding: 5px 10px; margin: 8px 0; border-radius: 2px; line-height: 1.7; }
+p.light-cue { background: #fdf8e4; border: 1px solid #e0c060; border-left: 5px solid #c89020; color: #4a3000; }
+p.music-cue { background: #f0f8f0; border: 1px solid #80c090; border-left: 5px solid #308050; color: #0e2a1a; }
+p.time-cue { background: #f5f0e8; border: 1px solid #c0b080; border-left: 5px solid #907040; color: #3a2810; font-weight: 400; }
+p.daidogu-cue { background: #fdf4e4; border: 1px solid #c07820; border-left: 5px solid #905010; color: #3a2000; }
+p.shodogu-cue { background: #f4f0fc; border: 1px solid #8858b0; border-left: 5px solid #604090; color: #260848; }
+p.onkyo-cue { background: #e8f6f4; border: 1px solid #38a090; border-left: 5px solid #107060; color: #062e28; }
+p.isho-cue { background: #fce8ee; border: 1px solid #c05890; border-left: 5px solid #903070; color: #420824; }
+p.kantoku-cue { background: #eceef6; border: 1px solid #3848b0; border-left: 5px solid #1e30a0; color: #080e3c; }
+
+/* バッジ・フッター */
+.version-badge { display: inline-block; font-size: 9pt; padding: 2px 10px; border-radius: 2px; margin-bottom: 8px; font-weight: 700; letter-spacing: 0.05em; }
+.badge-full { background: #b0802a; color: #fcf8ee; }
+.badge-yakusha { background: #7a3a10; color: #fcf8ee; }
+.footer-note { font-size: 8pt; color: #9a7a50; text-align: center; margin-top: 32px; padding-top: 10px; border-top: 1px solid #d0b880; }
+.yakuwari-dept { font-size: 30pt; font-weight: 700; color: #5a1500; text-align: center; padding: 22px 0 10px; letter-spacing: 0.12em; line-height: 1.4; }
+
+/* ===== H4 ===== */
+h4 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #555;
+  margin: 14px 0 6px;
+  padding: 3px 0 3px 8px;
+  border-left: 3px solid #bbb;
+}
+/* ===== CODE BLOCK / SVG FIGURE ===== */
+pre {
+  background: #f5f6f8;
+  border: 1px solid #d4d8e0;
+  border-radius: 4px;
+  padding: 10px 14px;
+  margin: 12px 0;
+  overflow-x: auto;
+}
+pre code {
+  font-family: 'Consolas','SFMono-Regular','Menlo','Courier New',monospace;
+  font-size: 9pt;
+  line-height: 1.55;
+  color: #2a2a2a;
+  white-space: pre;
+}
+svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 14px auto;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure {
+  margin: 14px 0 20px;
+  text-align: center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  writing-mode: horizontal-tb;
+}
+figure.svg-figure figcaption {
+  font-size: 9pt;
+  color: #777;
+  margin-top: 4px;
+  letter-spacing: 0.03em;
+}
+/* ===== 映像（プロジェクター）cue ===== */
+p.eizo-cue {
+  background: #f4eefc;
+  border: 1px solid #8858c8;
+  border-left: 6px solid #6030a8;
+  color: #2a1050;
+}
+</style>
+</head>
+<body>
+<div class="yakuwari-dept">大道具係</div>
+<h2>役割書 — 大道具係</h2>
+<hr>
+<h2>概要・責任範囲</h2>
+<p>大道具係は<strong>セット（背景・大型の舞台装置）の制作・設置・場面転換</strong>と<strong>教室装飾</strong>を担当する。</p>
+<p>公演当日は暗転中に素早くセットを入れ替える必要があるため、転換フローを全員で把握しておくこと。</p>
+<hr>
+<h2>必要人数・役割分担</h2>
+<table class="cast-table">
+<thead><tr><th>人数</th><th>役割</th></tr></thead><tbody>
+<tr>
+<td>1〜2人</td>
+<td>制作リーダー（設計・材料調達）</td>
+</tr>
+<tr>
+<td>2〜3人</td>
+<td>制作・塗装作業</td>
+</tr>
+<tr>
+<td>全員（本番）</td>
+<td>場面転換担当（暗転中に素早く動く）</td>
+</tr>
+</tbody></table>
+<p><strong>目安：3〜4人（本番の場面転換には出番のない役者も加わる）</strong></p>
+<hr>
+<h2>制作物リスト</h2>
+<h3>セット</h3>
+<table class="cast-table">
+<thead><tr><th>品目</th><th>使用シーン</th><th>サイズ感</th><th>制作方法（案）</th><th>担当者</th><th>制作期限</th></tr></thead><tbody>
+<tr>
+<td>背景パネル：氷・雪（青白）</td>
+<td>ACT3『レット・イット・ゴー』＆ACT5 エルサの城</td>
+<td>黒板サイズ程度</td>
+<td>青白い布または大きな画用紙。雪の結晶を貼る</td>
+<td>大道具係</td>
+<td>—</td>
+</tr>
+<tr>
+<td>背景パネル：城内（茶系）</td>
+<td>ACT2 戴冠式・ACT6 室内</td>
+<td>黒板サイズ程度</td>
+<td>段ボールや布で城の壁をイメージして制作</td>
+<td>大道具係</td>
+<td>—</td>
+</tr>
+<tr>
+<td>目隠しスクリーン（子供アナ・子供エルサ用、下手袖設置）</td>
+<td>ACT7 子供アナ・子供エルサを客席から見えないように下手袖で待機させる</td>
+<td>高さ150cm×幅90cm程度（人が隠れる大きさ）</td>
+<td>段ボールや布のパネルを組み立てて自立させる</td>
+<td>大道具係</td>
+<td>2026年8月28日（本番2週間前）までに制作完了・設置テストを実施</td>
+</tr>
+</tbody></table>
+<blockquote class="narrator">※ 実際の大きさ・仕様はリハーサル室の広さを確認してから決定する。</blockquote>
+<h3>教室装飾（当日）</h3>
+<table class="cast-table">
+<thead><tr><th>場所</th><th>品目</th><th>制作方法（案）</th></tr></thead><tbody>
+<tr>
+<td>教室入口</td>
+<td>演目名看板・雪の結晶デコレーション</td>
+<td>演目名看板「アナと雪の女王」は模造紙1枚（A1目安・約60×84cm）に、青地に白文字または白地に青文字＋雪の結晶の縁取りで制作し、ドア上または横の壁に掲示。雪の結晶は切り紙で大(15cm角)6個・中(10cm角)10個・小(5cm角)15個を作り、看板周りと壁面にランダムに散りばめる。青・白・水色で統一</td>
+</tr>
+<tr>
+<td>廊下</td>
+<td>つらら（氷柱）・氷の壁風パネル・LEDイルミネーション・案内表示</td>
+<td>つららは白・水色の画用紙で三角形パーツを制作し、長め(40〜50cm)6本・中(25〜30cm)8本・短め(15cm)10本の計24本を天井際から吊るす。入口に近いほど密度を上げ、間隔20〜40cmで不規則に配置（規則正しく並べると氷柱らしさが失われるため）。氷の壁風パネルは入口から左右2〜3m分の壁にひび割れ模様を描いた模造紙パネルを4〜6枚貼る。つらら・パネルの裏に電池式LEDイルミネーションライト（3〜4m）を2〜3本這わせる。次回開始時刻・待機列案内は無機質な貼り紙にせず、つらら型または雪の結晶型の掲示パネル2〜3箇所に統合する。<strong>上記の本数・枚数は廊下の壁3〜5m分を想定した目安。実際の廊下の長さが分かり次第調整すること</strong></td>
+</tr>
+<tr>
+<td>舞台周辺</td>
+<td>キャスト紹介ボード</td>
+<td>役名と役者名を書いたボード</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>本番の場面転換フロー</h2>
+<p>暗転中に速やかに動く。演出または舞台監督の合図（手信号）で動き出すこと。</p>
+<table class="cast-table">
+<thead><tr><th>タイミング</th><th>転換内容</th><th>担当</th></tr></thead><tbody>
+<tr>
+<td>ACT1→ACT2（雪だるまつくろう後）</td>
+<td>戴冠式用の背景・小道具を配置</td>
+<td>大道具係＋役者（ハンス役・公爵役など）</td>
+</tr>
+<tr>
+<td>ACT2→ACT3（とびら開けて後）</td>
+<td>転換なし（茶系背景パネルはそのまま継続使用）</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT3『レット・イット・ゴー』<strong>開始時</strong></td>
+<td>白・水色の布/パネルを後方に展開（雪山・氷の城を表現） ※暗転ではなく歌の始まりに合わせて出す</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT3→ACT4（レット・イット・ゴー後）</td>
+<td>白・水色パネルを撤去するのみ（ドアフレームは廃止済みのため搬入不要）</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT4→ACT5（あこがれの夏後）</td>
+<td>氷の城背景パネル（白・水色）を前面に設置</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT5→ACT6（ハンスの部屋へ、45秒暗転）</td>
+<td>氷の城パネル（白・水色）を撤去→茶系背景パネルに切替（4名体制・目安25秒）、机・椅子を搬入（2名・目安15秒）。<strong>机・椅子は暗転前に上手袖の奥に事前スタンバイ</strong>（大人エルサの退場経路より奥に待機させ、エルサ通過確認後に引き出す）。搬入動線は上手一方向に固定。35秒時点でパネル切替未完了の場合は延長合図（舞台監督が手を2回叩く）。<strong>ゲネプロで必ず計測・記録すること</strong>。</td>
+<td>大道具係</td>
+</tr>
+<tr>
+<td>ACT6内（クライマックス前・短い暗転）</td>
+<td>机・椅子を舞台袖へ素早く撤収。茶系背景パネルはそのまま残す（城の外壁として転用）</td>
+<td>大道具係</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>準備スケジュール（目安）</h2>
+<table class="cast-table">
+<thead><tr><th>時期</th><th>作業内容</th></tr></thead><tbody>
+<tr>
+<td>7月前半</td>
+<td>制作物リストを確定・材料の調達計画を立てる</td>
+</tr>
+<tr>
+<td>7月後半〜8月前半</td>
+<td>背景パネルの制作</td>
+</tr>
+<tr>
+<td>8月後半</td>
+<td>セットを実際に舞台に置いて通し稽古に合わせる</td>
+</tr>
+<tr>
+<td>9月前半</td>
+<td>教室装飾の制作</td>
+</tr>
+<tr>
+<td>9月7〜9日</td>
+<td>会場入り・セット配置確認・転換の通し練習</td>
+</tr>
+<tr>
+<td>本番前日</td>
+<td>教室装飾を完成させる</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>役者との連携</h2>
+<p>出番の少ない役者が場面転換を手伝う。事前に動きを確認しておくこと。</p>
+<table class="cast-table">
+<thead><tr><th>役者</th><th>手伝えるシーン</th></tr></thead><tbody>
+<tr>
+<td>ウェーゼルトン役</td>
+<td>ACT4以降の転換（ACT3で退場後）。<strong>フォールバック</strong>：トロール役の衣装脱ぎがゲネプロで20秒以内に収まる場合は不要。収まらない場合、ACT5→6の机・椅子搬入（2名分）をウェーゼルトン役2名（こたに・しゅうた）で分担する</td>
+</tr>
+<tr>
+<td>トロール役</td>
+<td>ACT1〜3の転換（計3回担当）。ACT3→ACT4転換はドアフレーム廃止に伴い大道具係のみで対応可能なため対象外。ACT4→5転換もACT5登場準備に専念のため除外。<strong>ACT5→6転換（45秒暗転）も兼務</strong>：ACT5『トロールの村』出演後、衣装を素早く脱いで大道具作業（机・椅子搬入）に加わる（2026-07-04追記）</td>
+</tr>
+</tbody></table>
+<h3>トロール役の衣装即脱ぎ設計（2026-07-04追記）</h3>
+<p>トロール役はACT5終演直後にACT5→6転換（45秒暗転）で大道具作業を兼務するため、衣装を舞台袖で素早く脱げる設計にすること。</p>
+<ul><li><strong>衣装仕様</strong>：上から羽織れるケープ・ベスト・腰布タイプ（岩・森を意識したデザイン）。スナップボタンまたは面ファスナーで留め、<strong>2〜3秒で脱げる</strong>ようにする。下には黒Tシャツ＋黒ズボンを着用しておき、脱いだ瞬間に大道具スタッフの見た目になる。</li><li><strong>ゲネプロでの確認</strong>：「脱ぐ→移動→パネル搬出完了」までの一連の流れを<strong>20秒以内</strong>に収められるか、必ずゲネプロで計測すること。<strong>20秒以内に収まる場合はフォールバック不要。</strong></li><li><strong>フォールバック案</strong>：20秒以内に収まらない場合は、ウェーゼルトン役2名（こたに・しゅうた）で机・椅子搬入を分担する（上表参照）。ウェーゼルトン公爵のダブルキャストが2026-07-10に確定したため、当初案どおり「ウェーゼルトン役2名」プランで運用する。</li></ul>
+<hr>
+<h2>リハーサルで確認すること</h2>
+<ul><li>[ ] 各セットが暗転中に1分以内で転換できるか確認</li><li>[ ] 背景パネルの固定方法（立て掛け・壁への取り付け等）を決めておく</li><li>[ ] 転換中に音を立てないよう練習する</li><li>[ ] ACT5→6転換の作業時間をゲネプロで計測し記録する（45秒以内に完了できるか）</li><li>[ ] 机・椅子の事前スタンバイ位置（上手袖の奥・エルサ動線より内側）を確認する</li><li>[ ] 延長合図（手を2回叩く）の意味を全員で共有する</li><li>[ ] トロール役の衣装即脱ぎ（「脱ぐ→移動→パネル搬出完了」20秒以内）をゲネプロで計測する。収まった場合はフォールバック不要。収まらない場合はウェーゼルトン役（こたに）＋バックアップ生徒1名への分担に切り替える</li></ul>
+</body>
+</html>

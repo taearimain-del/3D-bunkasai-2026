@@ -31,3 +31,4 @@ node tools/html_to_pdf.js other/配役表.html:生徒用/pdf/配役表.pdf
 - `--all`で使う資料一覧はスクリプト内`ALL_DOCS`に直書きしてある。新しい資料（新しい役割書など）を追加したら、ここにも追記すること。
 - PDFを上書きする前に、プロジェクトの基本ルール（`CLAUDE.md`）どおり `過去版/` へのアーカイブを忘れないこと（このスクリプト自体はアーカイブを行わない）。
 - md→htmlの変換自体（内容編集）は引き続きユーザーのWindows環境の`md_to_html.py`、またはClaudeによる`other/*.html`の手動編集で行う。このスクリプトはhtml→pdfの最終工程のみを担当する。
+- **日本語フォントについて（2026-07-27追加）**：このLinux環境には日本語Minchoフォント（Yu Mincho等）が入っておらず、対策しないと漢字が中国語フォント（WenQuanYi Zen Hei）風の字形でPDF化されてしまう。この問題は`tools/fonts/ipaexm.ttf`（IPAexMincho、IPAフォントライセンスv1.0）を同梱し、各資料HTML側に`@font-face`宣言を追加することで対応済み。新しい資料HTMLを追加する場合は、既存ファイル（例：`other/企画書.html`）の`@font-face`＋`font-family`の書き方を踏襲すること。詳細は`プロジェクト概要.md`の重要ルール12番・`生徒用/変更点.md`（2026-07-27）参照。
