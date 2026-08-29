@@ -355,6 +355,19 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-29 20:04　shiryo.html：全PDFリンクにキャッシュバスティング用バージョンクエリを付与、HTML版リンクは撤去</h2>
+<h3>背景</h3>
+<p>shiryo.html経由でPDFを開いたとき、スマホ（Android Chrome）でリンクがキャッシュされて古い内容のまま表示され続ける問題が繰り返し発生していた。対策としてCloudflare Pages/Netlifyで使う`_headers`ファイルによるCache-Control指定を検討したが、GitHub Pages（Fastly配信）はその機構自体に対応しておらず不採用と判断。代わりに、PDFのURLに`?v=YYYYMMDDHHmm`形式のバージョンクエリを付与し、更新のたびに値を変えることでキャッシュを確実に無効化する「URLクエリによるキャッシュバスティング」方式を採用した。</p>
+<h3>変更内容</h3>
+<ul>
+<li>`shiryo.html`内、`生徒用/pdf/`配下を指す`<a class="doc" href="...">`のPDFリンク全11件（企画書・配役表・舞台構成・台本2種・役割書5種）に、各リンクの`<span class="desc">`表示済みの更新日時から算出した`?v=YYYYMMDDHHmm`クエリを付与。</li>
+<li>前回（17:52）追加した台本セクションの「→ HTML版はこちら（ダウンロード不要）」リンク2件と、対応するCSS（`a.html-alt`・`a.html-alt:hover`）を撤去。`<li>`本体・`<a class="doc">`本体は変更なし。</li>
+<li>ページ冒頭の「このページ自体の最終更新」を本日時刻（20:04）に更新。</li>
+<li>`プロジェクト概要.md`「重要ルール」10番付近に、PDF更新時は`shiryo.html`の更新日時表記だけでなく`?v=`クエリも同時に更新する運用ルールと、`_headers`不採用の経緯を追記。</li>
+</ul>
+<h3>対応ファイル</h3>
+<p>`shiryo.html`、`プロジェクト概要.md`、`生徒用/変更点.md`（旧版は`過去版/その他/20260829/shiryo_20260829v3.html`にアーカイブ済み）</p>
+
 <h2>2026-08-29 17:52　shiryo.htmlの台本PDFリンクにHTML版へのリンクを追加（スマホでの即時プレビュー対応）</h2>
 <h3>背景</h3>
 <p>Fort様がスマホ（Android Chrome）でshiryo.htmlから台本PDFを開くと、Chromeモバイルの仕様上その場でプレビューされずダウンロードが発生し、閲覧のたびに手間がかかっていた。プロジェクトには元々`生徒用/html/`配下に閲覧用のHTML版が用意されているが、shiryo.htmlからはPDFにしかリンクされていなかった。</p>
