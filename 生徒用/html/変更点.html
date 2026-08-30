@@ -355,6 +355,17 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-30 13:19　shiryo.html：Frozenトレーラー埋め込みの開始位置を7秒目からに修正・自動再生の仕様を補足</h2>
+<h3>背景</h3>
+<p>Fort様より「6秒目までカットにしよう」とのご指示。前回の実装は`start=6`（6秒目から再生開始＝冒頭0〜5秒の5秒間をカット）だったが、今回は6秒目までを含めてカットする（冒頭0〜6秒の6秒間をカット、7秒目から再生開始）という指定に修正した。あわせて「最初再生ボタンが出る」というご指摘への回答として、モバイルブラウザの自動再生ポリシー上の制約（実装の不備ではない）を記録した。</p>
+<h3>変更内容</h3>
+<ul>
+<li>`shiryo.html`：ヒーロー背景のYouTube embed URLを`start=6`→`start=7`に変更。</li>
+<li>ページ冒頭の「このページ自体の最終更新」を本日時刻（13:19）に更新。</li>
+</ul>
+<h3>対応ファイル</h3>
+<p>`shiryo.html`（旧版は`過去版/その他/20260830/shiryo_20260830.html`にアーカイブ済み）、`生徒用/変更点.md`</p>
+
 <h2>2026-08-29 22:55　shiryo.html：ヒーローセクションの雪canvasをDisney公式Frozenトレーラー動画（YouTube公式埋め込み）に置き換え</h2>
 <h3>背景</h3>
 <p>Fort様のご指示により、shiryo.html冒頭のヒーローセクション（タイトル背景）を、JS降雪アニメーション（`&lt;canvas class="snow"&gt;`）からDisney公式のFrozenトレーラー動画に変更した。著作権確認済み：埋め込むのはDisney公式チャンネル「Walt Disney Animation Studios」がYouTubeに公開している"Disney's Frozen Official Trailer"（動画ID: `TbQm5doF_Uc`）。YouTubeの公式iframe埋め込みプレイヤーを使用しており、動画ファイル自体のダウンロード・自前ホスティングは一切行っていない。</p>
