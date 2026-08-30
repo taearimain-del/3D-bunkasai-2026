@@ -89,7 +89,6 @@ section h2::after{
 }
 .dot{width:10px; height:10px; border-radius:50%; background:#555; flex:0 0 auto;}
 .dot.loaded{background:var(--good); box-shadow:0 0 6px rgba(143,227,201,.6);}
-.dot.error{background:var(--danger); box-shadow:0 0 6px rgba(240,137,126,.6);}
 .num{color:var(--sub); font-size:0.75rem; flex:0 0 auto; width:32px; height:16px; text-align:center; position:relative;}
 .num .idnum{display:block;}
 .num .eq{display:none; align-items:flex-end; justify-content:center; gap:2px; height:14px;}
@@ -396,13 +395,6 @@ function typeBadge(cat){
 function buildTimelineRow(containerEl, cue){
   const badge = typeBadge(cueCategory(cue.id));
   const badgeHtml = badge ? `<span class="type-badge ${badge.cls}">${badge.label}</span>` : '';
-  // 2026-08-30再改訂：cue.file／cue.dataのどちらか一方でも存在するキューは、
-  // ページ読込時からボタンを有効にする（実際のロードはtogglePlay内で初回クリック時に
-  // 同期的に行う。iOS SafariではcanplaythroughイベントがユーザーOKしないと発火せず
-  // ボタンが永久disabledのままになるバグがあったため）。
-  // 音源が真に未登録（file・dataどちらも無い）なプレースホルダ（N1〜N3・SE2・SE4）だけ
-  // 従来通りdisabledのままにし、📂ローカルファイル選択を促す。
-  const hasSource = !!(cue.file || cue.data);
   const row = document.createElement('div');
   row.className = 'cue';
   row.id = 'row-'+cue.id;
@@ -420,7 +412,7 @@ function buildTimelineRow(containerEl, cue){
     </div>
     <div class="ctrl">
       <button class="iconbtn filebtn" title="ファイル選択" aria-label="ファイル選択">📂<input type="file" accept="audio/*" data-id="${cue.id}" class="fileInput"></button>
-      <button class="iconbtn play" data-id="${cue.id}" ${hasSource ? '' : 'disabled'} title="再生" aria-label="再生">▶</button>
+      <button class="iconbtn play" data-id="${cue.id}" disabled title="再生" aria-label="再生">▶</button>
     </div>
   `;
   containerEl.appendChild(row);
@@ -494,54 +486,30 @@ function assignFile(id, file){
   wireAudioEvents(id, audio);
 }
 
-// dot要素を「読み込み失敗」表示に切り替え、再生ボタンを再度disabledに戻す。
-// canplaythrough待ちをやめ即座にロード扱いにする代わりに、事後のerrorイベントで
-// 読み込み失敗を検知するための保険（2026-08-30再改訂）。
-function markLoadError(id, label){
-  const dotEl = document.getElementById('dot-'+id);
-  if(dotEl){ dotEl.classList.remove('loaded'); dotEl.classList.add('error'); }
-  const fnEl = document.getElementById('filename-'+id);
-  if(fnEl){ fnEl.textContent = '読み込み失敗: ' + label; fnEl.style.display = 'block'; }
-  document.querySelectorAll(`button[data-id="${id}"]`).forEach(b => b.disabled = true);
-}
-
-// キューを即座に（同期的に）ロードする共通関数（2026-08-30再改訂：iOS Safari対応）。
-// 従来はcue.fileの場合、canplaythroughイベントの発火を待ってからmarkLoaded()する設計
-// だったが、iOS Safariはユーザー操作を伴わない自動プリロードを厳しく制限しており、
-// ページ読込時にcanplaythroughが発火せず再生ボタンが永久disabledのままになる不具合が
-// あった。全ファイル参照はSHA-256で実ファイルとの整合性を検証済み（2026-08-30）で
-// 現時点で存在しないファイルを参照しているキューは無いため、事前のcanplaythrough確認は
-// 行わず、Audio要素を生成した時点で即「読み込み済み」として扱う。万一実際には読み込めない
-// 場合は、生成したAudio要素のerrorイベントで事後的に検知しmarkLoadError()に切り替える。
-// tryAutoLoad（ページ読込時の先読み・自動有効化）とtogglePlay（クリック時の遅延ロード）の
-// 両方から共通で呼ばれる。
-function loadCue(cue){
-  if(state[cue.id]) return state[cue.id];
-  let audio, fileName, loadedLabel;
+function tryAutoLoad(cue){
+  if(state[cue.id]) return;
   if(cue.data){
     // HTMLファイルに埋め込み済みの音源。ファイル読込不要で即再生可能。
-    audio = new Audio(cue.data);
-    fileName = cue.file || '埋め込み音源';
-    loadedLabel = fileName + '（内蔵済み）';
-  } else if(cue.file){
-    audio = new Audio(encodeURI(cue.file));
-    fileName = cue.file;
-    loadedLabel = fileName + '（自動読込）';
-  } else {
-    return null; // file・dataどちらも無い真の未登録プレースホルダ
+    const audio = new Audio(cue.data);
+    audio.preload = 'auto';
+    state[cue.id] = {audio, objectUrl:null, fileName:(cue.file || '埋め込み音源')};
+    markLoaded(cue.id, (cue.file || '埋め込み音源') + '（内蔵済み）');
+    wireAudioEvents(cue.id, audio);
+    return;
   }
+  if(!cue.file) return;
+  const audio = new Audio();
   audio.preload = 'auto';
-  state[cue.id] = {audio, objectUrl:null, fileName};
-  markLoaded(cue.id, loadedLabel);
-  wireAudioEvents(cue.id, audio);
-  audio.addEventListener('error', () => markLoadError(cue.id, fileName));
-  return state[cue.id];
-}
-
-// ページ読込時、全キューを即座にロード・有効化する「先読み」処理。
-// 実処理はloadCue()に委譲（ロード方式自体はloadCueのコメント参照）。
-function tryAutoLoad(cue){
-  loadCue(cue);
+  audio.addEventListener('canplaythrough', () => {
+    if(state[cue.id]) return; // already loaded via picker
+    state[cue.id] = {audio, objectUrl:null, fileName:cue.file};
+    markLoaded(cue.id, cue.file + '（自動読込）');
+    wireAudioEvents(cue.id, audio);
+  }, {once:true});
+  audio.addEventListener('error', () => {
+    // ファイルが見つからない場合は何もしない（手動読み込み待ち）
+  });
+  audio.src = encodeURI(cue.file);
 }
 
 allCues().forEach(tryAutoLoad);
@@ -646,15 +614,7 @@ function stopOtherExclusiveCues(){
 }
 
 function togglePlay(id){
-  if(!state[id]){
-    // 2026-08-30再改訂：ページ読込時の先読みで間に合わなかった場合の保険として、
-    // クリック（ユーザー操作）のタイミングでその場で同期的にロードする。
-    // awaitやPromise.then()を挟まず、ユーザーのタップと同じ同期コールスタック内で
-    // play()まで完結させる必要がある（iOS Safariはユーザー操作から切り離された
-    // 非同期タイミングでのaudio.play()呼び出しをブロックすることがあるため）。
-    const cue = allCues().find(c => c.id === id);
-    if(!cue || !loadCue(cue)) return; // 音源未登録キューは何もしない
-  }
+  if(!state[id]) return;
   const st = state[id];
   ensureGainNode(id); // 初回のユーザー操作でAudioContextを生成・resumeする（iOS対応）
   if(activeIds.has(id)){
