@@ -223,7 +223,7 @@
   <div class="hero__video" aria-hidden="true">
     <iframe
       id="heroTrailerFrame"
-      src="https://www.youtube.com/embed/TbQm5doF_Uc?start=7&autoplay=1&mute=1&controls=0&disablekb=1&rel=0&playsinline=1&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=https://taearimain-del.github.io"
+      src="https://www.youtube.com/embed/TbQm5doF_Uc?start=7&autoplay=1&mute=1&controls=0&disablekb=1&rel=0&playsinline=1&loop=1&playlist=TbQm5doF_Uc&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=https://taearimain-del.github.io"
       title="Disney's Frozen Official Trailer（Walt Disney Animation Studios公式チャンネル）"
       loading="lazy"
       allow="autoplay; encrypted-media; picture-in-picture"
@@ -249,7 +249,7 @@
   </div>
 </section>
 <div class="wrap" id="resources">
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-30 14:35</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-30 13:41</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -351,19 +351,12 @@
 </script>
 
 <script>
-  // ===== Frozenトレーラー背景：YouTube IFrame APIで明示的に再生を試みる（2026-08-30、同日ループ方式変更） =====
+  // ===== Frozenトレーラー背景：YouTube IFrame APIで明示的に再生を試みる（2026-08-30） =====
   // URLパラメータのautoplay=1だけに頼るより、APIを通じてJS側からmute()・playVideo()を
   // 呼ぶ方が自動再生ブロックを回避できる可能性がやや高いための補強措置。
   // ただし最終的な可否はブラウザの自動再生ポリシー次第であり、100%保証はできない
   // （ブロックされた場合はYouTube側の「タップして再生」表示が出る。これはcontrols=0でも
   // 消せない仕様のため、pointer-eventsは無効化していない＝タップすれば再生できる）。
-  //
-  // ループ方式について（2026-08-30変更）：以前はURLパラメータ`loop=1&playlist=<動画ID>`で
-  // ループさせていたが、この組み合わせによりYouTube側が動画を「プレイリスト」として扱い、
-  // controls=0を指定していても前へ/一時停止/次への3つ並び操作UIが表示されてしまう不具合があった。
-  // そこでloop/playlistパラメータを廃止し、代わりに下のonStateChangeでYT.PlayerState.ENDED
-  // （再生終了）を検知したらseekTo(7,true)+playVideo()で先頭（開始位置7秒）に戻す、
-  // という擬似ループに変更した。これによりプレイリスト扱いを回避しつつループ再生を維持できる。
   (function () {
     var el = document.getElementById('heroTrailerFrame');
     if (!el) return;
@@ -374,7 +367,6 @@
 
     var heroPlayer = null;
     var retryCount = 0;
-    var LOOP_START_SEC = 7; // iframe srcのstart=7と合わせる
 
     window.onYouTubeIframeAPIReady = function () {
       heroPlayer = new YT.Player('heroTrailerFrame', {
@@ -384,13 +376,6 @@
             e.target.playVideo();
           },
           onStateChange: function (e) {
-            // 擬似ループ：動画が最後まで再生し終わったら開始位置へ戻して再生し直す
-            // （loop=1&playlist=...のURLパラメータ方式は前へ/次へ操作UIが出る副作用があるため不採用）
-            if (e.data === YT.PlayerState.ENDED) {
-              e.target.seekTo(LOOP_START_SEC, true);
-              e.target.playVideo();
-              return;
-            }
             // 意図せず一時停止／未開始のままになったら再生を再試行（無限ループ防止に最大5回まで）
             if ((e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.CUED) && retryCount < 5) {
               retryCount++;
