@@ -355,6 +355,26 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-30 15:06　shiryo.html：ヒーロー背景をYouTube iframe埋め込みからmp4直接埋め込みに変更</h2>
+<h3>背景</h3>
+<p>ヒーロー背景のDisney公式Frozenトレーラーは、直前の対応（14:35）でloop/playlistパラメータを廃止し、YouTube IFrame Player APIのonStateChangeで擬似ループ化することで前へ/一時停止/次への操作UI不具合を解消していた。今回Fort様より、YouTube iframe埋め込みへの依存自体をやめ、アップロード済みのDisney公式トレーラーmp4ファイルをそのまま直接埋め込むよう明示的な指示があった。理由：ネットワーク依存・UI不具合の火種を根本から無くしたいため。<br>
+<b>著作権に関する経緯</b>：Fort様に確認済み。YouTube埋め込みよりリスクが上がる（自前ホスト・再配信になる）ことを説明した上で、Fort様は直接埋め込みを明示的に選択した。唯一の懸念事項は「重くならないか（パフォーマンス）」だった。</p>
+<h3>変更内容</h3>
+<p><b>①動画ファイルの用意</b><br>
+元ファイル：`Disneys_Frozen_Official_Trailer.mp4`（1280x570、H.264約737kbps＋AAC音声128kbps、全長152.5秒、16.59MB）。<br>
+パフォーマンス対応としてffmpegで軽量化・再エンコード：幅960pxへ縮小、音声トラックを完全削除（`<video>`は`muted`固定のため不要。約2.4MB分の削減効果）、H.264・CRF28・`-movflags +faststart`、さらに先頭7秒（0〜6.99秒）をトリムしてカット（`-ss 7`）。以前のYouTube版の`start=7`パラメータ（ロゴ・暗転部分を再生開始位置から除外する演出意図）を、動画ファイル自体のトリムという形で引き継いだ。結果：`frozen_trailer.mp4`（960x428、音声なし、全長145.4秒、8.37MB＝元の約50%に軽量化）。<br>
+poster画像：軽量化後の動画の最初のフレーム（元動画の7秒目＝Arendelle城の遠景ショット）から1フレーム抽出し`frozen_trailer_poster.jpg`（16.6KB）として生成、初期表示の体感速度向上のため`poster`属性に設定。<br>
+配置場所：専用のassetsフォルダが存在しないこと、`生徒用/音響ツール/`が音源ファイルをHTML本体と同階層に置く慣習であることを踏まえ、リポジトリルート直下（shiryo.htmlと同階層）に配置。</p>
+<p><b>②shiryo.htmlの書き換え</b><br>
+`id="heroTrailerFrame"`のYouTube iframeを撤去し、ネイティブ`<video id="heroTrailerVideo" src="frozen_trailer.mp4" poster="frozen_trailer_poster.jpg" preload="auto" autoplay muted loop playsinline>`タグに置き換え。CSSも`.hero__video iframe`→`.hero__video video`（`object-fit:cover`を追加）に更新。<br>
+YouTube IFrame API読み込み・`window.onYouTubeIframeAPIReady`・`heroPlayer`・`retryCount`・`onStateChange`による擬似ループ処理を全て削除（ネイティブ`<video>`は`loop`属性があるため不要）。自動再生ブロック時のフォールバックとして、`video.play()`失敗時にページ内の最初のクリック／タップで再試行するシンプルな処理を実装。<br>
+YouTube関連コードが他のファイルで使われていないことをgrepで確認済み（該当なし）。</p>
+<h3>動作確認</h3>
+<p>Playwright（Chromium、`/opt/pw-browsers/chromium`）でRange対応の簡易HTTPサーバー経由で確認：`<video>`の`autoplay`・`muted`・`loop`・`playsInline`・`preload="auto"`が期待通りであること、`frozen_trailer.mp4`（206）・`frozen_trailer_poster.jpg`（200）とも正常にレスポンスを取得できること、旧`id="heroTrailerFrame"`が存在しないことを確認。コンソールエラーはFirebase SDK読み込み失敗の2件のみで、これは編集前から存在するサンドボックス環境固有の事象（外部ネットワーク不可）であり、編集前3件→編集後2件に減少（YouTube iframe_api読み込み失敗が1件消えたため）。<br>
+<b>既知の制約</b>：このセッションのPlaywright実行環境（オープンソース版Chromiumビルド）はライセンスの都合でH.264/AACデコードを一切搭載していないことが判明した（`canPlayType`で確認、VP9/AV1は対応）。そのため`video.paused`が`false`になることの直接確認はできなかったが、これは実際の利用者が使う一般的なブラウザ（Chrome／Safari／Edge／Firefox、iOS/Androidの標準ブラウザ含む）では発生しないテスト環境固有の制約。DOM属性・ネットワーク疎通・JSロジックは全て正しいことを確認済みで、実機での目視確認を別途推奨する。</p>
+<h3>対応ファイル</h3>
+<p>`shiryo.html`（旧版は`過去版/その他/20260830/shiryo_20260830v6.html`にアーカイブ済み）、`frozen_trailer.mp4`（新規）、`frozen_trailer_poster.jpg`（新規）、`プロジェクト概要.md`、`生徒用/変更点.md`、`生徒用/html/変更点.html`</p>
+
 <h2>2026-08-30 14:42　音響再生ツール：4セクション構成を「本番タイムライン」に統合・エピローグ音源を追加</h2>
 <h3>背景</h3>
 <p>`音響再生ツール.html`は従来、CUES（歌唱・BGM／ナレーション／SE／追加音源）を種類ごとの4セクションに分けて表示していたが、各セクション内はACT順でも、種類をまたいだ本番の通し上演順にはなっていなかった。Fort様より「SEとかでまとめるのではなく流す順番通りに直して。その他（追加音源）は除外していい」とのご指示があり、実際の上演順（ACT進行順）に並んだ単一のタイムライン表示へ変更した。あわせて、カーテンコール・キャスト紹介後の最後の挨拶で流すエピローグ音源（Frozenスコアのエピローグ、アップロードされたmp3）を新規キューとして追加する依頼もあった。</p>
