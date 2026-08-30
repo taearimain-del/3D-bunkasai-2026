@@ -222,8 +222,7 @@
   <div class="aurora" aria-hidden="true"></div>
   <div class="hero__video" aria-hidden="true">
     <iframe
-      id="heroTrailerFrame"
-      src="https://www.youtube.com/embed/TbQm5doF_Uc?start=7&autoplay=1&mute=1&controls=0&disablekb=1&rel=0&playsinline=1&loop=1&playlist=TbQm5doF_Uc&modestbranding=1&iv_load_policy=3&enablejsapi=1&origin=https://taearimain-del.github.io"
+      src="https://www.youtube.com/embed/TbQm5doF_Uc?start=7&autoplay=1&mute=1&controls=0&disablekb=1&rel=0&playsinline=1&loop=1&playlist=TbQm5doF_Uc&modestbranding=1&iv_load_policy=3"
       title="Disney's Frozen Official Trailer（Walt Disney Animation Studios公式チャンネル）"
       loading="lazy"
       allow="autoplay; encrypted-media; picture-in-picture"
@@ -232,24 +231,24 @@
   </div>
   <div class="hero__inner">
     <div class="hero__rule" aria-hidden="true"><span>Frozen</span></div>
-    <p class="hero__kicker">Class 3-D · Culture Festival 2026</p>
-    <h1 class="hero__title">Frozen</h1>
-    <p class="hero__sub">School Preview · 2026.9.11 Fri.</p>
+    <p class="hero__kicker">3年D組 文化祭 2026</p>
+    <h1 class="hero__title">アナと雪の女王</h1>
+    <p class="hero__sub">学内発表　2026.9.11 fri.</p>
     <div class="hero__count" id="countdown" aria-live="polite">
-      <span class="lbl">Until Showtime</span>
+      <span class="lbl">本番まで</span>
       <span class="num" id="count-num">—</span>
-      <span class="lbl" id="count-unit">Days</span>
+      <span class="lbl" id="count-unit">日</span>
     </div>
     <div>
-      <button class="hero__cta" id="scroll-cta" type="button" aria-label="Scroll to resources">
-        <span class="btn">View Resources</span>
+      <button class="hero__cta" id="scroll-cta" type="button" aria-label="資料一覧へ移動">
+        <span class="btn">資料を見る</span>
         <span class="arrow" aria-hidden="true">↓</span>
       </button>
     </div>
   </div>
 </section>
 <div class="wrap" id="resources">
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-30 13:41</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-30 13:36</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -320,9 +319,9 @@
       var target = new Date(2026, 8, 11, 0, 0, 0); // 月は0始まり→8=9月
       function startOfToday() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
       var diffDays = Math.round((target - startOfToday()) / 86400000);
-      if (diffDays > 0) { numEl.textContent = diffDays; unitEl.textContent = 'Days'; }
-      else if (diffDays === 0) { numEl.textContent = "It's Showtime!"; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
-      else { numEl.textContent = 'Thank You for Coming!'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+      if (diffDays > 0) { numEl.textContent = diffDays; unitEl.textContent = '日'; }
+      else if (diffDays === 0) { numEl.textContent = '本番当日！'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+      else { numEl.textContent = 'ご来場ありがとうございました'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
     })();
 
     // --- スクロール誘導 ---
@@ -347,54 +346,6 @@
       if (typeof count !== 'number' || count < 0) return;
       setMelt(meltBase + Math.min(0.18, count / 4000));
     };
-  })();
-</script>
-
-<script>
-  // ===== Frozenトレーラー背景：YouTube IFrame APIで明示的に再生を試みる（2026-08-30） =====
-  // URLパラメータのautoplay=1だけに頼るより、APIを通じてJS側からmute()・playVideo()を
-  // 呼ぶ方が自動再生ブロックを回避できる可能性がやや高いための補強措置。
-  // ただし最終的な可否はブラウザの自動再生ポリシー次第であり、100%保証はできない
-  // （ブロックされた場合はYouTube側の「タップして再生」表示が出る。これはcontrols=0でも
-  // 消せない仕様のため、pointer-eventsは無効化していない＝タップすれば再生できる）。
-  (function () {
-    var el = document.getElementById('heroTrailerFrame');
-    if (!el) return;
-
-    var apiTag = document.createElement('script');
-    apiTag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(apiTag);
-
-    var heroPlayer = null;
-    var retryCount = 0;
-
-    window.onYouTubeIframeAPIReady = function () {
-      heroPlayer = new YT.Player('heroTrailerFrame', {
-        events: {
-          onReady: function (e) {
-            e.target.mute();
-            e.target.playVideo();
-          },
-          onStateChange: function (e) {
-            // 意図せず一時停止／未開始のままになったら再生を再試行（無限ループ防止に最大5回まで）
-            if ((e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.CUED) && retryCount < 5) {
-              retryCount++;
-              e.target.playVideo();
-            }
-          }
-        }
-      });
-    };
-
-    // ページ内どこかがタップ/クリックされた直後にも再生を試みる
-    // （自動再生がブロックされていても、ユーザー操作後なら再生を許可するブラウザがあるため）
-    function tryPlayOnInteraction() {
-      if (heroPlayer && typeof heroPlayer.playVideo === 'function') {
-        heroPlayer.playVideo();
-      }
-    }
-    document.addEventListener('click', tryPlayOnInteraction, { once: true });
-    document.addEventListener('touchstart', tryPlayOnInteraction, { once: true });
   })();
 </script>
 
