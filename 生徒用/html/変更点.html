@@ -355,6 +355,15 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-30 13:41　shiryo.html：ヒーロー動画の再生をYouTube IFrame APIで補強・ヒーローセクション全文を英語化（Frozen表記）</h2>
+<h3>背景</h3>
+<p>Fort様より2件のご指示。①「タップして再生」ボタンが出る問題について、URLパラメータの`autoplay=1`任せではなくJS側から明示的に`playVideo()`を呼ぶ形で改善できないか。②ヒーローセクションの表示テキストをすべて英語にし、題名も「アナと雪の女王」ではなく「Frozen」にしたい。</p>
+<h3>変更内容</h3>
+<p><strong>①YouTube IFrame APIによる再生の補強</strong>：`enablejsapi=1`・`origin`パラメータを追加し、IFrame APIの`onReady`で`mute()`・`playVideo()`を明示的に呼び出し、`onStateChange`で意図せず一時停止した場合は最大5回まで自動再試行する仕組みを追加。初回タップ時のフォールバックも追加。ただしブラウザの自動再生ポリシー自体は上書きできないため、環境によっては引き続き「タップして再生」表示が出ることがある（タップすれば再生される）。動画ファイル自体の自前ホスティングは著作権上の理由から不採用。</p>
+<p><strong>②ヒーローセクションの英語化</strong>：「3年D組 文化祭 2026」→`Class 3-D · Culture Festival 2026`、「アナと雪の女王」→`Frozen`、「学内発表 2026.9.11 fri.」→`School Preview · 2026.9.11 Fri.`、カウントダウンの「本番まで／日／本番当日！／ご来場ありがとうございました」→`Until Showtime / Days / It's Showtime! / Thank You for Coming!`、ボタン「資料を見る」→`View Resources`。対象はヒーローセクションのみ、ページ下部の資料一覧・ブラウザタブのタイトルは日本語のまま据え置き。</p>
+<h3>対応ファイル</h3>
+<p>`shiryo.html`（旧版は`過去版/その他/20260830/shiryo_20260830v4.html`にアーカイブ済み）、`生徒用/変更点.md`</p>
+
 <h2>2026-08-30 13:36　shiryo.html：Frozenトレーラー背景の`pointer-events:none`を撤回（自動再生ブロック時に再生できなくなる不具合を修正）</h2>
 <h3>背景</h3>
 <p>前回（13:22）の対応でYouTube操作パネルの表示崩れを直すために`.hero__video iframe`へ`pointer-events:none`を追加したところ、自動再生がブロックされた端末で表示される中央の「再生ボタン付きサムネイル」（`controls`パラメータでは消せない、YouTube側の初期状態オーバーレイ）がタップ不能になり、動画が永久に再生できなくなる不具合を生んでいた。</p>
