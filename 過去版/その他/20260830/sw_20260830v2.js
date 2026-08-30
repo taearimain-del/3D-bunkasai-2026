@@ -32,7 +32,7 @@
 //   (2) 音響再生ツール.htmlのCUES定義に file フィールドで参照する
 //       （data フィールドでのBase64埋め込みはもう不要。著作権上の理由がある場合を除く）
 //   (3) 下記PRECACHE_URLSにそのファイルを追加し、CACHE_NAMEをバージョンアップする
-const CACHE_NAME = 'sound-tool-cache-v11';
+const CACHE_NAME = 'sound-tool-cache-v10';
 const PRECACHE_URLS = [
   './音響再生ツール.html',
   './manifest.json',

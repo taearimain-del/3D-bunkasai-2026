@@ -355,6 +355,21 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-30 19:43　音響再生ツール：sw.jsのCACHE_NAMEバージョンアップ漏れを修正（iPhoneでHTML修正が反映されない問題への対応）</h2>
+<h3>背景</h3>
+<p>直前（19:36エントリ）の音響再生ツール.html修正（iPhone再生ボタン修正）で、HTML本体を変更したにもかかわらず`sw.js`の`CACHE_NAME`（当時`sound-tool-cache-v10`のまま）をバージョンアップし忘れていた。`sw.js`はCache First戦略（キャッシュがあれば無条件にそれを返す）のため、`CACHE_NAME`を変えない限り、既に一度このツールを開いたことがある端末（Fort様のiPhone）では古いキャッシュ済みHTMLが配信され続け、修正が反映されない状態になっていた。Fort様から「iPhoneで変わってない、Base64埋め込み方式に戻そうか」との申し出があったが、原因はキャッシュバージョン不整合の可能性が高いと判断し、まずこの是正を実施した。</p>
+<h3>変更内容</h3>
+<p>`生徒用/音響ツール/sw.js`の`CACHE_NAME`を`sound-tool-cache-v10`→`sound-tool-cache-v11`に変更（1行のみ）。あわせて`PRECACHE_URLS`列挙18件（音源）＋本体4件（HTML・manifest・アイコン）の計22件が、実際に`生徒用/音響ツール/`フォルダ内に存在することを再確認した（過不足なし）。</p>
+<h3>動作確認（Playwright、Chromium `/opt/pw-browsers/chromium-1194`、Python版playwright使用）</h3>
+<ul><li>`node --check`で`sw.js`の構文エラー無しを確認。</li>
+<li>簡易HTTPサーバー（`python3 -m http.server`）経由でツールを開き、Service Workerが正常に登録・activateされ、`caches.keys()`で`sound-tool-cache-v11`という名前のキャッシュが作成されていることを確認。</li>
+<li>コンソールエラーは既存挙動の`favicon.ico`404のみ、`pageerror`は0件。</li></ul>
+<h3>iPhoneユーザーへの案内（重要）</h3>
+<p>今回の修正をiPhone（Safari）に確実に反映させるには、以下いずれかの操作が必要（単に再読み込みするだけでは、タイミングによっては1回では反映されない場合がある）。</p>
+<ul><li>Safariでこのサイトのタブを完全に閉じてから、あらためて開き直す</li>
+<li>または、Safariの設定 →「詳細」→「Webサイトデータ」からこのサイトのデータを削除してから、再度開く</li></ul>
+<h3>対応ファイル</h3>
+<p>`生徒用/音響ツール/sw.js`（旧版は`過去版/その他/20260830/sw_20260830v2.js`にアーカイブ）、`生徒用/変更点.md`、`生徒用/html/変更点.html`</p>
 <h2>2026-08-30 19:36　音響再生ツール：iPhoneで再生ボタンが押せないバグを修正（実ファイル参照化に伴うiOS Safari特有の不具合）</h2>
 <h3>バグ報告</h3>
 <p>Fort様より「iPhoneで音響再生ツールを開くと、再生ボタンが空欄（＝押せない状態）になっていて音楽が流せない」との報告があった。</p>
