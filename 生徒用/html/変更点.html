@@ -355,6 +355,21 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-29 22:55　shiryo.html：ヒーローセクションの雪canvasをDisney公式Frozenトレーラー動画（YouTube公式埋め込み）に置き換え</h2>
+<h3>背景</h3>
+<p>Fort様のご指示により、shiryo.html冒頭のヒーローセクション（タイトル背景）を、JS降雪アニメーション（`&lt;canvas class="snow"&gt;`）からDisney公式のFrozenトレーラー動画に変更した。著作権確認済み：埋め込むのはDisney公式チャンネル「Walt Disney Animation Studios」がYouTubeに公開している"Disney's Frozen Official Trailer"（動画ID: `TbQm5doF_Uc`）。YouTubeの公式iframe埋め込みプレイヤーを使用しており、動画ファイル自体のダウンロード・自前ホスティングは一切行っていない。</p>
+<h3>変更内容</h3>
+<ul>
+<li>`&lt;canvas class="snow"&gt;`を、`&lt;div class="hero__video"&gt;`＋`&lt;iframe&gt;`（YouTube公式embed、`start=6`で冒頭5秒をカットし6秒目から再生開始、`autoplay=1&amp;mute=1`でモバイル自動再生ポリシーに対応、`loop=1&amp;playlist=TbQm5doF_Uc`で常時ループ再生）に置き換え。</li>
+<li>CSS：`.hero canvas.snow{...}`を削除し、動画をヒーロー全体に敷き詰める`.hero__video`（YouTube embedは`object-fit`が効かないため16:9を保ちつつコンテナを覆う定番CSSテクニックを採用）と、タイトル文字の視認性確保用の暗いオーバーレイ`.hero__video::before`を新設。</li>
+<li>JS：`canvas.snow`を参照していた降雪描画IIFE（`resize`/`newFlake`/`tick`一式）を削除。`--melt`変数によるCSS雪解け演出と`window.applyKingdom`（集合アクセス数連動）はcanvas描画とは独立したロジックのため維持。</li>
+<li>ページ冒頭の「このページ自体の最終更新」を本日時刻（22:55）に更新。</li>
+</ul>
+<h3>動作確認</h3>
+<p>Playwright（Chromium）でDOM・CSSの実測値を確認：`.hero__video`がヒーロー全体を覆い、iframeが16:9を保ったままコンテナをカバーし`overflow:hidden`で正しくクリップされていること、タイトル要素が前面表示されていること、`canvas.snow`がDOM上に存在しないこと、`window.applyKingdom`が引き続き機能することを確認。モバイル幅でも同じカバー技法が機能することを確認。JS構文エラー・null参照エラーなし。</p>
+<h3>対応ファイル</h3>
+<p>`shiryo.html`、`生徒用/変更点.md`（旧版は`過去版/その他/20260829/shiryo_20260829v4.html`にアーカイブ済み）</p>
+
 <h2>2026-08-29 20:04　shiryo.html：全PDFリンクにキャッシュバスティング用バージョンクエリを付与、HTML版リンクは撤去</h2>
 <h3>背景</h3>
 <p>shiryo.html経由でPDFを開いたとき、スマホ（Android Chrome）でリンクがキャッシュされて古い内容のまま表示され続ける問題が繰り返し発生していた。対策としてCloudflare Pages/Netlifyで使う`_headers`ファイルによるCache-Control指定を検討したが、GitHub Pages（Fastly配信）はその機構自体に対応しておらず不採用と判断。代わりに、PDFのURLに`?v=YYYYMMDDHHmm`形式のバージョンクエリを付与し、更新のたびに値を変えることでキャッシュを確実に無効化する「URLクエリによるキャッシュバスティング」方式を採用した。</p>
