@@ -355,6 +355,21 @@ p.eizo-cue {
 </style>
 </head>
 <body>
+<h2>2026-08-30 15:20　frozen_trailer.mp4：画質優先で再エンコード（960px/CRF28→1280x570/CRF22）</h2>
+<h3>背景</h3>
+<p>15:06にmp4直接埋め込みへ変更した際、パフォーマンス優先で960px幅・CRF28まで圧縮していたところ、Fort様から「動画の画質がさすがに低い、あげてほしい」とフィードバックがあった。</p>
+<h3>変更内容</h3>
+<p>解像度：960x428への縮小をやめ、元ソースと同じ<b>1280x570</b>を維持。<br>
+画質：CRF28→<b>CRF22</b>（`-preset slow`）に変更。1280x570のままCRF20（24.1MB）・CRF22（20.0MB）・CRF23（18.9MB）の3パターンを比較し、画質とファイルサイズのバランスからCRF22を採用（「20MB前後まで許容」という方針にほぼ合致し、CRF23より一段画質が良い）。<br>
+音声トラックは今回も削除を維持（`<video>`は`muted`固定で背景装飾用途のため）。<br>
+先頭7秒（0〜6.99秒）のトリムは今回も維持（`-ss 7`を`-i`より前に指定、以前のYouTube版`start=7`の演出意図を継承）。<br>
+`-movflags +faststart`は維持。<br>
+結果：`frozen_trailer.mp4`（1280x570、音声なし、全長145.4秒、<b>20.46MB</b>＝旧版8.37MBの約2.4倍）。<br>
+poster画像：新しい動画の先頭フレーム（トリム後0秒目＝元動画7秒目）から高画質（`-q:v 2`）で再生成、`frozen_trailer_poster.jpg`（34.5KB、旧16.6KB）。<br>
+旧版（8.37MB・960x428・CRF28）は`過去版/その他/20260830/frozen_trailer_20260830.mp4`にアーカイブ済み。</p>
+<h3>対応ファイル</h3>
+<p>`frozen_trailer.mp4`（再生成）、`frozen_trailer_poster.jpg`（再生成）、`過去版/その他/20260830/frozen_trailer_20260830.mp4`（新規アーカイブ）、`生徒用/変更点.md`、`生徒用/html/変更点.html`。shiryo.html自体の変更なし（`<video src="frozen_trailer.mp4">`参照はそのまま、ファイルの中身のみ差し替え）。</p>
+
 <h2>2026-08-30 15:06　shiryo.html：ヒーロー背景をYouTube iframe埋め込みからmp4直接埋め込みに変更</h2>
 <h3>背景</h3>
 <p>ヒーロー背景のDisney公式Frozenトレーラーは、直前の対応（14:35）でloop/playlistパラメータを廃止し、YouTube IFrame Player APIのonStateChangeで擬似ループ化することで前へ/一時停止/次への操作UI不具合を解消していた。今回Fort様より、YouTube iframe埋め込みへの依存自体をやめ、アップロード済みのDisney公式トレーラーmp4ファイルをそのまま直接埋め込むよう明示的な指示があった。理由：ネットワーク依存・UI不具合の火種を根本から無くしたいため。<br>
