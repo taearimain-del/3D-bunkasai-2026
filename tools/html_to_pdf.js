@@ -45,6 +45,7 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 // 新しい資料を追加したらここにも追記すること。
 const ALL_DOCS = [
   ['other/配役表.html', '生徒用/pdf/配役表.pdf'],
+  ['other/配役表_ナレーター用.html', '生徒用/pdf/配役表_ナレーター用.pdf'],
   ['other/企画書.html', '生徒用/pdf/企画書.pdf'],
   ['other/舞台構成.html', '生徒用/pdf/舞台構成.pdf'],
   ['other/台本/台本_アナと雪の女王.html', '生徒用/pdf/台本/台本_アナと雪の女王.pdf'],
