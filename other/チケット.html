@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>3D Frozen 上映チケット</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+@page { size: A4; margin: 14mm 15mm; }
+@font-face {
+  font-family: 'IPAexMincho';
+  src: url('../tools/fonts/ipaexm.ttf') format('truetype');
+}
+:root {
+  --ink: #08243c;
+  --ink-deep: #051a2e;
+  --ice: #cfe7ff;
+  --ice-pale: #eef7ff;
+  --ice-mid: #a9cfee;
+}
+html, body {
+  background: #fff;
+  font-family: 'Hiragino Kaku Gothic ProN','Yu Gothic','IPAexMincho',sans-serif;
+  color: var(--ink);
+}
+body { padding: 0; }
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+}
+
+.cut-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 7mm;
+  color: var(--ice-mid);
+}
+.cut-row .line {
+  flex: 1;
+  border-top: 1.4px dashed var(--ice-mid);
+}
+.cut-row .snip { font-size: 13px; color: #5a8ab8; transform: scaleX(-1) rotate(-90deg); display: inline-block; }
+.sheet > .cut-row:first-child { height: 0; display: none; }
+
+/* ===== チケット本体 ===== */
+.ticket {
+  position: relative;
+  display: flex;
+  height: 34mm;
+  border: 1.6px solid var(--ink);
+  border-radius: 6px;
+  background: linear-gradient(115deg, #ffffff 0%, var(--ice-pale) 55%, #ffffff 100%);
+  overflow: visible;
+}
+
+/* 左：メイン部分 */
+.ticket-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 8mm;
+  position: relative;
+}
+.ticket-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-style: italic;
+  font-size: 26pt;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  background: linear-gradient(100deg, #0a2b44 0%, #1c5c8a 35%, #3d8fc4 55%, #1c5c8a 75%, #0a2b44 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+}
+.ticket-datetime {
+  margin-top: 3mm;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+}
+.ticket-datetime .flake { font-size: 10pt; color: var(--ice-mid); }
+
+.corner-flake {
+  position: absolute;
+  font-size: 11pt;
+  color: var(--ice-mid);
+  opacity: 0.85;
+}
+.corner-flake.tl { top: 3mm; left: 3mm; }
+.corner-flake.bl { bottom: 3mm; left: 3mm; font-size: 8pt; opacity: 0.6; }
+
+/* 右：半券スタブ */
+.ticket-stub {
+  width: 26mm;
+  flex-shrink: 0;
+  border-left: 1.6px dashed var(--ink);
+  background: linear-gradient(180deg, var(--ice) 0%, var(--ice-mid) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 5px 5px 0;
+}
+.ticket-stub .flake-big {
+  font-size: 22pt;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(8,36,60,0.35);
+}
+
+/* 半券の「もぎり穴」演出（上下に半円の切れ込み） */
+.notch {
+  position: absolute;
+  width: 6mm;
+  height: 6mm;
+  background: #fff;
+  border: 1.6px solid var(--ink);
+  border-radius: 50%;
+  left: calc(100% - 26mm - 3mm);
+}
+.notch.top { top: -3mm; }
+.notch.bottom { bottom: -3mm; }
+
+.footer-note {
+  text-align: center;
+  font-size: 8pt;
+  color: #9ab6d0;
+  margin-top: 4mm;
+  letter-spacing: 0.08em;
+}
+</style>
+</head>
+<body>
+
+<div class="sheet">
+
+  <!-- チケット 1 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <!-- チケット 2 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <!-- チケット 3 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <!-- チケット 4 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <!-- チケット 5 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <!-- チケット 6 -->
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+  <div class="ticket">
+    <div class="notch top"></div>
+    <div class="notch bottom"></div>
+    <div class="ticket-main">
+      <span class="corner-flake tl">❄</span>
+      <div class="ticket-title">3D Frozen</div>
+      <div class="ticket-datetime"><span class="flake">❄</span>9/11 11:45~</div>
+      <span class="corner-flake bl">❄</span>
+    </div>
+    <div class="ticket-stub"><span class="flake-big">❄</span></div>
+  </div>
+
+  <div class="cut-row"><span class="snip">✂</span><span class="line"></span></div>
+
+</div>
+
+</body>
+</html>
