@@ -255,7 +255,7 @@ const CUES = {
   song: [
     {id:'00', act:'開演1:30前', name:'イントロ／開演前BGM（開演1:30前スタート）', dur:'約1分30秒', note:'舞台監督（または開場担当）の合図で開演1分30秒前に再生開始。フェードアウトはせず自然に終わる（曲が残っていても「開演」の合図でそのまま停止）', file:'イントロ.mp3', aliases:['イントロ']},
     {id:'01', act:'ACT1 後半', name:'雪だるまつくろう', dur:'約3分', note:'歌唱後、暗転→場面転換', file:'雪だるまつくろう.mp3', aliases:['雪だるま']},
-    {id:'02', act:'ACT2 前半', name:'生まれてはじめて', dur:'約2分半', note:'二番の歌詞（1:08〜）から自動で再生開始。停止条件：ハンスが立ち上がった瞬間→4〜5秒フェードアウト', file:'生まれてはじめて.mp3', aliases:['生まれてはじめて'], startAt:68},
+    {id:'02', act:'ACT2 前半', name:'生まれてはじめて', dur:'約2分半', note:'二番の歌詞から再生開始。停止条件：ハンスが立ち上がった瞬間→4〜5秒フェードアウト', file:'生まれてはじめて.mp3', aliases:['生まれてはじめて']},
     {id:'03', act:'ACT2 後半', name:'とびら開けて', dur:'約2分', note:'歌唱後、暗転→場面転換', file:'とびら開けて.mp3', aliases:['とびら開けて']},
     {id:'04', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜', dur:'約4分', note:'歌唱後、暗転', file:'ありのままの.mp3', aliases:['ありのまま','レット・イット・ゴー']},
     {id:'04k1', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜（キー-1）', dur:'約4分', note:'「Bグループ」役用のキー下げ版（半音-1）。本番当日、歌う生徒に合わせて音響係が原曲版とキー下げ版から選択。', file:'ありのままの_key-1.mp3', aliases:['ありのまま キー-1','レット・イット・ゴー キー-1']},
@@ -746,11 +746,7 @@ function togglePlay(id){
     stopOtherExclusiveCues();
     cancelFade(id);
     resetVolume(id);
-    // 初回/停止後の再生開始位置：キュー定義にstartAt（秒）があればそこから、
-    // 無ければ従来通り0秒から（例：id:'02'「生まれてはじめて」は1:08(68秒)から自動再生開始）。
-    // 巻き戻し・早送り・シークバーでの手動移動は引き続き自由に可能（ここは「新規再生時の初期位置」のみ）。
-    const cue = allCues().find(c => c.id === id);
-    st.audio.currentTime = (cue && typeof cue.startAt === 'number') ? cue.startAt : 0;
+    st.audio.currentTime = 0;
     st.audio.play();
     activeIds.add(id);
     currentId = id;
