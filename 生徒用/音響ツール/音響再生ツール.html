@@ -302,6 +302,12 @@ const state = {}; // id -> {audio, objectUrl, fileName, gainNode, sourceNode, fa
 const activeIds = new Set();
 let currentId = null;
 
+// SE（効果音）の「重ね鳴らし」用インスタンス上限（2026-09-10追加）。
+// 本体1インスタンス＋重ねインスタンスの合計でこの数に達したら、それ以上の連打は無視する
+// （無制限にAudioインスタンスが積み上がるのを防ぐための安全弁。6程度あれば実運用上
+// 連打演出には十分で、かつメモリ・同時再生数が過大にならない値として設定）。
+const MAX_SE_INSTANCES = 6;
+
 // --- Web Audio API（GainNode）による音量制御 ---
 // iOS Safariには「JavaScriptから<audio>要素の.volumeプロパティを変更しても
 // 実際の再生音量には反映されない」という既知の仕様上の制限があるため（音量は
@@ -634,12 +640,23 @@ function cancelFade(id){
 // ノイズの原因になっていた（フェード完了→無音のはずが最後に一瞬だけ音が大きくなる不具合）。
 // 次回再生時の音量は togglePlay() 側の再生開始処理が毎回 resetVolume(id) を呼んでから
 // play() するため、ここで先回りしてリセットしなくても次回再生時の音量は正しく1に戻る。
-function deactivateCue(id){
+// opts.stopOverlays===true のときだけ、このキューの「重ね鳴らし」インスタンス
+// （playSeOverlayで生成した本体以外のAudio）もまとめて停止・破棄する。
+// 既定（false）では本体インスタンスしか止めない＝自然終了（ended）時に他の
+// 重ねインスタンスを巻き込んで止めてしまわないための区別（2026-09-10追加）。
+function deactivateCue(id, opts){
+  const stopOverlays = !!(opts && opts.stopOverlays);
   const st = state[id];
   if(st){
     cancelFade(id);
     st.audio.pause();
     st.audio.currentTime = 0;
+    if(stopOverlays && st.overlays && st.overlays.size){
+      st.overlays.forEach(a => {
+        try{ a.pause(); a.currentTime = 0; }catch(e){ /* 破棄前提のため無視 */ }
+      });
+      st.overlays.clear();
+    }
   }
   activeIds.delete(id);
   if(currentId === id){
@@ -657,6 +674,39 @@ function stopOtherExclusiveCues(){
   });
 }
 
+// SE連打時の「重ね鳴らし」：本体インスタンス（state[id].audio）はそのまま再生を続けさせ、
+// 同じ音源を指す新しいAudioインスタンスをもう1つ生成して即座に鳴らす。activeIds・currentId・
+// 行UI（アイコン）・下部の「現在再生中」バーには一切関与させない（本体の表示状態を変えない）。
+// フェード処理・GainNodeによる音量調整も本体専用のままでよく、重ねインスタンスには適用しない
+// （過剰実装を避けるためのシンプルな新規Audio要素の再生のみ）。
+function playSeOverlay(id){
+  const st = state[id];
+  if(!st) return;
+  if(!st.overlays) st.overlays = new Set();
+  // 本体1つ＋重ねの合計がMAX_SE_INSTANCESに達していたら、これ以上は追加しない（連打対策）。
+  if(st.overlays.size + 1 >= MAX_SE_INSTANCES) return;
+
+  const cue = allCues().find(c => c.id === id);
+  if(!cue) return;
+  let overlayAudio;
+  if(cue.data){
+    // Base64埋め込み音源のSE（現状想定外だが念のため両対応）
+    overlayAudio = new Audio(cue.data);
+  } else if(cue.file){
+    overlayAudio = new Audio(encodeURI(cue.file));
+  } else {
+    return;
+  }
+  st.overlays.add(overlayAudio);
+  overlayAudio.addEventListener('ended', () => {
+    st.overlays.delete(overlayAudio);
+  });
+  overlayAudio.play().catch(() => {
+    // 再生に失敗した場合は入れ物からも取り除いておく（残留防止）
+    st.overlays.delete(overlayAudio);
+  });
+}
+
 function togglePlay(id){
   if(!state[id]){
     // 2026-08-30再改訂：ページ読込時の先読みで間に合わなかった場合の保険として、
@@ -669,8 +719,12 @@ function togglePlay(id){
   }
   const st = state[id];
   ensureGainNode(id); // 初回のユーザー操作でAudioContextを生成・resumeする（iOS対応）
-  if(activeIds.has(id)){
-    // 同じキュー：再生⇄一時停止をトグル（SEでも非SEでも共通）
+  if(activeIds.has(id) && isSeCue(id) && !st.audio.paused){
+    // 効果音(SE)が現在まさに再生中の状態でもう一度押された：
+    // 本体インスタンスは止めず、重ねてもう1つ再生する（本体の状態・行UI・下部バーは変更しない）
+    playSeOverlay(id);
+  } else if(activeIds.has(id)){
+    // 同じキュー：再生⇄一時停止をトグル（SEでも非SEでも共通。SEが一時停止中の場合もここで再開する）
     cancelFade(id);
     if(st.audio.paused){
       resetVolume(id); // フェード中に一時停止していた場合も再開時は必ずフル音量に戻す
@@ -702,8 +756,22 @@ function togglePlay(id){
 }
 
 function stopAll(silent){
-  // 全停止（緊急停止／Escキー）：SE含め現在アクティブなすべての音をまとめて止める
-  [...activeIds].forEach(id => deactivateCue(id));
+  // 全停止（緊急停止／Escキー）：SE含め現在アクティブなすべての音をまとめて止める。
+  // 本番中の安全機能のため、SEの重ね鳴らしインスタンス（playSeOverlayで生成した分）も
+  // 漏れなく停止・破棄する（stopOverlays:true）。
+  [...activeIds].forEach(id => deactivateCue(id, {stopOverlays:true}));
+  // 本体インスタンスが既に自然終了してactiveIdsから外れた後も、重ねインスタンスだけが
+  // まだ再生中というケースがあり得る（例：SEを3連打し1本目だけ先に終わった場合）。
+  // 緊急停止の確実性を優先し、activeIdsに関わらず全キューのoverlaysを走査して止める。
+  Object.keys(state).forEach(id => {
+    const st = state[id];
+    if(st && st.overlays && st.overlays.size){
+      st.overlays.forEach(a => {
+        try{ a.pause(); a.currentTime = 0; }catch(e){ /* 破棄前提のため無視 */ }
+      });
+      st.overlays.clear();
+    }
+  });
   currentId = null;
   refreshRowStates();
   if(!silent) updateNowPlaying();
