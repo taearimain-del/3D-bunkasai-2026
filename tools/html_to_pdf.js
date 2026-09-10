@@ -49,6 +49,7 @@ const ALL_DOCS = [
   ['other/企画書.html', '生徒用/pdf/企画書.pdf'],
   ['other/舞台構成.html', '生徒用/pdf/舞台構成.pdf'],
   ['other/チケット.html', '生徒用/pdf/チケット.pdf'],
+  ['other/受付体制.html', '生徒用/pdf/受付体制.pdf'],
   ['other/台本/台本_アナと雪の女王.html', '生徒用/pdf/台本/台本_アナと雪の女王.pdf'],
   ['other/台本/台本_アナと雪の女王_役者用.html', '生徒用/pdf/台本/台本_アナと雪の女王_役者用.pdf'],
   ['other/役割書/役割書_キャスト.html', '生徒用/pdf/役割書/役割書_キャスト.pdf'],
