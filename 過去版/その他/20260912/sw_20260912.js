@@ -48,10 +48,6 @@ const CACHE_NAME = 'sound-tool-cache-v1';
 const PRECACHE_URLS = [
   './音響再生ツール.html',
   './manifest.json',
-  // トロールの歌「愛さえあれば」の歌詞カラオケ同期タイミングデータ（2026-09-12追加）。
-  // 音響係が本番前にマークモードで実測・上書きするため、HTML本体と同様Network First
-  // 扱いにしている（下記isNetworkFirstRequest参照）。手動バージョン管理は不要。
-  './トロールの歌_歌詞タイミング.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',
@@ -142,8 +138,7 @@ function isNetworkFirstRequest(request) {
   try {
     if (request.mode === 'navigate') return true;
     const url = new URL(request.url);
-    return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json')
-      || url.pathname.endsWith('トロールの歌_歌詞タイミング.json');
+    return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json');
   } catch (e) {
     return false;
   }
