@@ -62,6 +62,7 @@ const PRECACHE_URLS = [
   './ありのままの_key-2.mp3',
   './あこがれの夏.mp3',
   './生まれてはじめてリプライズ.mp3',
+  './生まれてはじめてリプライズ_頭出し.mp3',
   './愛さえあれば.mp3',
   './Epilogue_From_FrozenScore.mp3',
   './魔法①.mp3',
