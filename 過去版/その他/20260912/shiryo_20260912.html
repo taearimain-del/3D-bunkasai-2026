@@ -96,35 +96,6 @@
   }
   .comment-form button:hover{ background:linear-gradient(180deg, rgba(207,231,255,.28), rgba(207,231,255,.12)); transform:translateY(-1px); }
 
-  /* ===== 最優先告知バナー（2026-09-12追加） =====
-     Fort様の明示的な指示「音響再生ツールは誰も見ないから新しいツール作って、
-     ホームページの一番上に出るようにしてほしい」への対応。ページを開いて
-     最初に目に入る位置（ヒーロー映像より手前）に固定表示する常設バナー。
-     トロールの歌「愛さえあれば」の歌詞カラオケ同期表示・タイミングマークモード
-     専用ツール（生徒用/音響ツール/トロールの歌タイミングツール.html）への導線。 */
-  .top-tool-banner{
-    position:fixed; top:0; left:0; right:0; z-index:1000;
-    display:flex; align-items:center; justify-content:center; gap:10px;
-    flex-wrap:wrap; text-align:center;
-    padding:9px 14px; font-size:0.82rem;
-    background:linear-gradient(90deg, #3a2503, #6b4610 40%, #6b4610 60%, #3a2503);
-    border-bottom:1px solid rgba(255,214,140,.5);
-    box-shadow:0 4px 18px rgba(0,0,0,.35);
-  }
-  .top-tool-banner .label{ color:#ffe9b8; font-weight:600; letter-spacing:.02em; }
-  .top-tool-banner a.tool-cta{
-    display:inline-block; padding:6px 16px; border-radius:999px;
-    background:linear-gradient(135deg, #ffe9b8, #ffcf6b); color:#3a1c00;
-    font-weight:700; text-decoration:none; letter-spacing:.03em;
-    box-shadow:0 0 14px rgba(255,207,107,.55);
-    transition:transform .15s ease, box-shadow .15s ease;
-  }
-  .top-tool-banner a.tool-cta:hover{ transform:translateY(-1px); box-shadow:0 0 20px rgba(255,207,107,.8); }
-  @media (max-width:480px){
-    .top-tool-banner{ font-size:0.76rem; padding:8px 10px; }
-    .top-tool-banner a.tool-cta{ padding:5px 13px; }
-  }
-
   /* ===== アナ雪世界の入口ヒーロー（2026-07-07 高級感リデザイン） ===== */
   .hero{
     position:relative; width:100%; min-height:100svh;
@@ -246,24 +217,6 @@
 </style>
 </head>
 <body>
-<div class="top-tool-banner" id="topToolBanner">
-  <span class="label">🧌🎤 音響係向け新ツール：曲最後の「ラブ！」タイミングが分かる</span>
-  <a class="tool-cta" href="生徒用/音響ツール/トロールの歌タイミングツール.html?v=202609120851">トロールの歌 タイミングツールを開く →</a>
-</div>
-<script>
-  // バナー（固定表示・可変高さ）がヒーロー冒頭の見出しに重ならないよう、実測した
-  // 高さ分だけbodyの上パディングを確保する（2026-09-12追加）。
-  (function () {
-    var banner = document.getElementById('topToolBanner');
-    function sync() {
-      if (!banner) return;
-      document.body.style.paddingTop = banner.offsetHeight + 'px';
-    }
-    sync();
-    window.addEventListener('resize', sync);
-    window.addEventListener('load', sync);
-  })();
-</script>
 <section class="hero" id="hero">
   <div class="aurora" aria-hidden="true"></div>
   <div class="hero__video" aria-hidden="true">
@@ -293,7 +246,7 @@
   </div>
 </section>
 <div class="wrap" id="resources">
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-09-12 08:56</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-08-30 16:28</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -320,7 +273,6 @@
 
   <h2>ツール</h2>
   <ul>
-    <li><a class="doc" href="生徒用/音響ツール/トロールの歌タイミングツール.html?v=202609120851"><span class="name">トロールの歌 タイミングツール</span><span class="desc">「愛さえあれば」歌詞カラオケ同期表示・曲最後の「ラブ！」タイミング確認/マーク専用（新規、2026-09-12追加）</span></a></li>
     <li><a class="doc" href="生徒用/音響ツール/音響再生ツール.html?v=202608301617"><span class="name">音響再生ツール</span></a></li>
     <li><a class="doc" href="生徒用/進行シミュレーター/進行シミュレーター.html"><span class="name">進行シミュレーター</span></a></li>
     <li><a class="doc" href="生徒用/買い物リスト/買い物リスト.html"><span class="name">買い物リスト</span><span class="desc">購入チェック・備考・サイズ・購入日を全員で共有できる対話型ツール（更新: 2026-08-07 22:48）</span></a></li>

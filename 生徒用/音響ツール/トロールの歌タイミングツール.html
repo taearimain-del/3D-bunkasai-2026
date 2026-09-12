@@ -1,0 +1,770 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>トロールの歌 タイミングツール — アナと雪の女王</title>
+<meta name="theme-color" content="#05101f">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="トロール歌ツール">
+
+<!--
+  トロールの歌「愛さえあれば」歌詞タイミングツール（2026-09-12新規作成）
+
+  【経緯】音響係から「本番中、今どこを再生しているか分からない」「特に曲の最後、
+  全員が声を揃えて『ラブ！』と言う瞬間のタイミングがどうしても掴めない」という
+  相談を受け、当初は既存の音響再生ツール.html（音響キュー再生ツール本体）に
+  カラオケ風歌詞同期パネル・タイミングマークモードを埋め込む形で実装した。
+  その後Fort様から「音響再生ツールは誰も見ないから新しいツールを作ってほしい、
+  ホームページの一番上に出るようにしてほしい」という明確な方針転換の指示があり、
+  同日中にこの機能一式を独立した専用ツールとして切り出した。
+  埋め込み実装時に使ったロジック・演出（歌詞同期表示・マークモード・「ラブ！」
+  演出）はそのまま流用しており、音響再生ツール.html自体は元の状態（この機能を
+  含まない状態）に差し戻し済み（過去版/その他/20260912/を参照）。
+
+  【最優先事項（Fort様の明示的な指示、方針転換後も変更なし）】
+  本ツールで最も重要なのは、曲全体の同期精度ではなく、曲最後に全員が声を揃える
+  「ラブ！」の瞬間を音響係が確実に把握できることである。そのため：
+    ・カラオケ表示はその行に到達すると専用の大きな金色パルス表示に切り替わる
+    ・到達5秒前から秒数カウントダウン付きの予告バナーを表示する
+    ・到達した瞬間、画面全体を覆う金色フラッシュ演出が発火する
+    ・マークモードに「❤ 最優先：『ラブ！』だけ先にマーク」専用ボタンがあり、
+      全44行を順にマークしなくても、この1行だけ最優先で実測・登録できる
+  他の歌詞行（[全員]パート含む）の同期は、上記の次に位置づけられる副次的な機能。
+
+  【タイミングデータ】トロールの歌_歌詞タイミング.json（同フォルダ）に保存する。
+  2026-09-12時点ではまだ誰も実測しておらず、全行 time:null のプレースホルダ。
+  本番前に音響係が下記マークモードで実測し、エクスポートしたJSONでこのファイルを
+  上書き・コミットすること（生徒用/変更点.md 2026-09-12エントリ参照）。
+
+  歌詞本文・[全員]判定・並び順の根拠、および並び順が未検証の推定である旨は
+  トロールの歌_歌詞タイミング.json 内の _readme を参照。
+-->
+
+<style>
+:root{
+  --bg:#05101f; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.08); --panel3:rgba(255,255,255,.13);
+  --border:rgba(176,210,240,.16); --border-strong:rgba(176,210,240,.34);
+  --text:#e9f2fb; --sub:#93a8bd;
+  --accent:#cfe7ff; --accent-hover:#e3f2ff; --accent-ink:#0a1626;
+  --good:#8fe3c9; --warn:#e8c17a; --danger:#f0897e;
+  --serif:'Hiragino Mincho ProN','Yu Mincho','YuMincho','Shippori Mincho',serif;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',-apple-system,sans-serif;
+  background:var(--bg);
+  background-image:
+    radial-gradient(120% 80% at 50% -8%, rgba(90,160,220,.22), transparent 55%),
+    linear-gradient(180deg,#050f1e 0%,#071a30 40%,#08243c 72%,#0a2b44 100%);
+  background-attachment:fixed;
+  color:var(--text); margin:0; padding:18px 18px 40px; max-width:720px; margin-inline:auto;
+  -webkit-font-smoothing:antialiased; letter-spacing:.01em;
+}
+a{color:var(--accent);}
+.back-link{display:inline-block; font-size:0.8rem; color:var(--sub); text-decoration:none; margin-bottom:10px;}
+.back-link:hover{color:var(--accent);}
+h1{font-family:var(--serif); font-size:1.5rem; font-weight:600; letter-spacing:.06em; margin:0 0 4px; color:#f2f8ff;}
+.subtitle{color:var(--sub); font-size:0.82rem; margin:0 0 18px;}
+button{
+  font-family:inherit; cursor:pointer; border-radius:20px; border:1px solid var(--border);
+  background:var(--panel2); color:var(--text); padding:9px 16px; font-size:0.86rem;
+  transition:transform .12s ease, background-color .12s ease;
+}
+button:hover{background:var(--panel3);}
+button:active{transform:scale(.96);}
+button:disabled{opacity:.35; cursor:not-allowed;}
+
+.card{
+  background:var(--panel); border:1px solid var(--border); border-radius:16px;
+  padding:16px 18px; margin-bottom:18px; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+
+/* --- 再生コントロール --- */
+.transport{display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:12px;}
+.iconbtn{
+  width:52px; height:52px; min-width:52px; border-radius:50%; padding:0; font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center;
+  background:linear-gradient(160deg, rgba(255,255,255,.20), rgba(255,255,255,.05) 55%, rgba(207,231,255,.10));
+  border:1.5px solid rgba(207,231,255,.65);
+}
+.iconbtn.play{
+  width:64px; height:64px; min-width:64px; font-size:1.5rem;
+  background:rgba(207,231,255,.14); border:1.5px solid rgba(207,231,255,.85);
+  box-shadow:0 0 20px rgba(207,231,255,.4);
+}
+.seekrow{display:flex; align-items:center; gap:10px;}
+.time{font-size:0.8rem; color:var(--sub); min-width:44px; text-align:center; font-variant-numeric:tabular-nums;}
+.time.remaining{color:var(--warn);}
+input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:6px;
+  border-radius:4px; background:var(--panel2); outline:none; cursor:pointer;
+}
+input[type=range]:disabled{cursor:not-allowed; opacity:.6;}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:14px; height:14px; border-radius:50%;
+  background:var(--accent); cursor:pointer; border:0;
+}
+input[type=range]::-moz-range-thumb{width:14px; height:14px; border-radius:50%; background:var(--accent); cursor:pointer; border:0;}
+.fade-row{display:flex; justify-content:center; margin-top:10px;}
+.load-status{font-size:0.72rem; color:var(--sub); text-align:center; margin-top:8px;}
+
+/* --- カラオケ表示（本ツールの主役） --- */
+.karaoke{text-align:center; padding:26px 16px;}
+.karaoke .kh{font-size:0.75rem; color:var(--sub); letter-spacing:.1em; margin-bottom:10px;}
+.karaoke .kh b{color:var(--accent);}
+.karaoke .prev, .karaoke .next{font-size:0.95rem; color:var(--sub); opacity:.65; min-height:1.4em;}
+.karaoke .current{
+  font-family:var(--serif); font-size:1.7rem; font-weight:700; color:#f5faff;
+  margin:10px 0; line-height:1.4; min-height:2.4em; display:flex; align-items:center; justify-content:center;
+}
+.karaoke .current.all{
+  color:var(--warn); background:rgba(232,193,122,.14); border-radius:14px; padding:8px 18px; display:inline-flex;
+}
+.karaoke .current .tag{
+  font-size:0.62rem; font-weight:700; vertical-align:middle; margin-right:8px;
+  background:rgba(232,193,122,.9); color:#241a04; border-radius:8px; padding:2px 9px;
+}
+.karaoke .current.love{
+  color:#241a04; background:linear-gradient(135deg, #ffe9b8, #ffcf6b);
+  font-size:2.4rem; border-radius:16px; padding:10px 24px; display:inline-flex;
+  box-shadow:0 0 34px rgba(255,207,107,.8);
+  animation:lovePulse .55s ease-in-out infinite;
+}
+@keyframes lovePulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+.karaoke .empty{font-size:1rem; color:var(--sub);}
+.karaoke .love-soon{
+  font-size:1.05rem; font-weight:800; color:var(--warn); margin-top:10px;
+  animation:kPulse 0.8s ease-in-out infinite;
+}
+@keyframes kPulse{ 0%,100%{opacity:.5;} 50%{opacity:1;} }
+@media (prefers-reduced-motion: reduce){
+  .karaoke .love-soon{animation:none; opacity:1;}
+  .karaoke .current.love{animation:none; transform:scale(1);}
+}
+
+#loveFlashOverlay{
+  position:fixed; inset:0; z-index:80; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle, rgba(255,214,140,.85) 0%, rgba(232,150,60,.55) 45%, rgba(232,150,60,0) 75%);
+  opacity:0; transition:opacity .18s ease;
+}
+#loveFlashOverlay.active{opacity:1; animation:loveFlashPulse 1.1s ease-out;}
+#loveFlashOverlay span{
+  font-family:var(--serif); font-size:min(20vw,7.5rem); font-weight:700; color:#3a1c00;
+  text-shadow:0 0 24px rgba(255,255,255,.8); transform:scale(.7);
+}
+#loveFlashOverlay.active span{animation:loveFlashText 1.1s ease-out;}
+@keyframes loveFlashPulse{ 0%{opacity:0;} 15%{opacity:1;} 75%{opacity:1;} 100%{opacity:0;} }
+@keyframes loveFlashText{ 0%{transform:scale(.4);} 25%{transform:scale(1.15);} 45%{transform:scale(1);} 100%{transform:scale(1);} }
+@media (prefers-reduced-motion: reduce){
+  #loveFlashOverlay.active{animation:none; opacity:1;}
+  #loveFlashOverlay.active span{animation:none; transform:scale(1);}
+}
+
+/* --- マークモード（同じページ内でトグル表示） --- */
+.mark-toggle-row{text-align:center; margin-bottom:18px;}
+#toggleMarkBtn{
+  background:rgba(207,231,255,.1); border-color:rgba(207,231,255,.5); font-weight:600;
+}
+#markPanel[hidden]{display:none;}
+.tm-status{font-size:0.72rem; color:var(--sub); line-height:1.5; margin-bottom:10px;}
+.tm-love-banner{
+  font-size:0.82rem; font-weight:700; padding:9px 14px; border-radius:10px; margin-bottom:12px;
+  background:rgba(232,193,122,.14); border:1px solid rgba(232,193,122,.5); color:var(--warn);
+}
+.tm-love-banner.done{background:rgba(143,227,201,.14); border-color:rgba(143,227,201,.5); color:var(--good);}
+.tm-transport{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px;}
+.tm-time{font-variant-numeric:tabular-nums; font-size:1rem; color:var(--accent); min-width:90px;}
+#tmMarkBtn{
+  font-weight:700; font-size:0.95rem; padding:12px 20px; border-radius:24px;
+  background:rgba(207,231,255,.16); border:1.5px solid rgba(207,231,255,.8); color:#f5faff;
+}
+#tmJumpLoveBtn{
+  background:linear-gradient(135deg, rgba(255,233,184,.22), rgba(255,207,107,.14));
+  border:1.5px solid rgba(255,207,107,.75); color:var(--warn); font-weight:700;
+}
+.tm-list{max-height:50vh; overflow-y:auto; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.02);}
+.tm-row{display:flex; align-items:center; gap:8px; padding:8px 10px; border-bottom:1px solid rgba(255,255,255,.05); cursor:pointer;}
+.tm-row:last-child{border-bottom:none;}
+.tm-row:hover{background:rgba(255,255,255,.04);}
+.tm-row.selected{background:rgba(207,231,255,.12); box-shadow:inset 3px 0 0 var(--accent);}
+.tm-row.loveRow{background:rgba(255,207,107,.08); box-shadow:inset 3px 0 0 var(--warn);}
+.tm-row .idx{width:26px; flex:0 0 auto; font-size:0.7rem; color:var(--sub); text-align:right;}
+.tm-row .tag{flex:0 0 auto; font-size:0.6rem; font-weight:700; color:#241a04; background:var(--warn); border-radius:8px; padding:1px 6px; visibility:hidden;}
+.tm-row.all .tag{visibility:visible;}
+.tm-row .love{flex:0 0 auto; font-size:0.7rem;}
+.tm-row .txt{flex:1 1 auto; font-size:0.82rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.tm-row .timeInput{flex:0 0 auto; width:74px; font-size:0.78rem; text-align:right; background:var(--panel2); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:3px 6px;}
+.tm-row .rowbtn{flex:0 0 auto; font-size:0.9rem; width:30px; height:30px; border-radius:50%; background:var(--panel2); border:1px solid var(--border); color:var(--text); padding:0;}
+.tm-footer{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;}
+.tm-footer .filebtn{position:relative; overflow:hidden;}
+.tm-footer .filebtn input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+@media (max-width:480px){
+  .karaoke .current{font-size:1.35rem;}
+  .karaoke .current.love{font-size:1.8rem;}
+  .tm-row .txt{white-space:normal; font-size:0.78rem;}
+}
+</style>
+
+<a class="back-link" href="音響再生ツール.html">← 音響キュー再生ツール（本体）へ戻る</a>
+<h1>🧌 トロールの歌 タイミングツール</h1>
+<p class="subtitle">「愛さえあれば」歌詞カラオケ同期表示／曲最後の「ラブ！」タイミング確認・マーク専用ツール</p>
+
+<div class="card">
+  <div class="transport">
+    <button class="iconbtn" id="back10" title="10秒戻る">⏪10</button>
+    <button class="iconbtn play" id="playPause" title="再生" disabled>▶</button>
+    <button class="iconbtn" id="fwd10" title="10秒進む">⏩10</button>
+  </div>
+  <div class="seekrow">
+    <span class="time" id="timeCur">00:00</span>
+    <input type="range" id="seek" min="0" max="1000" value="0" step="1" disabled>
+    <span class="time remaining" id="timeRemain">-00:00</span>
+  </div>
+  <div class="fade-row">
+    <button id="fadeBtn" disabled>🔉 フェードアウト（5秒）</button>
+  </div>
+  <div class="load-status" id="loadStatus">読み込み中…</div>
+</div>
+
+<div class="card karaoke" id="karaoke">
+  <div class="kh"><b>🎤 歌詞同期</b></div>
+  <div class="prev" id="kPrev">&nbsp;</div>
+  <div class="current" id="kCurrent">再生を開始すると歌詞が表示されます</div>
+  <div class="next" id="kNext">&nbsp;</div>
+</div>
+
+<div id="loveFlashOverlay"><span>ラブ！</span></div>
+
+<div class="mark-toggle-row">
+  <button id="toggleMarkBtn">🎤 タイミングをマークする（未設定の行がある場合はこちら）</button>
+</div>
+
+<div class="card" id="markPanel" hidden>
+  <div class="tm-status" id="tmStatus"></div>
+  <div class="tm-love-banner" id="tmLoveBanner"></div>
+  <div class="tm-transport">
+    <span class="tm-time" id="tmTime">00:00.00</span>
+    <button id="tmMarkBtn" title="選択中の行に今の再生時刻を記録（キー: M）">⏺ この瞬間をマーク（M）</button>
+    <button id="tmJumpLoveBtn" title="最優先：曲最後の「ラブ！」行を選択する">❤ 最優先：「ラブ！」だけ先にマーク</button>
+  </div>
+  <div class="tm-list" id="tmList"></div>
+  <div class="tm-footer">
+    <button id="tmExportBtn">💾 JSONをエクスポート</button>
+    <button class="filebtn iconbtn" style="border-radius:20px;width:auto;height:auto;padding:8px 14px;" title="タイミングJSONを読み込み">📂 JSON読込<input type="file" accept="application/json,.json" id="tmImportInput"></button>
+    <button id="tmReloadRepoBtn">↺ 下書きを破棄してリポジトリ版を再読込</button>
+    <button id="tmResetAllBtn">🗑 全タイミングをクリア</button>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// トロールの歌「愛さえあれば」タイミングツール — 単体ページ実装
+// （2026-09-12：音響再生ツール.htmlへの埋め込みから独立ツールとして切り出し。
+//   歌詞データ・カラオケ同期・マークモードのロジックは埋め込み版をそのまま流用）
+// ============================================================
+
+const SONG_FILE = '愛さえあれば.mp3';
+const TROLL_JSON_PATH = 'トロールの歌_歌詞タイミング.json';
+const TROLL_DRAFT_KEY = 'trollLyricsDraft_v1'; // 旧・埋め込み版と同じキーを使い、下書きを引き継ぐ
+const TROLL_LOVE_WARN_SEC = 5;
+
+const TROLL_LYRICS_DEFAULT = [
+  {index:0, text:'何が問題なのお嬢ちゃん', isAll:false, time:null},
+  {index:1, text:'なんでこんないい男をほっとくのさ', isAll:false, time:null},
+  {index:2, text:'歩き方のせい？', isAll:false, time:null},
+  {index:3, text:'それかしゃべり方？', isAll:false, time:null},
+  {index:4, text:'四角い足のせいかな？', isAll:false, time:null},
+  {index:5, text:'不潔じゃないのに いつも少し臭い', isAll:false, time:null},
+  {index:6, text:'でも 誰よりもやさしい いい男', isAll:false, time:null},
+  {index:7, text:'彼は完璧じゃない 問題もある', isAll:false, time:null},
+  {index:8, text:'少し変わり者', isAll:false, time:null},
+  {index:9, text:'トナカイへの愛情は異常だよ', isAll:false, time:null},
+  {index:10, text:'問題はあるけれど 大丈夫さ', isAll:true, time:null},
+  {index:11, text:'仲良くやれるはず 愛があれば', isAll:true, time:null},
+  {index:12, text:'この話はもうやめてくれないか？', isAll:false, time:null},
+  {index:13, text:'それよりほんとに困ってることがあるんだよ', isAll:false, time:null},
+  {index:14, text:'なるほどね じゃあ話してごらん', isAll:false, time:null},
+  {index:15, text:'気が小さいから？', isAll:false, time:null},
+  {index:16, text:'変なヤツだから？', isAll:false, time:null},
+  {index:17, text:'森で立ち小便してる', isAll:false, time:null},
+  {index:18, text:'男らしくない この髪の毛のせい？', isAll:false, time:null},
+  {index:19, text:'真面目なのを隠してるせい？', isAll:true, time:null},
+  {index:20, text:'彼は完璧じゃない 問題もある', isAll:true, time:null},
+  {index:21, text:'孤独に暮らしているのは 愛されたいから', isAll:true, time:null},
+  {index:22, text:'彼は完璧じゃないが大丈夫', isAll:true, time:null},
+  {index:23, text:'あなたの愛情があれば完璧だ', isAll:true, time:null},
+  {index:24, text:'やめろーっ！', isAll:false, time:null},
+  {index:25, text:'彼女は他の男と結婚の約束をしてるんだ！', isAll:false, time:null},
+  {index:26, text:'彼女も完璧じゃない', isAll:false, time:null},
+  {index:27, text:'気にするなよ', isAll:false, time:null},
+  {index:28, text:'あきらめることはないさ', isAll:false, time:null},
+  {index:29, text:'指輪もしてないよ', isAll:false, time:null},
+  {index:30, text:'彼女も完璧じゃない 迷いがある婚約者と別れれば それでいい', isAll:true, time:null},
+  {index:31, text:'人は簡単に変われないけど', isAll:false, time:null},
+  {index:32, text:'愛の力はそう パワフルさ', isAll:false, time:null},
+  {index:33, text:'おびえてると道見失う でも 愛さえあれば', isAll:false, time:null},
+  {index:34, text:'愛さえあれば 最高の道選べる', isAll:true, time:null},
+  {index:35, text:'誰もが完璧じゃない それでいいのさ 父さん！姉さん！兄さん！', isAll:false, time:null},
+  {index:36, text:'お互いに支えあえばいい', isAll:true, time:null},
+  {index:37, text:'誰もが完璧じゃない あたりまえさ', isAll:true, time:null},
+  {index:38, text:'それを補うために必要なものは 本物の愛', isAll:false, time:null},
+  {index:39, text:'トゥルーラブラブ ラブ ラブ ラブ ラブラブトゥルー ラブ', isAll:true, time:null},
+  {index:40, text:'アナはこの男クリストフを 夫とし', isAll:false, time:null},
+  {index:41, text:'えっ 何？', isAll:false, time:null},
+  {index:42, text:'結婚を認める', isAll:false, time:null},
+  {index:43, text:'ラブ！', isAll:true, isFinalLove:true, time:null},
+];
+
+let trollLyrics = TROLL_LYRICS_DEFAULT.map(l => ({...l}));
+let trollTimingSource = '埋め込みデフォルト（読込前）';
+let tmSelectedIndex = 0;
+let loveFlashFired = false;
+
+// --- 音声再生（このページは「愛さえあれば」1曲専用。CUES等の複数キュー管理は不要） ---
+const audio = new Audio(encodeURI(SONG_FILE));
+audio.preload = 'auto';
+
+let audioCtx = null, gainNode = null, fadeRAF = null;
+function getAudioContext(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null;
+  if(!audioCtx){ try{ audioCtx = new AC(); }catch(e){ return null; } }
+  if(audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+  return audioCtx;
+}
+function ensureGainNode(){
+  if(gainNode) return gainNode;
+  const ctx = getAudioContext();
+  if(!ctx) return null;
+  try{
+    const source = ctx.createMediaElementSource(audio);
+    gainNode = ctx.createGain();
+    gainNode.gain.value = 1;
+    source.connect(gainNode).connect(ctx.destination);
+  }catch(e){ gainNode = null; }
+  return gainNode;
+}
+function resetVolume(){
+  audio.volume = 1;
+  if(gainNode && audioCtx){
+    const now = audioCtx.currentTime;
+    gainNode.gain.cancelScheduledValues(now);
+    gainNode.gain.setValueAtTime(1, now);
+  }
+}
+function cancelFade(){
+  if(fadeRAF){ cancelAnimationFrame(fadeRAF); fadeRAF = null; }
+  if(gainNode && audioCtx){
+    const now = audioCtx.currentTime;
+    const current = gainNode.gain.value;
+    gainNode.gain.cancelScheduledValues(now);
+    gainNode.gain.setValueAtTime(current, now);
+  }
+}
+function fadeOut(seconds=5){
+  cancelFade();
+  const gain = ensureGainNode();
+  const startTime = performance.now();
+  const durationMs = seconds*1000;
+  if(gain && audioCtx){
+    const now = audioCtx.currentTime;
+    const startVal = gain.gain.value > 0 ? gain.gain.value : 1;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(startVal, now);
+    gain.gain.linearRampToValueAtTime(0, now + seconds);
+    (function step(){
+      if(performance.now() - startTime < durationMs){ fadeRAF = requestAnimationFrame(step); }
+      else{
+        fadeRAF = null;
+        gain.gain.cancelScheduledValues(audioCtx.currentTime);
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        audio.pause(); audio.currentTime = 0;
+        updatePlayIcon();
+      }
+    })();
+  } else {
+    const startVolume = audio.volume > 0 ? audio.volume : 1;
+    (function step(now){
+      const t = Math.min(1, (now - startTime) / durationMs);
+      audio.volume = Math.max(0, Math.min(startVolume, startVolume * (1 - t)));
+      if(t < 1){ fadeRAF = requestAnimationFrame(step); }
+      else{ fadeRAF = null; audio.volume = 0; audio.pause(); audio.currentTime = 0; updatePlayIcon(); }
+    })(performance.now());
+  }
+}
+
+function fmtTime(s){
+  if(!isFinite(s)) return '00:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function fmtTimeMs(s){
+  if(typeof s !== 'number' || !isFinite(s)) return '00:00.00';
+  const m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0')+':'+sec.toFixed(2).padStart(5,'0');
+}
+
+const playPauseBtn = document.getElementById('playPause');
+const seekEl = document.getElementById('seek');
+let isSeeking = false;
+
+function updatePlayIcon(){
+  const playing = !audio.paused;
+  playPauseBtn.textContent = playing ? '⏸' : '▶';
+  playPauseBtn.title = playing ? '一時停止' : '再生';
+  document.getElementById('fadeBtn').disabled = false;
+}
+function updateTransport(){
+  const curEl = document.getElementById('timeCur');
+  const remEl = document.getElementById('timeRemain');
+  const pct = audio.duration ? (audio.currentTime/audio.duration*100) : 0;
+  if(!isSeeking){
+    seekEl.value = Math.round(pct*10);
+    seekEl.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--panel2) ${pct}%)`;
+  }
+  curEl.textContent = fmtTime(audio.currentTime);
+  remEl.textContent = audio.duration ? ('-' + fmtTime(Math.max(0, audio.duration - audio.currentTime))) : '-00:00';
+  updatePlayIcon();
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  document.getElementById('loadStatus').textContent = `読み込み済み: ${SONG_FILE}（自動読込・約${fmtTime(audio.duration)}）`;
+  playPauseBtn.disabled = false;
+  seekEl.disabled = false;
+  updateTransport();
+});
+audio.addEventListener('error', () => {
+  document.getElementById('loadStatus').textContent = `読み込み失敗: ${SONG_FILE}（ファイルの配置を確認してください）`;
+});
+audio.addEventListener('ended', () => { updatePlayIcon(); });
+
+playPauseBtn.addEventListener('click', () => {
+  ensureGainNode();
+  if(audio.paused){ cancelFade(); resetVolume(); audio.play(); }
+  else{ audio.pause(); }
+  updatePlayIcon();
+});
+document.getElementById('back10').addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 10); });
+document.getElementById('fwd10').addEventListener('click', () => { if(audio.duration) audio.currentTime = Math.min(audio.duration, audio.currentTime + 10); });
+document.getElementById('fadeBtn').addEventListener('click', () => fadeOut(5));
+seekEl.addEventListener('input', () => {
+  if(audio.duration) audio.currentTime = (seekEl.value/1000) * audio.duration;
+});
+['mousedown','touchstart'].forEach(ev => seekEl.addEventListener(ev, () => { isSeeking = true; }));
+['mouseup','touchend'].forEach(ev => seekEl.addEventListener(ev, () => { isSeeking = false; }));
+
+document.addEventListener('keydown', (e) => {
+  // マークモード内でのMキー等はmarkPanel側のリスナーで処理するため、入力欄フォーカス中は無視
+  const tag = document.activeElement && document.activeElement.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(e.key === 'Escape'){
+    cancelFade();
+    audio.pause();
+    audio.currentTime = 0;
+    updatePlayIcon();
+  }
+});
+
+// --- 歌詞データの読込（リポジトリJSON優先、この端末の下書きがあれば上書き適用） ---
+function trollFinalLoveIndex(){ return trollLyrics.findIndex(l => l.isFinalLove); }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function normalizeTrollLines(rawLines){
+  if(!Array.isArray(rawLines)) return null;
+  return rawLines.map((l, i) => ({
+    index: typeof l.index === 'number' ? l.index : i,
+    text: String(l.text || ''),
+    isAll: !!l.isAll,
+    isFinalLove: !!l.isFinalLove,
+    time: (typeof l.time === 'number' && isFinite(l.time)) ? l.time : null,
+  }));
+}
+function saveTrollDraft(){
+  try{ localStorage.setItem(TROLL_DRAFT_KEY, JSON.stringify({savedAt: Date.now(), lines: trollLyrics})); }catch(e){}
+}
+function applyTrollDraftIfAny(){
+  try{
+    const raw = localStorage.getItem(TROLL_DRAFT_KEY);
+    if(!raw) return false;
+    const parsed = JSON.parse(raw);
+    const normalized = normalizeTrollLines(parsed.lines);
+    if(!normalized || normalized.length !== trollLyrics.length) return false;
+    trollLyrics = normalized;
+    return true;
+  }catch(e){ return false; }
+}
+async function loadTrollLyrics(){
+  try{
+    const res = await fetch(TROLL_JSON_PATH, {cache:'no-store'});
+    if(res && res.ok){
+      const data = await res.json();
+      const normalized = normalizeTrollLines(data.lines);
+      if(normalized && normalized.length){
+        trollLyrics = normalized;
+        trollTimingSource = 'リポジトリ版（トロールの歌_歌詞タイミング.json）';
+      }
+    } else {
+      trollTimingSource = '埋め込みデフォルト（JSON取得失敗・未計測）';
+    }
+  }catch(e){
+    trollTimingSource = '埋め込みデフォルト（JSON取得失敗・未計測。file://で直接開いている場合はこれが通常）';
+  }
+  if(applyTrollDraftIfAny()) trollTimingSource += ' ＋ この端末の下書きを適用中';
+  renderMarkList();
+  updateTmStatus();
+}
+loadTrollLyrics();
+
+// --- カラオケ同期表示（このページの主役） ---
+function updateKaraoke(){
+  const t = audio.currentTime || 0;
+  let curIdx = -1;
+  for(let i=0;i<trollLyrics.length;i++){
+    if(typeof trollLyrics[i].time === 'number' && trollLyrics[i].time <= t) curIdx = i;
+  }
+  const anyMarked = trollLyrics.some(l => typeof l.time === 'number');
+  const loveIdx = trollFinalLoveIndex();
+  const prevEl = document.getElementById('kPrev');
+  const curEl = document.getElementById('kCurrent');
+  const nextEl = document.getElementById('kNext');
+
+  if(!anyMarked){
+    prevEl.innerHTML = '&nbsp;';
+    curEl.innerHTML = '<span class="empty">歌詞タイミング未設定です。下の「🎤 タイミングをマークする」から登録してください（最優先は曲最後の「ラブ！」の1行です）。</span>';
+    curEl.className = 'current';
+    nextEl.innerHTML = '&nbsp;';
+  } else if(curIdx === -1){
+    prevEl.innerHTML = '&nbsp;';
+    curEl.innerHTML = '<span class="empty">（まもなく歌詞開始）</span>';
+    curEl.className = 'current';
+    nextEl.textContent = trollLyrics[0] ? trollLyrics[0].text : '';
+  } else if(curIdx === loveIdx){
+    prevEl.textContent = trollLyrics[curIdx-1] ? trollLyrics[curIdx-1].text : ' ';
+    curEl.innerHTML = '❤ ' + escapeHtml(trollLyrics[curIdx].text) + ' ❤';
+    curEl.className = 'current love';
+    nextEl.innerHTML = '&nbsp;';
+  } else {
+    const prev = trollLyrics[curIdx-1], cur = trollLyrics[curIdx], next = trollLyrics[curIdx+1];
+    prevEl.textContent = prev ? prev.text : ' ';
+    curEl.innerHTML = (cur.isAll ? '<span class="tag">全員</span>' : '') + escapeHtml(cur.text);
+    curEl.className = 'current' + (cur.isAll ? ' all' : '');
+    nextEl.textContent = next ? next.text : ' ';
+  }
+
+  // 最重要キュー：曲最後の「ラブ！」の予告・フラッシュ演出
+  const karaokeCard = document.getElementById('karaoke');
+  const existingSoon = karaokeCard.querySelector('.love-soon');
+  if(existingSoon) existingSoon.remove();
+  if(loveIdx >= 0){
+    const loveTime = trollLyrics[loveIdx].time;
+    if(typeof loveTime === 'number'){
+      const untilLove = loveTime - t;
+      if(untilLove > 0 && untilLove <= TROLL_LOVE_WARN_SEC){
+        const div = document.createElement('div');
+        div.className = 'love-soon';
+        div.textContent = `🔔 まもなく全員で「ラブ！」 — あと${untilLove.toFixed(1)}秒`;
+        karaokeCard.appendChild(div);
+      }
+      if(untilLove <= 0 && untilLove > -4){
+        if(!loveFlashFired){
+          loveFlashFired = true;
+          const overlay = document.getElementById('loveFlashOverlay');
+          overlay.classList.add('active');
+          setTimeout(() => overlay.classList.remove('active'), 1150);
+        }
+      } else if(untilLove > 1){
+        loveFlashFired = false;
+      }
+    }
+  }
+}
+setInterval(() => { updateTransport(); updateKaraoke(); updateMarkModeTime(); }, 250);
+
+// --- マークモード（同一ページ内、モーダルではなく展開パネル） ---
+function updateTmStatus(){
+  const el = document.getElementById('tmStatus');
+  if(el){
+    const markedCount = trollLyrics.filter(l => typeof l.time === 'number').length;
+    el.textContent = `データソース: ${trollTimingSource} ／ 進捗: ${markedCount}/${trollLyrics.length}行 設定済み`;
+  }
+  const banner = document.getElementById('tmLoveBanner');
+  if(banner){
+    const loveIdx = trollFinalLoveIndex();
+    const loveTime = loveIdx >= 0 ? trollLyrics[loveIdx].time : null;
+    if(typeof loveTime === 'number'){
+      banner.className = 'tm-love-banner done';
+      banner.textContent = `❤ 最重要キュー「ラブ！」設定済み：${fmtTimeMs(loveTime)}（${loveTime.toFixed(2)}秒）。他の行より先にこれだけでも設定できていれば、本番の最大の課題には対応できています。`;
+    } else {
+      banner.className = 'tm-love-banner';
+      banner.textContent = '❤ 最重要キュー「ラブ！」は未設定です。時間が無い場合、まずこの1行だけでも「❤ 最優先：『ラブ！』だけ先にマーク」ボタンから設定してください。';
+    }
+  }
+}
+function renderMarkList(){
+  const list = document.getElementById('tmList');
+  if(!list) return;
+  const prevScroll = list.scrollTop;
+  list.innerHTML = '';
+  trollLyrics.forEach((line, idx) => {
+    const row = document.createElement('div');
+    row.className = 'tm-row' + (line.isAll ? ' all' : '') + (line.isFinalLove ? ' loveRow' : '') + (idx === tmSelectedIndex ? ' selected' : '');
+    row.dataset.idx = idx;
+    row.innerHTML = `
+      <span class="idx">${idx+1}</span>
+      <span class="tag">全員</span>
+      <span class="love">${line.isFinalLove ? '❤' : ''}</span>
+      <span class="txt">${escapeHtml(line.text)}</span>
+      <input type="number" step="0.01" class="timeInput" placeholder="秒" value="${typeof line.time==='number' ? line.time.toFixed(2) : ''}">
+      <button class="rowbtn jump" title="この時刻へシーク">▶</button>
+      <button class="rowbtn clear" title="このタイミングをクリア">✕</button>
+    `;
+    row.addEventListener('click', (e) => {
+      if(e.target.closest('input,button')) return;
+      tmSelectedIndex = idx;
+      renderMarkList();
+    });
+    row.querySelector('.timeInput').addEventListener('change', (e) => {
+      const v = parseFloat(e.target.value);
+      trollLyrics[idx].time = isFinite(v) ? Math.max(0, v) : null;
+      saveTrollDraft();
+      updateTmStatus();
+    });
+    row.querySelector('.jump').addEventListener('click', () => {
+      if(typeof trollLyrics[idx].time === 'number') audio.currentTime = trollLyrics[idx].time;
+    });
+    row.querySelector('.clear').addEventListener('click', () => {
+      trollLyrics[idx].time = null;
+      saveTrollDraft();
+      renderMarkList();
+      updateTmStatus();
+    });
+    list.appendChild(row);
+  });
+  list.scrollTop = prevScroll;
+}
+function scrollRowIntoView(idx){
+  const list = document.getElementById('tmList');
+  const row = list && list.querySelector(`.tm-row[data-idx="${idx}"]`);
+  if(row) row.scrollIntoView({block:'center'});
+}
+function markCurrentLine(){
+  const t = audio.currentTime || 0;
+  trollLyrics[tmSelectedIndex].time = Math.round(t*100)/100;
+  saveTrollDraft();
+  if(tmSelectedIndex < trollLyrics.length - 1) tmSelectedIndex += 1;
+  renderMarkList();
+  updateTmStatus();
+  scrollRowIntoView(tmSelectedIndex);
+}
+function updateMarkModeTime(){
+  const panel = document.getElementById('markPanel');
+  if(!panel || panel.hidden) return;
+  const el = document.getElementById('tmTime');
+  if(el) el.textContent = fmtTimeMs(audio.currentTime);
+}
+function jumpToLoveLineForMarking(){
+  const loveIdx = trollFinalLoveIndex();
+  if(loveIdx < 0) return;
+  tmSelectedIndex = loveIdx;
+  renderMarkList();
+  scrollRowIntoView(loveIdx);
+}
+function exportTrollLyricsJson(){
+  const payload = {
+    _readme: [
+      'このファイルは「トロールの歌タイミングツール」でエクスポートされたものです。',
+      '生徒用/音響ツール/トロールの歌_歌詞タイミング.json に上書き保存し、',
+      'git commit / push すれば本番データとして反映されます。',
+      '最重要キューは isFinalLove:true の行（曲最後に全員が「ラブ！」と言う瞬間）です。'
+    ],
+    songId: '07',
+    songFile: SONG_FILE,
+    lines: trollLyrics.map(l => {
+      const o = {index:l.index, text:l.text, isAll:l.isAll, time:l.time};
+      if(l.isFinalLove) o.isFinalLove = true;
+      return o;
+    }),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'トロールの歌_歌詞タイミング.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+function importTrollLyricsJson(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      const normalized = normalizeTrollLines(data.lines);
+      if(!normalized || !normalized.length){ alert('JSONの形式が想定と異なるため読み込めませんでした。'); return; }
+      trollLyrics = normalized;
+      trollTimingSource = `インポート（${file.name}）`;
+      tmSelectedIndex = 0;
+      saveTrollDraft();
+      renderMarkList();
+      updateTmStatus();
+    }catch(e){ alert('JSONの読み込みに失敗しました: ' + e.message); }
+  };
+  reader.readAsText(file);
+}
+
+const markPanel = document.getElementById('markPanel');
+const toggleMarkBtn = document.getElementById('toggleMarkBtn');
+toggleMarkBtn.addEventListener('click', () => {
+  markPanel.hidden = !markPanel.hidden;
+  toggleMarkBtn.textContent = markPanel.hidden
+    ? '🎤 タイミングをマークする（未設定の行がある場合はこちら）'
+    : '🎤 タイミングマークを閉じる';
+  if(!markPanel.hidden){
+    const loveIdx = trollFinalLoveIndex();
+    if(loveIdx >= 0 && typeof trollLyrics[loveIdx].time !== 'number') tmSelectedIndex = loveIdx;
+    renderMarkList();
+    updateTmStatus();
+    scrollRowIntoView(tmSelectedIndex);
+  }
+});
+document.getElementById('tmMarkBtn').addEventListener('click', markCurrentLine);
+document.getElementById('tmJumpLoveBtn').addEventListener('click', jumpToLoveLineForMarking);
+document.getElementById('tmExportBtn').addEventListener('click', exportTrollLyricsJson);
+document.getElementById('tmImportInput').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if(f) importTrollLyricsJson(f);
+  e.target.value = '';
+});
+document.getElementById('tmReloadRepoBtn').addEventListener('click', () => {
+  if(!confirm('この端末に保存済みの下書き（未エクスポートのマーク内容）を破棄して、リポジトリ版（またはデフォルト）を読み込み直します。よろしいですか？')) return;
+  try{ localStorage.removeItem(TROLL_DRAFT_KEY); }catch(e){}
+  loadTrollLyrics();
+});
+document.getElementById('tmResetAllBtn').addEventListener('click', () => {
+  if(!confirm('全行のタイミングをクリアします。よろしいですか？')) return;
+  trollLyrics.forEach(l => l.time = null);
+  saveTrollDraft();
+  renderMarkList();
+  updateTmStatus();
+});
+document.addEventListener('keydown', (e) => {
+  if(markPanel.hidden) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if(e.key === 'm' || e.key === 'M'){ e.preventDefault(); markCurrentLine(); }
+});
+
+// --- Service Worker登録（同フォルダのsw.jsを共有、オフライン対応） ---
+if('serviceWorker' in navigator){
+  let reloading = false;
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(!hadController || reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+  window.addEventListener('load', () => {
+    try{ navigator.serviceWorker.register('sw.js').catch(() => {}); }catch(e){}
+  });
+}
+</script>
