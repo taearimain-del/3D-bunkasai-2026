@@ -3,3 +3,10 @@
 
 # Claude Code ローカル設定（Webhook等の機密情報を含みうるため非公開に）
 .claude/
+
+# 生徒用/音響ツール/セットアップ.sh（nowplaying配信のFirebaseルール設定・任意）実行時の
+# 一時ファイル（2026-09-12追加）。Fort様の実際のFirebaseルール内容を含みうるため非公開に。
+生徒用/音響ツール/current-rules.json
+生徒用/音響ツール/.nowplaying-rules-merged.json
+生徒用/音響ツール/firebase.json
+生徒用/音響ツール/.firebaserc

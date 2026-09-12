@@ -217,10 +217,6 @@ kbd{background:var(--panel2); border:1px solid var(--border); border-radius:4px;
 }
 </style>
 
-<!-- 「現在の音響再生状況」ブロードキャスト（2026-09-12追加）。詳細はnowplaying-broadcast.js参照。
-     読み込みに失敗しても以下のscriptタグ自体が無くなるだけで、本体機能には一切影響しない。 -->
-<script src="./nowplaying-broadcast.js"></script>
-
 <h1>🔊 音響キュー再生ツール</h1>
 
 <div class="toolbar">
@@ -932,40 +928,7 @@ function updateNowPlaying(){
   durEl.textContent = fmtTime(audio.duration);
   updateNpPlayIcon();
 }
-
-// --- 「現在の音響再生状況」ブロードキャスト（2026-09-12追加） ---
-// 下部固定バー（現在再生中）が表示している内容と同じ情報を、nowplaying-broadcast.js経由で
-// Firebase Realtime Databaseへ送る。詳細な設計・安全設計はnowplaying-broadcast.js冒頭コメント参照。
-// nowPlayingEverActiveは「このタブで一度も再生していないなら何も送らない」ためのガード
-// （もう一方のツール＝トロールの歌タイミングツールを別タブでただ開いているだけの場合に、
-// そちらが誤って「配信オフ」でこちらの配信を上書きしてしまうのを防ぐ）。
-let nowPlayingEverActive = false;
-function broadcastNowPlaying() {
-  try {
-    if (!window.NowPlayingBroadcast) return;
-    const playingNow = !!(currentId && state[currentId] && !state[currentId].audio.paused);
-    if (!playingNow && !nowPlayingEverActive) return;
-    if (playingNow) nowPlayingEverActive = true;
-    if (!currentId || !state[currentId]) {
-      window.NowPlayingBroadcast.update({ toolId: 'main', cueId: null, title: null, isPlaying: false, currentTime: 0, duration: 0 });
-      return;
-    }
-    const cue = allCues().find(c => c.id === currentId);
-    const audio = state[currentId].audio;
-    window.NowPlayingBroadcast.update({
-      toolId: 'main',
-      cueId: currentId,
-      title: cue ? cue.name : currentId,
-      isPlaying: !audio.paused,
-      currentTime: audio.currentTime || 0,
-      duration: audio.duration || 0,
-    });
-  } catch (e) {
-    // 配信失敗は再生に一切影響させない
-  }
-}
-
-setInterval(() => { updateNowPlaying(); broadcastNowPlaying(); }, 250);
+setInterval(updateNowPlaying, 250);
 
 // --- Service Worker登録（オフライン対応・PWA化） ---
 // 63MBという大きなファイル自身をキャッシュするため、モバイル端末（特にiOS Safari）の

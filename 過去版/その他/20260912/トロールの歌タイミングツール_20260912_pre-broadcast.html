@@ -206,10 +206,6 @@ input[type=range]::-moz-range-thumb{width:14px; height:14px; border-radius:50%; 
 }
 </style>
 
-<!-- 「現在の音響再生状況」ブロードキャスト（2026-09-12追加）。詳細はnowplaying-broadcast.js参照。
-     読み込みに失敗しても以下のscriptタグ自体が無くなるだけで、本体機能には一切影響しない。 -->
-<script src="./nowplaying-broadcast.js"></script>
-
 <a class="back-link" href="音響再生ツール.html">← 音響キュー再生ツール（本体）へ戻る</a>
 <h1>🧌 トロールの歌 タイミングツール</h1>
 <p class="subtitle">「愛さえあれば」歌詞カラオケ同期表示／曲最後の「ラブ！」タイミング確認・マーク専用ツール</p>
@@ -584,31 +580,7 @@ function updateKaraoke(){
     }
   }
 }
-// --- 「現在の音響再生状況」ブロードキャスト（2026-09-12追加） ---
-// このツールは「愛さえあれば」（id:'07'）専用ページのため、常にそのcueIdで送信する。
-// nowPlayingEverActiveのガードの意図は音響再生ツール.html側の同名変数と同じ
-// （このタブで一度も再生していないなら何も送らず、他ツールの配信を誤って上書きしない）。
-let nowPlayingEverActive = false;
-function broadcastNowPlaying() {
-  try {
-    if (!window.NowPlayingBroadcast) return;
-    const playingNow = !audio.paused;
-    if (!playingNow && !nowPlayingEverActive) return;
-    if (playingNow) nowPlayingEverActive = true;
-    window.NowPlayingBroadcast.update({
-      toolId: 'troll',
-      cueId: '07',
-      title: '愛さえあれば',
-      isPlaying: playingNow,
-      currentTime: audio.currentTime || 0,
-      duration: audio.duration || 0,
-    });
-  } catch (e) {
-    // 配信失敗は再生に一切影響させない
-  }
-}
-
-setInterval(() => { updateTransport(); updateKaraoke(); updateMarkModeTime(); broadcastNowPlaying(); }, 250);
+setInterval(() => { updateTransport(); updateKaraoke(); updateMarkModeTime(); }, 250);
 
 // --- マークモード（同一ページ内、モーダルではなく展開パネル） ---
 function updateTmStatus(){
