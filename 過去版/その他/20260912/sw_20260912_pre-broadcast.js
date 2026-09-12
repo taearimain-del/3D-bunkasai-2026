@@ -61,10 +61,6 @@ const PRECACHE_URLS = [
   // 上記ツールが読み書きする歌詞タイミングデータ。音響係が本番前にマークモードで
   // 実測・上書きするため、こちらもHTML本体と同様Network First扱いにしている。
   './トロールの歌_歌詞タイミング.json',
-  // 「現在の音響再生状況」ブロードキャスト共通モジュール（2026-09-12追加）。
-  // 音響再生ツール.html／トロールの歌タイミングツール.htmlの両方から読み込まれる小さな
-  // ロジックファイルのため、HTML本体と同様Network First扱いにしている（下記参照）。
-  './nowplaying-broadcast.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',
@@ -157,8 +153,7 @@ function isNetworkFirstRequest(request) {
     const url = new URL(request.url);
     return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json')
       || url.pathname.endsWith('トロールの歌タイミングツール.html')
-      || url.pathname.endsWith('トロールの歌_歌詞タイミング.json')
-      || url.pathname.endsWith('nowplaying-broadcast.js');
+      || url.pathname.endsWith('トロールの歌_歌詞タイミング.json');
   } catch (e) {
     return false;
   }
