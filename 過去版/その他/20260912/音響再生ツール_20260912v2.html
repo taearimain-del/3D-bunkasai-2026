@@ -1,0 +1,1605 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>音響キュー再生ツール — アナと雪の女王</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#05101f">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="音響ツール">
+
+<style>
+:root{
+  --bg:#05101f; --panel:rgba(255,255,255,.045); --panel2:rgba(255,255,255,.08); --panel3:rgba(255,255,255,.13);
+  --border:rgba(176,210,240,.16); --border-strong:rgba(176,210,240,.34);
+  --text:#e9f2fb; --sub:#93a8bd;
+  --accent:#cfe7ff; --accent-hover:#e3f2ff; --accent-ink:#0a1626;
+  --good:#8fe3c9; --warn:#e8c17a; --danger:#f0897e;
+  --serif:'Hiragino Mincho ProN','Yu Mincho','YuMincho','Shippori Mincho',serif;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:'Hiragino Kaku Gothic ProN','Yu Gothic',-apple-system,sans-serif;
+  background:var(--bg);
+  background-image:
+    radial-gradient(120% 80% at 50% -8%, rgba(90,160,220,.22), transparent 55%),
+    linear-gradient(180deg,#050f1e 0%,#071a30 40%,#08243c 72%,#0a2b44 100%);
+  background-attachment:fixed;
+  color:var(--text); margin:0; padding:20px 20px 132px;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:.01em;
+}
+h1{font-family:var(--serif); font-size:1.6rem; font-weight:600; letter-spacing:.06em; margin:0 0 22px; color:#f2f8ff;}
+.toolbar{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:12px 14px; margin-bottom:18px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+}
+.toolbar input[type=file]{color:var(--sub); font-size:0.8rem;}
+button{
+  font-family:inherit; cursor:pointer; border-radius:20px; border:1px solid var(--border);
+  background:var(--panel2); color:var(--text); padding:8px 14px; font-size:0.85rem;
+  white-space:nowrap; flex:0 0 auto;
+  transition:transform .12s ease, background-color .12s ease, filter .12s ease, color .12s ease;
+}
+button:hover{background:var(--panel3);}
+button:active{transform:scale(.96);}
+button.play{
+  background:rgba(207,231,255,.09);
+  color:#f5faff; border:1.5px solid rgba(207,231,255,.75); font-weight:700;
+  box-shadow:0 0 0 1px rgba(207,231,255,.1) inset, 0 0 16px rgba(207,231,255,.4), 0 0 2px rgba(207,231,255,.8);
+}
+button.play:hover{
+  background:rgba(207,231,255,.16);
+  border-color:#eaf4ff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14) inset, 0 0 28px rgba(207,231,255,.65), 0 0 3px rgba(227,242,255,.9);
+}
+button.stop{background:transparent; color:var(--sub); border-color:var(--border);}
+button.stop:hover{color:var(--danger); border-color:var(--danger); background:var(--panel2);}
+button.fadebtn{background:transparent; color:var(--sub); border-color:var(--border);}
+button.fadebtn:hover{color:var(--warn); border-color:var(--warn); background:var(--panel2);}
+button:disabled{opacity:.32; cursor:not-allowed; transform:none;}
+section{margin-bottom:22px;}
+section h2{
+  font-family:var(--serif); font-size:1.08rem; font-weight:600; letter-spacing:.08em;
+  padding-bottom:9px; margin:34px 0 14px; color:#eaf4ff; position:relative;
+}
+section h2::after{
+  content:""; position:absolute; left:0; bottom:0; width:100%; height:1px;
+  background:linear-gradient(90deg, var(--border-strong), transparent 70%);
+}
+.cue{
+  display:flex; align-items:center; gap:10px;
+  background:var(--panel); border:1px solid var(--border); border-radius:14px;
+  padding:8px 10px; margin-bottom:6px;
+  backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+  transition:background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.cue:hover{background:var(--panel2); transform:translateY(-1px);}
+.cue.current{background:rgba(207,231,255,.09); border-color:var(--border-strong); box-shadow:0 8px 22px rgba(10,40,70,.35), inset 0 1px 0 rgba(255,255,255,.08);}
+.cue.playing{animation:cueBreathe 2.6s ease-in-out infinite;}
+@keyframes cueBreathe{
+  0%,100%{box-shadow:0 8px 22px rgba(10,40,70,.35), inset 0 1px 0 rgba(255,255,255,.08), 0 0 0 rgba(207,231,255,0);}
+  50%{box-shadow:0 8px 26px rgba(10,40,70,.4), inset 0 1px 0 rgba(255,255,255,.1), 0 0 22px rgba(207,231,255,.28);}
+}
+@media (prefers-reduced-motion: reduce){
+  .cue.playing{animation:none; box-shadow:0 8px 24px rgba(10,40,70,.38), inset 0 1px 0 rgba(255,255,255,.09), 0 0 14px rgba(207,231,255,.2);}
+}
+.dot{width:10px; height:10px; border-radius:50%; background:#555; flex:0 0 auto;}
+.dot.loaded{background:var(--good); box-shadow:0 0 6px rgba(143,227,201,.6);}
+.dot.error{background:var(--danger); box-shadow:0 0 6px rgba(240,137,126,.6);}
+.num{color:var(--sub); font-size:0.75rem; flex:0 0 auto; width:32px; height:16px; text-align:center; position:relative;}
+.num .idnum{display:block;}
+.num .eq{display:none; align-items:flex-end; justify-content:center; gap:2px; height:14px;}
+.cue.current .num .idnum{display:none;}
+.cue.current .num .eq{display:flex;}
+.num .eq i{width:3px; background:var(--accent); border-radius:1px; height:4px; animation:eqBounce 0.9s ease-in-out infinite; animation-play-state:paused;}
+.cue.playing .num .eq i{animation-play-state:running;}
+.num .eq i:nth-child(1){animation-delay:-0.6s;}
+.num .eq i:nth-child(2){animation-delay:-0.3s;}
+.num .eq i:nth-child(3){animation-delay:0s;}
+@keyframes eqBounce{
+  0%,100%{height:4px;}
+  50%{height:14px;}
+}
+.meta{flex:1 1 auto; min-width:0;}
+.meta b{display:block; font-size:0.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.cue.current .meta b{color:var(--accent);}
+.meta .timing{color:var(--sub); font-size:0.74rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.meta .note{color:var(--warn); font-size:0.72rem; margin-top:1px; line-height:1.3;}
+.meta .filename{color:var(--sub); font-size:0.68rem; margin-top:1px; display:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ctrl{display:flex; gap:6px; flex:0 0 auto;}
+.iconbtn{
+  width:44px; height:44px; min-width:44px; min-height:44px; padding:0; font-size:1.1rem;
+  display:flex; align-items:center; justify-content:center; border-radius:50%;
+  background:linear-gradient(160deg, rgba(255,255,255,.20), rgba(255,255,255,.05) 55%, rgba(207,231,255,.10));
+  border:1.5px solid rgba(207,231,255,.65);
+  backdrop-filter:blur(14px) saturate(160%); -webkit-backdrop-filter:blur(14px) saturate(160%);
+  box-shadow:0 1px 0 rgba(255,255,255,.4) inset, 0 -8px 12px rgba(0,0,0,.18) inset, 0 0 14px rgba(207,231,255,.35);
+}
+.iconbtn:hover{
+  transform:scale(1.08);
+  background:linear-gradient(160deg, rgba(255,255,255,.30), rgba(255,255,255,.08) 55%, rgba(207,231,255,.16));
+  border-color:rgba(227,242,255,.95);
+  box-shadow:0 1px 0 rgba(255,255,255,.5) inset, 0 -8px 12px rgba(0,0,0,.14) inset, 0 0 24px rgba(207,231,255,.6);
+}
+.filebtn{position:relative; overflow:hidden;}
+.filebtn input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+.nowplaying{
+  /* 2026-09-12：トロールの歌カラオケパネル追加に伴い、.bottom-dock（position:fixed;bottom:0）
+     でこの要素と.troll-karaokeをまとめて縦積みするようにした。ここで独自にposition:fixedを
+     持たせると通常のフローから外れてbottom-dock内のflexレイアウトを無視し、karaoke
+     パネルと同じ画面最下部に重なって表示されてしまうため、position指定は持たせない
+     （position:staticのまま、bottom-dock側のflex子要素として並ぶ）。 */
+  background:rgba(6,16,30,.86); border-top:1px solid var(--border-strong);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  padding:10px 20px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  box-shadow:0 -12px 30px rgba(0,0,0,.4);
+}
+.nowplaying .np-info{flex:1 1 160px; min-width:120px; max-width:240px;}
+.nowplaying .label{font-size:0.68rem; color:var(--sub); text-transform:uppercase; letter-spacing:.04em;}
+.nowplaying .title{font-family:var(--serif); font-size:1rem; font-weight:600; color:#f2f8ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.np-center{flex:2 1 320px; min-width:260px; display:flex; flex-direction:column; align-items:center; gap:6px;}
+.np-buttons{display:flex; gap:10px; align-items:center; justify-content:center;}
+.np-buttons .iconbtn.play{width:48px; height:48px; min-width:48px; min-height:48px; font-size:1.2rem;}
+.np-seekrow{display:flex; align-items:center; gap:8px; width:100%; max-width:520px;}
+.np-time{font-size:0.72rem; color:var(--sub); min-width:38px; text-align:center; flex:0 0 auto;}
+.np-right{flex:0 0 auto; display:flex; align-items:center; gap:6px; margin-left:auto;}
+input[type=range]{
+  -webkit-appearance:none; appearance:none; width:100%; height:6px;
+  border-radius:4px; background:var(--panel2); outline:none; cursor:pointer;
+}
+input[type=range]:disabled{cursor:not-allowed; opacity:.6;}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:13px; height:13px; border-radius:50%;
+  background:var(--accent); cursor:pointer; border:0;
+}
+input[type=range]::-moz-range-thumb{
+  width:13px; height:13px; border-radius:50%; background:var(--accent);
+  cursor:pointer; border:0;
+}
+.kbd{font-size:0.72rem; color:var(--sub); margin-left:auto;}
+kbd{background:var(--panel2); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.72rem;}
+@media (max-width:640px){
+  body{padding:14px 12px 190px;}
+  h1{font-size:1.25rem;}
+  .toolbar{padding:10px 12px; gap:8px;}
+  .cue{flex-wrap:nowrap; gap:8px; padding:8px;}
+  .num{width:26px;}
+  .ctrl{gap:4px;}
+  .meta .timing{font-size:0.78rem;}
+  .meta .note{font-size:0.76rem;}
+  .meta .filename{font-size:0.72rem;}
+  kbd, .kbd{font-size:0.76rem;}
+  .np-time{font-size:0.76rem; min-width:34px;}
+  .nowplaying .label{font-size:0.72rem;}
+  /* 縦積み(column)にすると、行方向(width)用に設定していたflex-basis(160px/320px)が
+     そのまま高さの基準値として解釈されてしまい、バーが異常に縦長になるバグがあった。
+     column方向の子要素はすべてflex:0 0 auto（伸縮なし・中身の高さのみ）に固定し、
+     gapも縦積み用に詰める。 */
+  .nowplaying{flex-direction:column; align-items:stretch; padding:8px 12px; gap:6px;}
+  .nowplaying .np-info{flex:0 0 auto; max-width:none; min-width:0; text-align:center;}
+  .np-center{flex:0 0 auto; min-width:0; gap:4px;}
+  .np-buttons{flex:0 0 auto; gap:8px;}
+  .np-seekrow{flex:0 0 auto;}
+  .np-right{flex:0 0 auto; margin-left:0; justify-content:center;}
+}
+@media (max-width:400px){
+  body{padding:12px 8px 200px;}
+  .toolbar{padding:8px 10px;}
+  .cue{padding:7px 6px; gap:6px;}
+  .meta b{font-size:0.86rem;}
+  .iconbtn{font-size:1rem;}
+}
+/* --- 統合タイムライン（2026-08-30追加）---
+   song/narr/se の各キューを実際の上演順に1本の通し一覧として表示するための
+   ACT区切り線・種類バッジ（歌唱／ナレーション／SE）のスタイル。 */
+.act-divider{
+  display:flex; align-items:center; gap:10px;
+  margin:30px 0 12px; color:var(--sub);
+  font-family:var(--serif); font-size:0.78rem; font-weight:600;
+  letter-spacing:.16em;
+}
+.act-divider::before, .act-divider::after{
+  content:""; flex:1 1 auto; height:1px;
+  background:linear-gradient(90deg, transparent, var(--border-strong) 50%, transparent);
+}
+.act-divider span{flex:0 0 auto; white-space:nowrap; padding:0 2px;}
+.type-badge{
+  display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:.02em;
+  padding:1px 6px; border-radius:8px; margin-right:6px; vertical-align:middle;
+  white-space:nowrap;
+}
+.type-badge.badge-song{background:rgba(207,231,255,.16); color:var(--accent); border:1px solid rgba(207,231,255,.4);}
+.type-badge.badge-narr{background:rgba(232,193,122,.16); color:var(--warn); border:1px solid rgba(232,193,122,.4);}
+.type-badge.badge-se{background:rgba(240,137,126,.16); color:var(--danger); border:1px solid rgba(240,137,126,.4);}
+@media (max-width:640px){
+  .act-divider{font-size:0.72rem; margin:24px 0 10px;}
+  .type-badge{font-size:0.58rem;}
+}
+
+/* --- トロールの歌（愛さえあれば）歌詞カラオケ表示・タイミングマークモード（2026-09-12追加）---
+   背景：音響係が本番中「今どこを再生しているか」を掴めず、特に曲最後に全員が声を揃える
+   「ラブ！」のタイミングが分からず困っているという課題への対応。id:'07'（愛さえあれば）
+   再生中のみ、下部固定バーの上にカラオケ風の歌詞同期パネルを表示する。
+   タイミングデータの実測値はまだ無い（トロールの歌_歌詞タイミング.json参照）ため、
+   実際に効果を発揮するのは音響係がマークモードでタイミングを打ち込んだ後。 */
+.bottom-dock{
+  position:fixed; left:0; right:0; bottom:0; z-index:40;
+  display:flex; flex-direction:column;
+}
+.troll-karaoke{
+  background:rgba(6,16,30,.92); border-top:1px solid var(--border-strong);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  padding:10px 20px 6px; text-align:center;
+}
+.troll-karaoke .tk-head{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  font-size:0.68rem; color:var(--sub); letter-spacing:.04em; margin-bottom:6px;
+}
+.troll-karaoke .tk-head b{color:var(--accent); font-weight:600;}
+.troll-karaoke .tk-prev, .troll-karaoke .tk-next{
+  font-size:0.78rem; color:var(--sub); opacity:.7; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.troll-karaoke .tk-current{
+  font-family:var(--serif); font-size:1.3rem; font-weight:700; color:#f5faff;
+  margin:3px 0; line-height:1.35; transition:color .2s ease;
+}
+.troll-karaoke .tk-current.tk-all{
+  color:var(--warn);
+  background:rgba(232,193,122,.14); border-radius:10px; padding:4px 10px; display:inline-block;
+}
+.troll-karaoke .tk-current .tk-tag{
+  font-size:0.62rem; font-weight:700; vertical-align:middle; margin-right:6px;
+  background:rgba(232,193,122,.9); color:#241a04; border-radius:8px; padding:1px 7px;
+}
+.troll-karaoke .tk-empty{font-size:0.8rem; color:var(--sub);}
+.troll-karaoke .tk-current.tk-love{
+  color:#241a04; background:linear-gradient(135deg, #ffe9b8, #ffcf6b);
+  font-size:1.7rem; border-radius:12px; padding:6px 16px; display:inline-block;
+  box-shadow:0 0 26px rgba(255,207,107,.75);
+  animation:tkLovePulse .55s ease-in-out infinite;
+}
+@keyframes tkLovePulse{ 0%,100%{transform:scale(1);} 50%{transform:scale(1.07);} }
+.troll-karaoke .tk-love-soon{
+  font-size:0.95rem; font-weight:800; color:var(--warn); margin-top:3px;
+  animation:tkPulse 0.8s ease-in-out infinite;
+}
+@keyframes tkPulse{ 0%,100%{opacity:.5;} 50%{opacity:1;} }
+@media (prefers-reduced-motion: reduce){
+  .troll-karaoke .tk-love-soon{animation:none; opacity:1;}
+  .troll-karaoke .tk-current.tk-love{animation:none; transform:scale(1);}
+}
+
+#loveFlashOverlay{
+  position:fixed; inset:0; z-index:80; pointer-events:none;
+  display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(circle, rgba(255,214,140,.85) 0%, rgba(232,150,60,.55) 45%, rgba(232,150,60,0) 75%);
+  opacity:0; transition:opacity .18s ease;
+}
+#loveFlashOverlay.active{opacity:1; animation:loveFlashPulse 1.1s ease-out;}
+#loveFlashOverlay span{
+  font-family:var(--serif); font-size:min(18vw,7rem); font-weight:700; color:#3a1c00;
+  text-shadow:0 0 24px rgba(255,255,255,.8); transform:scale(.7);
+}
+#loveFlashOverlay.active span{animation:loveFlashText 1.1s ease-out;}
+@keyframes loveFlashPulse{ 0%{opacity:0;} 15%{opacity:1;} 75%{opacity:1;} 100%{opacity:0;} }
+@keyframes loveFlashText{ 0%{transform:scale(.4);} 25%{transform:scale(1.15);} 45%{transform:scale(1);} 100%{transform:scale(1);} }
+@media (prefers-reduced-motion: reduce){
+  #loveFlashOverlay.active{animation:none; opacity:1;}
+  #loveFlashOverlay.active span{animation:none; transform:scale(1);}
+}
+
+/* --- マークモード（タイミング打ち込み）モーダル --- */
+#trollMarkModal{
+  position:fixed; inset:0; z-index:90; background:rgba(3,8,16,.92);
+  display:flex; flex-direction:column; padding:16px; overflow:hidden;
+}
+#trollMarkModal[hidden]{display:none;}
+.tm-header{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:8px;}
+.tm-header h2{font-family:var(--serif); font-size:1.1rem; margin:0; color:#f2f8ff; flex:1 1 auto;}
+.tm-status{font-size:0.72rem; color:var(--sub); width:100%; line-height:1.5;}
+.tm-love-banner{
+  font-size:0.8rem; font-weight:700; padding:7px 12px; border-radius:10px; margin-bottom:8px;
+  background:rgba(232,193,122,.14); border:1px solid rgba(232,193,122,.5); color:var(--warn);
+}
+.tm-love-banner.tm-love-done{background:rgba(143,227,201,.14); border-color:rgba(143,227,201,.5); color:var(--good);}
+#tmJumpLoveBtn{
+  background:linear-gradient(135deg, rgba(255,233,184,.22), rgba(255,207,107,.14));
+  border:1.5px solid rgba(255,207,107,.75); color:var(--warn); font-weight:700;
+}
+#tmJumpLoveBtn:hover{background:rgba(255,207,107,.28);}
+.tm-row.tm-love-row{background:rgba(255,207,107,.08); box-shadow:inset 3px 0 0 var(--warn);}
+.tm-transport{
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  background:var(--panel); border:1px solid var(--border); border-radius:12px;
+  padding:10px 12px; margin-bottom:10px;
+}
+.tm-time{font-variant-numeric:tabular-nums; font-size:1rem; color:var(--accent); min-width:90px;}
+#tmMarkBtn{
+  font-weight:700; font-size:1rem; padding:12px 22px; border-radius:24px;
+  background:rgba(207,231,255,.16); border:1.5px solid rgba(207,231,255,.8); color:#f5faff;
+}
+#tmMarkBtn:hover{background:rgba(207,231,255,.26);}
+.tm-list{
+  flex:1 1 auto; overflow-y:auto; border:1px solid var(--border); border-radius:12px;
+  background:rgba(255,255,255,.02);
+}
+.tm-row{
+  display:flex; align-items:center; gap:8px; padding:7px 10px;
+  border-bottom:1px solid rgba(255,255,255,.05); cursor:pointer;
+}
+.tm-row:last-child{border-bottom:none;}
+.tm-row:hover{background:rgba(255,255,255,.04);}
+.tm-row.tm-selected{background:rgba(207,231,255,.12); box-shadow:inset 3px 0 0 var(--accent);}
+.tm-row .tm-idx{width:26px; flex:0 0 auto; font-size:0.7rem; color:var(--sub); text-align:right;}
+.tm-row .tm-tag{
+  flex:0 0 auto; font-size:0.6rem; font-weight:700; color:#241a04; background:var(--warn);
+  border-radius:8px; padding:1px 6px; visibility:hidden;
+}
+.tm-row.tm-all .tm-tag{visibility:visible;}
+.tm-row .tm-love{flex:0 0 auto; font-size:0.68rem;}
+.tm-row .tm-text{flex:1 1 auto; font-size:0.82rem; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.tm-row .tm-time-input{
+  flex:0 0 auto; width:78px; font-size:0.78rem; text-align:right;
+  background:var(--panel2); border:1px solid var(--border); border-radius:6px; color:var(--text); padding:3px 6px;
+}
+.tm-row .tm-btn{
+  flex:0 0 auto; font-size:0.9rem; width:30px; height:30px; border-radius:50%;
+  background:var(--panel2); border:1px solid var(--border); color:var(--text); padding:0;
+}
+.tm-footer{
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:10px;
+}
+.tm-footer .filebtn{position:relative; overflow:hidden;}
+.tm-footer .filebtn input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+@media (max-width:640px){
+  .tm-row .tm-text{white-space:normal; font-size:0.78rem;}
+  .tm-time{min-width:70px;}
+}
+</style>
+
+<h1>🔊 音響キュー再生ツール</h1>
+
+<div class="toolbar">
+  <button id="trollMarkModeBtn" title="「愛さえあれば」の歌詞タイミングを実測して打ち込む">🎤 トロールの歌 歌詞タイミング設定</button>
+  <span class="kbd">全停止：<kbd>Esc</kbd></span>
+</div>
+
+<section id="sec-timeline">
+  <h2>本番タイムライン</h2>
+</section>
+
+<div class="bottom-dock">
+  <div class="troll-karaoke" id="trollKaraoke" hidden></div>
+  <div class="nowplaying">
+    <div class="np-info">
+      <div class="label">現在再生中</div>
+      <div class="title" id="npTitle">停止中</div>
+    </div>
+    <div class="np-center">
+      <div class="np-buttons">
+        <button class="iconbtn" id="npBack" title="10秒戻る" aria-label="10秒戻る">⏪</button>
+        <button class="iconbtn play" id="npPlayPause" title="再生" aria-label="再生" disabled>▶</button>
+        <button class="iconbtn" id="npFwd" title="10秒進む" aria-label="10秒進む">⏩</button>
+      </div>
+      <div class="np-seekrow">
+        <span class="np-time" id="npTimeCur">00:00</span>
+        <input type="range" id="npSeek" min="0" max="1000" value="0" step="1" disabled>
+        <span class="np-time" id="npTimeDur">00:00</span>
+      </div>
+    </div>
+    <div class="np-right">
+      <button class="iconbtn fadebtn" id="npFade" title="フェードアウト（5秒）" aria-label="フェードアウト（5秒）" disabled>🔉</button>
+      <button class="iconbtn stop" id="npStop" title="全停止（緊急停止）" aria-label="全停止（緊急停止）">■</button>
+    </div>
+  </div>
+</div>
+
+<div id="loveFlashOverlay"><span>ラブ！</span></div>
+
+<div id="trollMarkModal" hidden>
+  <div class="tm-header">
+    <h2>🎤 トロールの歌「愛さえあれば」歌詞タイミング設定</h2>
+    <button id="tmCloseBtn" title="閉じる" aria-label="閉じる">✕ 閉じる</button>
+    <div class="tm-status" id="tmStatus"></div>
+  </div>
+  <div class="tm-love-banner" id="tmLoveBanner"></div>
+  <div class="tm-transport">
+    <button class="iconbtn play" id="tmPlayPause" data-id="07" title="再生/一時停止">▶</button>
+    <button class="iconbtn" id="tmBack" title="5秒戻る">⏪5</button>
+    <button class="iconbtn" id="tmFwd" title="5秒進む">⏩5</button>
+    <span class="tm-time" id="tmTime">00:00.00</span>
+    <button id="tmMarkBtn" title="選択中の行に今の再生時刻を記録（キー: M）">⏺ この瞬間をマーク（M）</button>
+    <button id="tmJumpLoveBtn" title="最優先：曲最後の「ラブ！」行を選択してマークする">❤ 最優先：「ラブ！」だけ先にマーク</button>
+  </div>
+  <div class="tm-list" id="tmList"></div>
+  <div class="tm-footer">
+    <button id="tmExportBtn">💾 JSONをエクスポート</button>
+    <button class="filebtn iconbtn" style="border-radius:20px;width:auto;height:auto;padding:8px 14px;" title="タイミングJSONを読み込み">📂 JSON読込<input type="file" accept="application/json,.json" id="tmImportInput"></button>
+    <button id="tmReloadRepoBtn">↺ この端末の下書きを破棄してリポジトリ版を再読込</button>
+    <button id="tmResetAllBtn">🗑 全タイミングをクリア</button>
+  </div>
+</div>
+
+<script>
+const CUES = {
+  song: [
+    {id:'00', act:'開演1:30前', name:'イントロ／開演前BGM（開演1:30前スタート）', dur:'約1分30秒', note:'舞台監督（または開場担当）の合図で開演1分30秒前に再生開始。フェードアウトはせず自然に終わる（曲が残っていても「開演」の合図でそのまま停止）', file:'イントロ.mp3', aliases:['イントロ']},
+    {id:'01', act:'ACT1 後半', name:'雪だるまつくろう', dur:'約3分', note:'歌唱後、暗転→場面転換', file:'雪だるまつくろう.mp3', aliases:['雪だるま']},
+    {id:'02', act:'ACT2 前半', name:'生まれてはじめて', dur:'約2分半', note:'二番の歌詞（1:08〜）から自動で再生開始。停止条件：ハンスが立ち上がった瞬間→4〜5秒フェードアウト', file:'生まれてはじめて.mp3', aliases:['生まれてはじめて'], startAt:68},
+    {id:'03', act:'ACT2 後半', name:'とびら開けて', dur:'約2分', note:'歌唱後、暗転→場面転換', file:'とびら開けて.mp3', aliases:['とびら開けて']},
+    {id:'04', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜', dur:'約4分', note:'歌唱後、暗転', file:'ありのままの.mp3', aliases:['ありのまま','レット・イット・ゴー']},
+    {id:'04k1', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜（キー-1）', dur:'約4分', note:'「Bグループ」役用のキー下げ版（半音-1）。本番当日、歌う生徒に合わせて音響係が原曲版とキー下げ版から選択。', file:'ありのままの_key-1.mp3', aliases:['ありのまま キー-1','レット・イット・ゴー キー-1']},
+    {id:'04k2', act:'ACT3 後半', name:'レット・イット・ゴー〜ありのままで〜（キー-2）', dur:'約4分', note:'「Bグループ」役用のキー下げ版（半音-2）。本番当日、歌う生徒に合わせて音響係が原曲版とキー下げ版から選択。', file:'ありのままの_key-2.mp3', aliases:['ありのまま キー-2','レット・イット・ゴー キー-2']},
+    {id:'05', act:'ACT4 後半', name:'あこがれの夏', dur:'約2分', note:'歌唱後、即暗転', file:'あこがれの夏.mp3', aliases:['あこがれ']},
+    {id:'06', act:'ACT5 中盤', name:'生まれてはじめて（リプライズ）', dur:'約2分半', note:'終盤で冬アナに魔法。音量を絞るタイミングは舞台監督の合図', file:'生まれてはじめてリプライズ.mp3', aliases:['リプライズ']},
+    {id:'06b', act:'ACT5 中盤', name:'生まれてはじめて（リプライズ・頭出し版）', dur:'約2分8秒', note:'冒頭の無音をカットした即再生版（実測：冒頭0〜3.454秒が完全な無音だったためそこをトリムし、切り口に50msの短いフェードインを付与。以降の曲の内容・停止条件はid:06と同一＝終盤で冬アナに魔法、音量を絞るタイミングは舞台監督の合図）。本番当日、演出に応じて音響係が通常版（無音あり・id:06）とこちらから選択。', file:'生まれてはじめてリプライズ_頭出し.mp3', aliases:['リプライズ 頭出し','リプライズすぐ']},
+    {id:'07', act:'ACT5 後半', name:'愛さえあれば', dur:'約3分', note:'曲終わりにアナが座り込む', file:'愛さえあれば.mp3', aliases:['愛さえ']},
+    {id:'08', act:'フィナーレ', name:'フィナーレBGM（エピローグ）', dur:'約3分6秒', note:'カーテンコール・キャスト紹介〜最後の挨拶で使用。Frozenスコアのエピローグ音源（Base64埋め込み）。', file:'Epilogue_From_FrozenScore.mp3', aliases:['フィナーレ']},
+  ],
+  narr: [
+    {id:'N1', act:'ACT1 冒頭', name:'ACT1 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+    {id:'N2', act:'ACT2 冒頭', name:'ACT2 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+    {id:'N3', act:'ACT5 冒頭', name:'ACT5 開幕ナレーション', dur:'—', note:'舞台監督の点灯合図後すぐ再生'},
+  ],
+  se: [
+    {id:'SE1', act:'ACT1 魔法が飛ぶ', name:'魔法発動音', dur:'短音（約0.5秒）', note:'子供エルサが手を振り上げた瞬間。（2026-09-10追記）バリエーション追加あり（SE1b〜SE1f）。本番当日、演出の好みに応じて音響係が魔法①〜Fの中から選択。', file:'魔法①.mp3', aliases:['魔法①']},
+    {id:'SE1b', act:'ACT1 魔法が飛ぶ', name:'魔法発動音（バリエーションB）', dur:'約4秒', note:'2026-09-10追加。SE1の代替候補。本番当日、演出の好みに応じて音響係がSE1〜SE1fから選択。（元ファイル名：icemagic.mp3）', file:'魔法発動音B.mp3', aliases:['魔法発動音B']},
+    {id:'SE1c', act:'ACT1 魔法が飛ぶ', name:'魔法発動音（バリエーションC）', dur:'約3秒', note:'2026-09-10追加。SE1の代替候補。本番当日、演出の好みに応じて音響係がSE1〜SE1fから選択。（元ファイル名：氷魔法2.mp3）', file:'魔法発動音C.mp3', aliases:['魔法発動音C']},
+    {id:'SE1d', act:'ACT1 魔法が飛ぶ', name:'魔法発動音（バリエーションD）', dur:'約3秒', note:'2026-09-10追加。SE1の代替候補。本番当日、演出の好みに応じて音響係がSE1〜SE1fから選択。（元ファイル名：氷魔法3.mp3）', file:'魔法発動音D.mp3', aliases:['魔法発動音D']},
+    {id:'SE1e', act:'ACT1 魔法が飛ぶ', name:'魔法発動音（バリエーションE）', dur:'約4秒', note:'2026-09-10追加。SE1の代替候補。本番当日、演出の好みに応じて音響係がSE1〜SE1fから選択。（元ファイル名：氷魔法で凍結.mp3）', file:'魔法発動音E.mp3', aliases:['魔法発動音E']},
+    {id:'SE1f', act:'ACT1 魔法が飛ぶ', name:'魔法発動音（バリエーションF）', dur:'約4秒', note:'2026-09-10追加。SE1の代替候補。本番当日、演出の好みに応じて音響係がSE1〜SE1fから選択。（元ファイル名：freezey.mp3）', file:'魔法発動音F.mp3', aliases:['魔法発動音F']},
+    {id:'SE2', act:'ACT3 手袋引き抜き', name:'氷の「ピシッ」音', dur:'短音', note:'アナがエルサの手袋を引き抜いた瞬間'},
+    {id:'SE3', act:'ACT3 魔法暴走', name:'低い振動音・氷が広がる音', dur:'1〜2秒', note:'「やめて…！」直後・照明フラッシュと同期（舞台監督の合図が最終トリガー）', file:'魔法②.wav', aliases:['魔法②']},
+    {id:'SE4', act:'ACT3 レット・イット・ゴー', name:'キラキラ効果音（省略可）', dur:'短音', note:'マントを脱いだ瞬間・照明最大輝度と同期'},
+    {id:'SE5', act:'ACT5 魔法が当たる', name:'鋭い氷音「ピキン！」', dur:'短音', note:'冬アナがよろめく直前', file:'アナに魔法があたって倒れるとき.mp3', aliases:['アナに魔法があたって倒れるとき']},
+    {id:'SE6', act:'ACT7 凍りつく', name:'氷結音「ジュワッ／ズバン！」', dur:'短音', note:'「やめて！」直後・白フラッシュと同期', file:'魔法④.wav', aliases:['魔法④']},
+    {id:'SE7', act:'ACT7 クライマックス（氷が解ける）', name:'アナの魔法が解けるとき', dur:'—', note:'エルサの台詞「いや、いやよ、そんな…」直後、氷が解け始めるタイミングで再生（2026-08-03 用途確定）', file:'アナの魔法が解けるとき.wav', aliases:['アナの魔法が解けるとき']},
+  ],
+  // 用途未確定の追加音源（X2・X3）。2026-08-30のタイムライン統合時、ユーザー指示により
+  // 本番の上演順タイムライン（下記TIMELINE_ORDER）からは意図的に除外した（UI非表示）。
+  // データ自体は削除せず、以下にそのまま保持する。
+  extra: [
+    {id:'X2', act:'（要確認）', name:'お城／オラフ2回目登場あたりのBGM', dur:'—', note:'2026-07-04追加。ACT5氷の城シーンかオラフ再登場シーンでの使用を想定？音響係で要確認', file:'お城にいるときとかオラフが二回目に初めて出てくるときとか.wav', aliases:['お城にいるとき']},
+    {id:'X3', act:'（要確認）', name:'氷の上を歩いている（足音／BGM）', dur:'—', note:'2026-07-04追加。ACT5氷の城での使用を想定？音響係で要確認', file:'氷の上歩いている.mp3', aliases:['氷の上歩いている']},
+    {id:'X4', act:'（要確認）', name:'魔法発動音・予備候補1', dur:'約8秒', note:'2026-09-10追加。MediaFireから取得した魔法・氷系効果音の一つ（元ファイル名：yodguard-iced-magic-3-378609.mp3）。SE1（魔法発動音）の代替候補としては尺がやや長め（約8秒）のためタイムラインからは除外し保留。SE1用途以外（例：ACT3レット・イット・ゴーの魔法演出やACT7クライマックス等）での使用を検討する場合は音響係・演出担当で要確認。', file:'魔法発動音_予備1.mp3', aliases:['魔法発動音予備1']},
+    {id:'X5', act:'（要確認）', name:'魔法発動音・予備候補2', dur:'約8秒', note:'2026-09-10追加。MediaFireから取得した魔法・氷系効果音の一つ（元ファイル名：yodguard-iced-magic-6-378606.mp3）。SE1（魔法発動音）の代替候補としては尺がやや長め（約8秒）のためタイムラインからは除外し保留。SE1用途以外での使用を検討する場合は音響係・演出担当で要確認。', file:'魔法発動音_予備2.mp3', aliases:['魔法発動音予備2']},
+  ],
+};
+
+const state = {}; // id -> {audio, objectUrl, fileName, gainNode, sourceNode, fadeRAF}
+// 効果音(SE)は他の音と重ねて再生できるため、「現在再生中」は単一IDではなく集合で管理する。
+// activeIds: 現在アクティブ（再生中／一時停止中を含む）なキューIDの集合。SEは複数同時に含まれ得る。
+// currentId: 下部固定バー（曲名・シークバー等）に表示する対象。最後に再生を開始したキューを指す。
+const activeIds = new Set();
+let currentId = null;
+
+// SE（効果音）の「重ね鳴らし」用インスタンス上限（2026-09-10追加）。
+// 本体1インスタンス＋重ねインスタンスの合計でこの数に達したら、それ以上の連打は無視する
+// （無制限にAudioインスタンスが積み上がるのを防ぐための安全弁。6程度あれば実運用上
+// 連打演出には十分で、かつメモリ・同時再生数が過大にならない値として設定）。
+const MAX_SE_INSTANCES = 6;
+
+// --- Web Audio API（GainNode）による音量制御 ---
+// iOS Safariには「JavaScriptから<audio>要素の.volumeプロパティを変更しても
+// 実際の再生音量には反映されない」という既知の仕様上の制限があるため（音量は
+// 物理ボタン／サイレントスイッチのみで制御される）、フェードアウト等の音量操作は
+// audio.volumeではなくWeb Audio APIのGainNodeを介して行う。AudioContextは
+// ユーザー操作（ボタンタップ）をきっかけに生成・resumeする（iOSはジェスチャー
+// なしでのAudioContext起動を許可しないため）。
+let audioCtx = null;
+function getAudioContext(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if(!AC) return null; // 非対応環境ではnullを返し、呼び出し側でaudio.volumeにフォールバックさせる
+  if(!audioCtx){
+    try{ audioCtx = new AC(); }catch(e){ return null; }
+  }
+  if(audioCtx.state === 'suspended'){
+    audioCtx.resume().catch(() => {});
+  }
+  return audioCtx;
+}
+
+// 各キューにつきMediaElementAudioSourceNode／GainNodeのペアを1つだけ作成し、
+// 以後は使い回す（createMediaElementSourceは同一<audio>要素に対して一度しか呼べない）。
+function ensureGainNode(id){
+  const st = state[id];
+  if(!st) return null;
+  if(st.gainNode) return st.gainNode;
+  const ctx = getAudioContext();
+  if(!ctx) return null;
+  try{
+    const source = ctx.createMediaElementSource(st.audio);
+    const gain = ctx.createGain();
+    gain.gain.value = 1;
+    source.connect(gain).connect(ctx.destination);
+    st.sourceNode = source;
+    st.gainNode = gain;
+  }catch(e){
+    st.gainNode = null; // 生成に失敗した場合はaudio.volumeベースにフォールバック
+  }
+  return st.gainNode;
+}
+
+// フェード等で変化させた音量を1（フル音量）に戻す。GainNodeがあればそちらを、
+// 無ければ従来どおりaudio.volumeを使う（両方セットしても無害）。
+function resetVolume(id){
+  const st = state[id];
+  if(!st) return;
+  st.audio.volume = 1;
+  if(st.gainNode && audioCtx){
+    const now = audioCtx.currentTime;
+    st.gainNode.gain.cancelScheduledValues(now);
+    st.gainNode.gain.setValueAtTime(1, now);
+  }
+}
+
+function fmtTime(s){
+  if(!isFinite(s)) return '00:00';
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+// --- 統合タイムライン（2026-08-30追加）---
+// song/narr/se の各キューを、台本本文・ACT進行順に基づく実際の上演順に並べたID一覧。
+// 各キューが元々どの種類（song/narr/se）だったかは cueCategory() で判定しバッジ表示する。
+// extra（X2・X3）は用途未確定のためこのタイムラインには含めない（ユーザー指示、UI非表示のみ。
+// データはCUES.extraにそのまま保持）。
+// 並び順の根拠：other/台本/台本_アナと雪の女王.md本文を実際に読み、各SE・ナレーションが
+// 台詞・歌のどの位置に挿入されるかを確認して確定した（2026-08-30）。
+const TIMELINE_ORDER = [
+  {id:'00', actGroup:'開演前'},
+  {id:'N1', actGroup:'ACT1'},
+  {id:'SE1', actGroup:'ACT1'},
+  {id:'SE1b', actGroup:'ACT1'},
+  {id:'SE1c', actGroup:'ACT1'},
+  {id:'SE1d', actGroup:'ACT1'},
+  {id:'SE1e', actGroup:'ACT1'},
+  {id:'SE1f', actGroup:'ACT1'},
+  {id:'01', actGroup:'ACT1'},
+  {id:'N2', actGroup:'ACT2'},
+  {id:'02', actGroup:'ACT2'},
+  {id:'03', actGroup:'ACT2'},
+  {id:'SE2', actGroup:'ACT3'},
+  {id:'SE3', actGroup:'ACT3'},
+  {id:'04', actGroup:'ACT3'},
+  {id:'04k1', actGroup:'ACT3'},
+  {id:'04k2', actGroup:'ACT3'},
+  {id:'SE4', actGroup:'ACT3'},
+  {id:'05', actGroup:'ACT4'},
+  {id:'N3', actGroup:'ACT5'},
+  {id:'06', actGroup:'ACT5'},
+  {id:'06b', actGroup:'ACT5'},
+  {id:'SE5', actGroup:'ACT5'},
+  {id:'07', actGroup:'ACT5'},
+  {id:'SE6', actGroup:'ACT7'},
+  {id:'SE7', actGroup:'ACT7'},
+  {id:'08', actGroup:'フィナーレ'},
+];
+
+function typeBadge(cat){
+  if(cat === 'song') return {label:'🎵 歌・BGM', cls:'badge-song'};
+  if(cat === 'narr') return {label:'🎙 ナレーション', cls:'badge-narr'};
+  if(cat === 'se') return {label:'🔊 SE', cls:'badge-se'};
+  return null;
+}
+
+function buildTimelineRow(containerEl, cue){
+  const badge = typeBadge(cueCategory(cue.id));
+  const badgeHtml = badge ? `<span class="type-badge ${badge.cls}">${badge.label}</span>` : '';
+  // 2026-08-30再改訂：cue.file／cue.dataのどちらか一方でも存在するキューは、
+  // ページ読込時からボタンを有効にする（実際のロードはtogglePlay内で初回クリック時に
+  // 同期的に行う。iOS SafariではcanplaythroughイベントがユーザーOKしないと発火せず
+  // ボタンが永久disabledのままになるバグがあったため）。
+  // 音源が真に未登録（file・dataどちらも無い）なプレースホルダ（N1〜N3・SE2・SE4）だけ
+  // 従来通りdisabledのままにし、📂ローカルファイル選択を促す。
+  const hasSource = !!(cue.file || cue.data);
+  const row = document.createElement('div');
+  row.className = 'cue';
+  row.id = 'row-'+cue.id;
+  row.innerHTML = `
+    <div class="dot" id="dot-${cue.id}"></div>
+    <div class="num">
+      <span class="idnum">${cue.id}</span>
+      <span class="eq"><i></i><i></i><i></i></span>
+    </div>
+    <div class="meta">
+      <b>${badgeHtml}${cue.name}</b>
+      <div class="timing">${cue.act} ／ ${cue.dur}</div>
+      ${cue.note ? `<div class="note">${cue.note}</div>` : ''}
+      <div class="filename" id="filename-${cue.id}"></div>
+    </div>
+    <div class="ctrl">
+      <button class="iconbtn filebtn" title="ファイル選択" aria-label="ファイル選択">📂<input type="file" accept="audio/*" data-id="${cue.id}" class="fileInput"></button>
+      <button class="iconbtn play" data-id="${cue.id}" ${hasSource ? '' : 'disabled'} title="再生" aria-label="再生">▶</button>
+    </div>
+  `;
+  containerEl.appendChild(row);
+}
+
+function buildTimeline(containerEl, order){
+  let prevAct = null;
+  order.forEach(entry => {
+    const cue = allCues().find(c => c.id === entry.id);
+    if(!cue) return; // 未登録のIDは防御的にスキップ
+    if(entry.actGroup !== prevAct){
+      const divider = document.createElement('div');
+      divider.className = 'act-divider';
+      divider.innerHTML = `<span>${entry.actGroup}</span>`;
+      containerEl.appendChild(divider);
+      prevAct = entry.actGroup;
+    }
+    buildTimelineRow(containerEl, cue);
+  });
+}
+
+buildTimeline(document.getElementById('sec-timeline'), TIMELINE_ORDER);
+
+function allCues(){
+  return [...CUES.song, ...CUES.narr, ...CUES.se, ...CUES.extra];
+}
+
+// キューIDがどのカテゴリ（song/narr/se/extra）に属するかを返す。
+// SE（効果音）だけ「重ねて再生してもよい」特別扱いにするための判定に使う。
+function cueCategory(id){
+  for(const cat of ['song','narr','se','extra']){
+    if(CUES[cat].some(c => c.id === id)) return cat;
+  }
+  return null;
+}
+function isSeCue(id){
+  return cueCategory(id) === 'se';
+}
+
+function markLoaded(id, label){
+  // 2026-08-30：統合タイムライン化に伴い、extra（X2・X3）はUI行が存在しなくなった。
+  // 該当するdot要素が無い場合（＝タイムライン非表示のキュー）は何もせず抜ける防御的処理。
+  const dotEl = document.getElementById('dot-'+id);
+  if(!dotEl) return;
+  dotEl.classList.add('loaded');
+  const fnEl = document.getElementById('filename-'+id);
+  fnEl.textContent = '読み込み済み: ' + label;
+  fnEl.style.display = 'block';
+  document.querySelectorAll(`button[data-id="${id}"]`).forEach(b => b.disabled = false);
+}
+
+function wireAudioEvents(id, audio){
+  audio.addEventListener('timeupdate', () => { if(currentId===id) updateNowPlaying(); });
+  audio.addEventListener('ended', () => {
+    // 自然終了したキュー自身だけを非アクティブ化する（他に同時再生中の音があっても止めない）
+    deactivateCue(id);
+    refreshRowStates();
+    updateNowPlaying();
+  });
+}
+
+function assignFile(id, file){
+  const cue = allCues().find(c => c.id === id);
+  if(!cue) return;
+  if(state[id] && state[id].objectUrl) URL.revokeObjectURL(state[id].objectUrl);
+  const url = URL.createObjectURL(file);
+  const audio = new Audio(url);
+  audio.preload = 'auto';
+  state[id] = {audio, objectUrl:url, fileName:file.name};
+  markLoaded(id, file.name);
+  wireAudioEvents(id, audio);
+}
+
+// dot要素を「読み込み失敗」表示に切り替え、再生ボタンを再度disabledに戻す。
+// canplaythrough待ちをやめ即座にロード扱いにする代わりに、事後のerrorイベントで
+// 読み込み失敗を検知するための保険（2026-08-30再改訂）。
+function markLoadError(id, label){
+  const dotEl = document.getElementById('dot-'+id);
+  if(dotEl){ dotEl.classList.remove('loaded'); dotEl.classList.add('error'); }
+  const fnEl = document.getElementById('filename-'+id);
+  if(fnEl){ fnEl.textContent = '読み込み失敗: ' + label; fnEl.style.display = 'block'; }
+  document.querySelectorAll(`button[data-id="${id}"]`).forEach(b => b.disabled = true);
+}
+
+// キューを即座に（同期的に）ロードする共通関数（2026-08-30再改訂：iOS Safari対応）。
+// 従来はcue.fileの場合、canplaythroughイベントの発火を待ってからmarkLoaded()する設計
+// だったが、iOS Safariはユーザー操作を伴わない自動プリロードを厳しく制限しており、
+// ページ読込時にcanplaythroughが発火せず再生ボタンが永久disabledのままになる不具合が
+// あった。全ファイル参照はSHA-256で実ファイルとの整合性を検証済み（2026-08-30）で
+// 現時点で存在しないファイルを参照しているキューは無いため、事前のcanplaythrough確認は
+// 行わず、Audio要素を生成した時点で即「読み込み済み」として扱う。万一実際には読み込めない
+// 場合は、生成したAudio要素のerrorイベントで事後的に検知しmarkLoadError()に切り替える。
+// tryAutoLoad（ページ読込時の先読み・自動有効化）とtogglePlay（クリック時の遅延ロード）の
+// 両方から共通で呼ばれる。
+function loadCue(cue){
+  if(state[cue.id]) return state[cue.id];
+  let audio, fileName, loadedLabel;
+  if(cue.data){
+    // HTMLファイルに埋め込み済みの音源。ファイル読込不要で即再生可能。
+    audio = new Audio(cue.data);
+    fileName = cue.file || '埋め込み音源';
+    loadedLabel = fileName + '（内蔵済み）';
+  } else if(cue.file){
+    audio = new Audio(encodeURI(cue.file));
+    fileName = cue.file;
+    loadedLabel = fileName + '（自動読込）';
+  } else {
+    return null; // file・dataどちらも無い真の未登録プレースホルダ
+  }
+  audio.preload = 'auto';
+  state[cue.id] = {audio, objectUrl:null, fileName};
+  markLoaded(cue.id, loadedLabel);
+  wireAudioEvents(cue.id, audio);
+  audio.addEventListener('error', () => markLoadError(cue.id, fileName));
+  return state[cue.id];
+}
+
+// ページ読込時、全キューを即座にロード・有効化する「先読み」処理。
+// 実処理はloadCue()に委譲（ロード方式自体はloadCueのコメント参照）。
+function tryAutoLoad(cue){
+  loadCue(cue);
+}
+
+allCues().forEach(tryAutoLoad);
+
+document.querySelectorAll('.fileInput').forEach(inp => {
+  inp.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if(f) assignFile(inp.dataset.id, f);
+  });
+});
+
+function refreshRowStates(){
+  document.querySelectorAll('.cue').forEach(r => r.classList.remove('current', 'playing'));
+  activeIds.forEach(id => {
+    const row = document.getElementById('row-'+id);
+    if(row){
+      row.classList.add('current');
+      const st = state[id];
+      if(st && !st.audio.paused) row.classList.add('playing');
+    }
+  });
+  updateAllPlayIcons();
+}
+
+function updatePlayIcon(id){
+  // 2026-09-12：マークモードの再生ボタン（#tmPlayPause）も同じdata-idを持たせて
+  // 連動させるため、同一idを持つボタンが複数存在し得る前提でquerySelectorAllにした
+  // （従来は行内の1ボタンのみを想定したquerySelectorだった）。
+  const btns = document.querySelectorAll(`.iconbtn.play[data-id="${id}"]`);
+  if(!btns.length) return;
+  const st = state[id];
+  // 各キューのAudio要素は独立して再生状態(paused)を持つため、SEが複数同時再生されていても
+  // 行ごとのアイコンはそのキュー自身の実際の再生状態を正しく反映する。
+  const playing = !!(st && activeIds.has(id) && !st.audio.paused);
+  btns.forEach(btn => {
+    btn.textContent = playing ? '⏸' : '▶';
+    btn.title = playing ? '一時停止' : '再生';
+    btn.setAttribute('aria-label', btn.title);
+  });
+}
+
+function updateAllPlayIcons(){
+  allCues().forEach(c => updatePlayIcon(c.id));
+  updateNpPlayIcon();
+}
+
+function updateNpPlayIcon(){
+  const btn = document.getElementById('npPlayPause');
+  if(!btn) return;
+  const st = currentId && state[currentId];
+  const playing = !!(st && !st.audio.paused);
+  btn.disabled = !currentId;
+  btn.textContent = playing ? '⏸' : '▶';
+  btn.title = playing ? '一時停止' : '再生';
+  btn.setAttribute('aria-label', btn.title);
+  const fadeBtn = document.getElementById('npFade');
+  if(fadeBtn) fadeBtn.disabled = !currentId;
+}
+
+function cancelFade(id){
+  const st = state[id];
+  if(!st) return;
+  if(st.fadeRAF){
+    cancelAnimationFrame(st.fadeRAF);
+    st.fadeRAF = null;
+  }
+  if(st.gainNode && audioCtx){
+    // 進行中のlinearRampToValueAtTimeはJS側のrAFを止めるだけでは中断されない
+    // （Web Audioのオーディオクロック上でスケジュール済みのため）。cancelScheduledValues
+    // で明示的にキャンセルし、その時点の音量値で固定する。
+    const now = audioCtx.currentTime;
+    const current = st.gainNode.gain.value;
+    st.gainNode.gain.cancelScheduledValues(now);
+    st.gainNode.gain.setValueAtTime(current, now);
+  }
+}
+
+// 指定した1キューだけを完全停止（一時停止＋先頭に巻き戻し）し、アクティブ集合から
+// 取り除く。他に同時再生中の音があっても、それらには一切影響しない。
+// ※2026-07-05修正：以前はここで resetVolume(id) を呼び、gain（音量）を1に戻していたが、
+// フェードアウト完了直後にここを通ると「audio.pause()が音声パイプライン上で実際に反映される
+// 前に gain だけ先に1へ戻ってしまい、停止直前の一瞬だけ元の音量で鳴ってから切れる」という
+// ノイズの原因になっていた（フェード完了→無音のはずが最後に一瞬だけ音が大きくなる不具合）。
+// 次回再生時の音量は togglePlay() 側の再生開始処理が毎回 resetVolume(id) を呼んでから
+// play() するため、ここで先回りしてリセットしなくても次回再生時の音量は正しく1に戻る。
+// opts.stopOverlays===true のときだけ、このキューの「重ね鳴らし」インスタンス
+// （playSeOverlayで生成した本体以外のAudio）もまとめて停止・破棄する。
+// 既定（false）では本体インスタンスしか止めない＝自然終了（ended）時に他の
+// 重ねインスタンスを巻き込んで止めてしまわないための区別（2026-09-10追加）。
+function deactivateCue(id, opts){
+  const stopOverlays = !!(opts && opts.stopOverlays);
+  const st = state[id];
+  if(st){
+    cancelFade(id);
+    st.audio.pause();
+    st.audio.currentTime = 0;
+    if(stopOverlays && st.overlays && st.overlays.size){
+      st.overlays.forEach(a => {
+        try{ a.pause(); a.currentTime = 0; }catch(e){ /* 破棄前提のため無視 */ }
+      });
+      st.overlays.clear();
+    }
+  }
+  activeIds.delete(id);
+  if(currentId === id){
+    // 下部バーの表示対象が消えた場合、他にまだアクティブな音があればそれを表示対象に引き継ぐ
+    const remaining = [...activeIds];
+    currentId = remaining.length ? remaining[remaining.length-1] : null;
+  }
+}
+
+// 非SE（song/narr/extra）は従来通り単一チャンネル：新しいキューを再生したら
+// それまで再生中だった非SEキューは完全停止する。SEは対象外＝重ねて鳴らしたままにする。
+function stopOtherExclusiveCues(){
+  [...activeIds].forEach(activeId => {
+    if(!isSeCue(activeId)) deactivateCue(activeId);
+  });
+}
+
+// SE連打時の「重ね鳴らし」：本体インスタンス（state[id].audio）はそのまま再生を続けさせ、
+// 同じ音源を指す新しいAudioインスタンスをもう1つ生成して即座に鳴らす。activeIds・currentId・
+// 行UI（アイコン）・下部の「現在再生中」バーには一切関与させない（本体の表示状態を変えない）。
+// フェード処理・GainNodeによる音量調整も本体専用のままでよく、重ねインスタンスには適用しない
+// （過剰実装を避けるためのシンプルな新規Audio要素の再生のみ）。
+function playSeOverlay(id){
+  const st = state[id];
+  if(!st) return;
+  if(!st.overlays) st.overlays = new Set();
+  // 本体1つ＋重ねの合計がMAX_SE_INSTANCESに達していたら、これ以上は追加しない（連打対策）。
+  if(st.overlays.size + 1 >= MAX_SE_INSTANCES) return;
+
+  const cue = allCues().find(c => c.id === id);
+  if(!cue) return;
+  let overlayAudio;
+  if(cue.data){
+    // Base64埋め込み音源のSE（現状想定外だが念のため両対応）
+    overlayAudio = new Audio(cue.data);
+  } else if(cue.file){
+    overlayAudio = new Audio(encodeURI(cue.file));
+  } else {
+    return;
+  }
+  st.overlays.add(overlayAudio);
+  overlayAudio.addEventListener('ended', () => {
+    st.overlays.delete(overlayAudio);
+  });
+  overlayAudio.play().catch(() => {
+    // 再生に失敗した場合は入れ物からも取り除いておく（残留防止）
+    st.overlays.delete(overlayAudio);
+  });
+}
+
+function togglePlay(id){
+  if(!state[id]){
+    // 2026-08-30再改訂：ページ読込時の先読みで間に合わなかった場合の保険として、
+    // クリック（ユーザー操作）のタイミングでその場で同期的にロードする。
+    // awaitやPromise.then()を挟まず、ユーザーのタップと同じ同期コールスタック内で
+    // play()まで完結させる必要がある（iOS Safariはユーザー操作から切り離された
+    // 非同期タイミングでのaudio.play()呼び出しをブロックすることがあるため）。
+    const cue = allCues().find(c => c.id === id);
+    if(!cue || !loadCue(cue)) return; // 音源未登録キューは何もしない
+  }
+  const st = state[id];
+  ensureGainNode(id); // 初回のユーザー操作でAudioContextを生成・resumeする（iOS対応）
+  if(activeIds.has(id) && isSeCue(id) && !st.audio.paused){
+    // 効果音(SE)が現在まさに再生中の状態でもう一度押された：
+    // 本体インスタンスは止めず、重ねてもう1つ再生する（本体の状態・行UI・下部バーは変更しない）
+    playSeOverlay(id);
+  } else if(activeIds.has(id)){
+    // 同じキュー：再生⇄一時停止をトグル（SEでも非SEでも共通。SEが一時停止中の場合もここで再開する）
+    cancelFade(id);
+    if(st.audio.paused){
+      resetVolume(id); // フェード中に一時停止していた場合も再開時は必ずフル音量に戻す
+      st.audio.play();
+    } else {
+      st.audio.pause();
+    }
+    currentId = id; // 下部バーの表示対象を、直近に操作したキューに更新
+  } else if(isSeCue(id)){
+    // 効果音(SE)：他の再生中の音（他のSEでもBGMでも）は止めずに重ねて再生する
+    cancelFade(id);
+    resetVolume(id);
+    st.audio.currentTime = 0;
+    st.audio.play();
+    activeIds.add(id);
+    currentId = id;
+  } else {
+    // 歌唱・BGM／ナレーション／追加音源：従来通り単一チャンネル。前の非SEキューを完全停止してから再生
+    stopOtherExclusiveCues();
+    cancelFade(id);
+    resetVolume(id);
+    // 初回/停止後の再生開始位置：キュー定義にstartAt（秒）があればそこから、
+    // 無ければ従来通り0秒から（例：id:'02'「生まれてはじめて」は1:08(68秒)から自動再生開始）。
+    // 巻き戻し・早送り・シークバーでの手動移動は引き続き自由に可能（ここは「新規再生時の初期位置」のみ）。
+    const cue = allCues().find(c => c.id === id);
+    st.audio.currentTime = (cue && typeof cue.startAt === 'number') ? cue.startAt : 0;
+    st.audio.play();
+    activeIds.add(id);
+    currentId = id;
+  }
+  refreshRowStates();
+  updateNowPlaying();
+}
+
+function stopAll(silent){
+  // 全停止（緊急停止／Escキー）：SE含め現在アクティブなすべての音をまとめて止める。
+  // 本番中の安全機能のため、SEの重ね鳴らしインスタンス（playSeOverlayで生成した分）も
+  // 漏れなく停止・破棄する（stopOverlays:true）。
+  [...activeIds].forEach(id => deactivateCue(id, {stopOverlays:true}));
+  // 本体インスタンスが既に自然終了してactiveIdsから外れた後も、重ねインスタンスだけが
+  // まだ再生中というケースがあり得る（例：SEを3連打し1本目だけ先に終わった場合）。
+  // 緊急停止の確実性を優先し、activeIdsに関わらず全キューのoverlaysを走査して止める。
+  Object.keys(state).forEach(id => {
+    const st = state[id];
+    if(st && st.overlays && st.overlays.size){
+      st.overlays.forEach(a => {
+        try{ a.pause(); a.currentTime = 0; }catch(e){ /* 破棄前提のため無視 */ }
+      });
+      st.overlays.clear();
+    }
+  });
+  currentId = null;
+  refreshRowStates();
+  if(!silent) updateNowPlaying();
+}
+
+function fadeOut(id, seconds=5){
+  if(!activeIds.has(id) || !state[id]) return;
+  const st = state[id];
+  const audio = st.audio;
+  cancelFade(id); // 二重フェード防止
+
+  const gain = ensureGainNode(id);
+  const startTime = performance.now();
+  const durationMs = seconds*1000;
+
+  if(gain && audioCtx){
+    // iOS Safariではaudio.volumeを直接操作しても実際の音量に反映されないため
+    // （WebKitの既知の仕様。音量はハードウェアの物理ボタン／サイレントスイッチのみで
+    // 制御される）、GainNodeを介して確実にフェードさせる。当初は人間の音量知覚（対数的）に
+    // 合わせてexponentialRampToValueAtTime（指数関数的減衰）を使っていたが、実際に使うと
+    // 「フェード序盤で急激に下がりすぎる」という指摘があったため、時間に対して均等に
+    // 下がる直線的なlinearRampToValueAtTime（線形フェード）に変更した（2026-07-05）。
+    // linearRampToValueAtTimeはexponentialと異なり目標値に0を直接指定できるため、
+    // 完全な無音まで下げられる。
+    const now = audioCtx.currentTime;
+    const startVal = gain.gain.value > 0 ? gain.gain.value : 1;
+    gain.gain.cancelScheduledValues(now);
+    gain.gain.setValueAtTime(startVal, now);
+    gain.gain.linearRampToValueAtTime(0, now + seconds);
+
+    // 実際の減衰はWeb Audioのオーディオクロック上でスケジュール済みなので、この
+    // requestAnimationFrameループは完了タイミングの検知（再生停止・状態リセット）専用。
+    function step(){
+      if(!activeIds.has(id) || !state[id] || state[id].audio !== audio){
+        return;
+      }
+      if(performance.now() - startTime < durationMs){
+        st.fadeRAF = requestAnimationFrame(step);
+      } else {
+        st.fadeRAF = null;
+        gain.gain.cancelScheduledValues(audioCtx.currentTime);
+        gain.gain.setValueAtTime(0, audioCtx.currentTime);
+        // このキュー1つだけを停止する（他に同時再生中の音があっても止めない）
+        deactivateCue(id);
+        refreshRowStates();
+        updateNowPlaying();
+      }
+    }
+    st.fadeRAF = requestAnimationFrame(step);
+  } else {
+    // Web Audio APIが使えない環境（非対応ブラウザ等）向けのフォールバック：
+    // audio.volumeをrequestAnimationFrameで直線的に下げる（2026-07-05：指数関数的減衰は
+    // フェード序盤で急激に下がりすぎるとの指摘があったため、時間に対して均等に下がる
+    // 単純な線形フェードに変更した）。
+    const startVolume = audio.volume > 0 ? audio.volume : 1;
+    function step(now){
+      if(!activeIds.has(id) || !state[id] || state[id].audio !== audio){
+        return;
+      }
+      const t = Math.min(1, (now - startTime) / durationMs);
+      audio.volume = Math.max(0, Math.min(startVolume, startVolume * (1 - t)));
+      if(t < 1){
+        st.fadeRAF = requestAnimationFrame(step);
+      } else {
+        st.fadeRAF = null;
+        audio.volume = 0;
+        // このキュー1つだけを停止する（他に同時再生中の音があっても止めない）
+        deactivateCue(id);
+        refreshRowStates();
+        updateNowPlaying();
+      }
+    }
+    st.fadeRAF = requestAnimationFrame(step);
+  }
+}
+
+document.body.addEventListener('click', e => {
+  const btn = e.target.closest('.iconbtn.play');
+  if(!btn || !btn.dataset.id) return;
+  togglePlay(btn.dataset.id);
+});
+
+document.getElementById('npPlayPause').addEventListener('click', () => {
+  if(currentId) togglePlay(currentId);
+});
+
+document.getElementById('npFade').addEventListener('click', () => {
+  if(currentId) fadeOut(currentId);
+});
+
+document.getElementById('npStop').addEventListener('click', () => stopAll());
+
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') stopAll();
+});
+
+// --- シーク・スキップ ---
+let isSeeking = false;
+const npSeek = document.getElementById('npSeek');
+npSeek.addEventListener('input', () => {
+  if(!currentId || !state[currentId]) return;
+  const audio = state[currentId].audio;
+  if(audio.duration){
+    audio.currentTime = (npSeek.value/1000) * audio.duration;
+    updateNowPlaying();
+  }
+});
+['mousedown','touchstart'].forEach(ev => npSeek.addEventListener(ev, () => { isSeeking = true; }));
+['mouseup','touchend'].forEach(ev => npSeek.addEventListener(ev, () => { isSeeking = false; }));
+
+function skip(sec){
+  if(!currentId || !state[currentId]) return;
+  const audio = state[currentId].audio;
+  if(!audio.duration) return;
+  audio.currentTime = Math.min(Math.max(0, audio.currentTime + sec), audio.duration);
+  updateNowPlaying();
+}
+document.getElementById('npBack').addEventListener('click', () => skip(-10));
+document.getElementById('npFwd').addEventListener('click', () => skip(10));
+
+function updateNowPlaying(){
+  const titleEl = document.getElementById('npTitle');
+  const curEl = document.getElementById('npTimeCur');
+  const durEl = document.getElementById('npTimeDur');
+  const seekEl = document.getElementById('npSeek');
+  if(!currentId || !state[currentId]){
+    titleEl.textContent = '停止中';
+    curEl.textContent = '00:00';
+    durEl.textContent = '00:00';
+    seekEl.disabled = true;
+    if(!isSeeking){
+      seekEl.value = 0;
+      seekEl.style.background = 'var(--panel2)';
+    }
+    updateNpPlayIcon();
+    return;
+  }
+  const cue = allCues().find(c => c.id === currentId);
+  const audio = state[currentId].audio;
+  titleEl.textContent = `${cue.id}　${cue.name}`;
+  const pct = audio.duration ? (audio.currentTime/audio.duration*100) : 0;
+  seekEl.disabled = false;
+  if(!isSeeking){
+    seekEl.value = Math.round(pct*10);
+    seekEl.style.background = `linear-gradient(to right, var(--accent) ${pct}%, var(--panel2) ${pct}%)`;
+  }
+  curEl.textContent = fmtTime(audio.currentTime);
+  durEl.textContent = fmtTime(audio.duration);
+  updateNpPlayIcon();
+}
+function tick(){
+  updateNowPlaying();
+  updateKaraoke();
+  updateMarkModeTime();
+}
+setInterval(tick, 250);
+
+// ============================================================
+// トロールの歌「愛さえあれば」歌詞カラオケ同期・タイミングマークモード（2026-09-12追加）
+//
+// 背景：音響係から「本番中、今どこを再生しているか分からない」「特に曲の最後、
+// 全員が声を揃えて『ラブ！』と言う瞬間のタイミングがどうしても掴めない」という
+// 相談があり、id:'07'（愛さえあれば）再生中だけ歌詞をカラオケ風に同期表示する機能と、
+// 実測タイミングを打ち込むマークモードを追加した。
+//
+// 【最優先事項（Fort様の明示的な指示）】本課題で最も重要なのは曲全体の同期精度では
+// なく、曲最後に全員が声を揃える「ラブ！」の瞬間を音響係が確実に把握できることである。
+// そのため実装・演出とも「ラブ！」キュー（isFinalLove:true の行）に最も手をかけている：
+//   ・カラオケパネルはその行に到達すると専用の大きな金色パルス表示に切り替わる
+//   ・到達5秒前から秒数カウントダウン付きの予告バナーを表示する
+//   ・到達した瞬間、画面全体を覆う金色フラッシュ演出（#loveFlashOverlay）が発火する
+//   ・マークモードにも「❤ 最優先：『ラブ！』だけ先にマーク」という専用ボタンを設け、
+//     時間が無い場合でも全44行を順にマークせず、この1行だけ最優先で実測・登録できる
+//   ・マークモード上部に、この最重要キューが設定済みかどうかの専用ステータス表示がある
+// 他の歌詞行（[全員]パート含む）の同期は、上記の次に位置づけられる副次的な機能である。
+//
+// タイミングデータは トロールの歌_歌詞タイミング.json （同フォルダ）に保存する。
+// 2026-09-12時点ではまだ誰も実測しておらず、全行 time:null のプレースホルダ。
+// 本番前に音響係が下記マークモードで実測し、エクスポートしたJSONでこのファイルを
+// 上書き・コミットすること（生徒用/変更点.md 2026-09-12エントリ参照）。
+//
+// 歌詞本文・[全員]判定・並び順の根拠、および並び順が未検証の推定である旨は
+// トロールの歌_歌詞タイミング.json 内の _readme を参照。
+// ============================================================
+
+const TROLL_SONG_ID = '07';
+const TROLL_JSON_PATH = 'トロールの歌_歌詞タイミング.json';
+const TROLL_DRAFT_KEY = 'trollLyricsDraft_v1';
+// 「まもなくラブ！」の予告を出し始める、到達何秒前か（最重要キューなので余裕を持たせる）
+const TROLL_LOVE_WARN_SEC = 5;
+
+// リポジトリのJSON取得に失敗した場合（file://で直接開いた場合等）に使う埋め込み
+// フォールバック。内容はトロールの歌_歌詞タイミング.jsonのlinesと同一（time以外）に保つこと。
+const TROLL_LYRICS_DEFAULT = [
+  {index:0, text:'何が問題なのお嬢ちゃん', isAll:false, time:null},
+  {index:1, text:'なんでこんないい男をほっとくのさ', isAll:false, time:null},
+  {index:2, text:'歩き方のせい？', isAll:false, time:null},
+  {index:3, text:'それかしゃべり方？', isAll:false, time:null},
+  {index:4, text:'四角い足のせいかな？', isAll:false, time:null},
+  {index:5, text:'不潔じゃないのに いつも少し臭い', isAll:false, time:null},
+  {index:6, text:'でも 誰よりもやさしい いい男', isAll:false, time:null},
+  {index:7, text:'彼は完璧じゃない 問題もある', isAll:false, time:null},
+  {index:8, text:'少し変わり者', isAll:false, time:null},
+  {index:9, text:'トナカイへの愛情は異常だよ', isAll:false, time:null},
+  {index:10, text:'問題はあるけれど 大丈夫さ', isAll:true, time:null},
+  {index:11, text:'仲良くやれるはず 愛があれば', isAll:true, time:null},
+  {index:12, text:'この話はもうやめてくれないか？', isAll:false, time:null},
+  {index:13, text:'それよりほんとに困ってることがあるんだよ', isAll:false, time:null},
+  {index:14, text:'なるほどね じゃあ話してごらん', isAll:false, time:null},
+  {index:15, text:'気が小さいから？', isAll:false, time:null},
+  {index:16, text:'変なヤツだから？', isAll:false, time:null},
+  {index:17, text:'森で立ち小便してる', isAll:false, time:null},
+  {index:18, text:'男らしくない この髪の毛のせい？', isAll:false, time:null},
+  {index:19, text:'真面目なのを隠してるせい？', isAll:true, time:null},
+  {index:20, text:'彼は完璧じゃない 問題もある', isAll:true, time:null},
+  {index:21, text:'孤独に暮らしているのは 愛されたいから', isAll:true, time:null},
+  {index:22, text:'彼は完璧じゃないが大丈夫', isAll:true, time:null},
+  {index:23, text:'あなたの愛情があれば完璧だ', isAll:true, time:null},
+  {index:24, text:'やめろーっ！', isAll:false, time:null},
+  {index:25, text:'彼女は他の男と結婚の約束をしてるんだ！', isAll:false, time:null},
+  {index:26, text:'彼女も完璧じゃない', isAll:false, time:null},
+  {index:27, text:'気にするなよ', isAll:false, time:null},
+  {index:28, text:'あきらめることはないさ', isAll:false, time:null},
+  {index:29, text:'指輪もしてないよ', isAll:false, time:null},
+  {index:30, text:'彼女も完璧じゃない 迷いがある婚約者と別れれば それでいい', isAll:true, time:null},
+  {index:31, text:'人は簡単に変われないけど', isAll:false, time:null},
+  {index:32, text:'愛の力はそう パワフルさ', isAll:false, time:null},
+  {index:33, text:'おびえてると道見失う でも 愛さえあれば', isAll:false, time:null},
+  {index:34, text:'愛さえあれば 最高の道選べる', isAll:true, time:null},
+  {index:35, text:'誰もが完璧じゃない それでいいのさ 父さん！姉さん！兄さん！', isAll:false, time:null},
+  {index:36, text:'お互いに支えあえばいい', isAll:true, time:null},
+  {index:37, text:'誰もが完璧じゃない あたりまえさ', isAll:true, time:null},
+  {index:38, text:'それを補うために必要なものは 本物の愛', isAll:false, time:null},
+  {index:39, text:'トゥルーラブラブ ラブ ラブ ラブ ラブラブトゥルー ラブ', isAll:true, time:null},
+  {index:40, text:'アナはこの男クリストフを 夫とし', isAll:false, time:null},
+  {index:41, text:'えっ 何？', isAll:false, time:null},
+  {index:42, text:'結婚を認める', isAll:false, time:null},
+  {index:43, text:'ラブ！', isAll:true, isFinalLove:true, time:null},
+];
+
+let trollLyrics = TROLL_LYRICS_DEFAULT.map(l => ({...l})); // 実行時に差し替わる作業用データ
+let trollTimingSource = '埋め込みデフォルト（読込前）';
+let tmSelectedIndex = 0;
+let loveFlashFired = false;
+
+function trollFinalLoveIndex(){
+  return trollLyrics.findIndex(l => l.isFinalLove);
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function normalizeTrollLines(rawLines){
+  // インポート/フェッチしたJSONの構造ゆらぎ（フィールド欠落等）を吸収する防御的正規化。
+  if(!Array.isArray(rawLines)) return null;
+  return rawLines.map((l, i) => ({
+    index: typeof l.index === 'number' ? l.index : i,
+    text: String(l.text || ''),
+    isAll: !!l.isAll,
+    isFinalLove: !!l.isFinalLove,
+    time: (typeof l.time === 'number' && isFinite(l.time)) ? l.time : null,
+  }));
+}
+
+function saveTrollDraft(){
+  try{
+    localStorage.setItem(TROLL_DRAFT_KEY, JSON.stringify({savedAt: Date.now(), lines: trollLyrics}));
+  }catch(e){
+    // localStorage不可（プライベートモード等）の環境では下書き保存を諦める。
+    // マークモード自体は動作を続け、エクスポートで手動保存すればよい。
+  }
+}
+
+function applyTrollDraftIfAny(){
+  try{
+    const raw = localStorage.getItem(TROLL_DRAFT_KEY);
+    if(!raw) return false;
+    const parsed = JSON.parse(raw);
+    const normalized = normalizeTrollLines(parsed.lines);
+    if(!normalized || normalized.length !== trollLyrics.length) return false;
+    trollLyrics = normalized;
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+// 起動時：まずリポジトリのJSON（本番コミット済みデータ）を取得し、その上にこの端末に
+// 保存済みの下書き（マークモードで未エクスポートの作業途中データ）があれば上書き適用する。
+// 下書きの方を優先するのは「同じ端末で作業を再開する」ケースを想定しているため
+// （エクスポートすればリポジトリ側が正になる）。
+async function loadTrollLyrics(){
+  try{
+    const res = await fetch(TROLL_JSON_PATH, {cache:'no-store'});
+    if(res && res.ok){
+      const data = await res.json();
+      const normalized = normalizeTrollLines(data.lines);
+      if(normalized && normalized.length){
+        trollLyrics = normalized;
+        trollTimingSource = 'リポジトリ版（トロールの歌_歌詞タイミング.json）';
+      }
+    } else {
+      trollTimingSource = '埋め込みデフォルト（JSON取得失敗・未計測）';
+    }
+  }catch(e){
+    trollTimingSource = '埋め込みデフォルト（JSON取得失敗・未計測。file://で直接開いている場合はこれが通常）';
+  }
+  if(applyTrollDraftIfAny()){
+    trollTimingSource += ' ＋ この端末の下書きを適用中';
+  }
+  renderTrollMarkList();
+  updateTmStatus();
+}
+loadTrollLyrics();
+
+function fmtTimeMs(s){
+  if(typeof s !== 'number' || !isFinite(s)) return '00:00.00';
+  const m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0')+':'+sec.toFixed(2).padStart(5,'0');
+}
+
+// --- 下部固定バー（bottom-dock）の高さに合わせて本文のpadding-bottomを追従させる ---
+function syncBottomDockPadding(){
+  const dock = document.querySelector('.bottom-dock');
+  if(!dock) return;
+  document.body.style.paddingBottom = (dock.offsetHeight + 16) + 'px';
+}
+window.addEventListener('resize', syncBottomDockPadding);
+window.addEventListener('load', syncBottomDockPadding);
+
+// --- カラオケ同期表示（id:'07' 再生中のみ）---
+function updateKaraoke(){
+  const panel = document.getElementById('trollKaraoke');
+  if(!panel) return;
+  const st = state[TROLL_SONG_ID];
+  const showing = (currentId === TROLL_SONG_ID) && !!st;
+  if(!showing){
+    if(!panel.hidden){ panel.hidden = true; syncBottomDockPadding(); }
+    loveFlashFired = false;
+    return;
+  }
+  if(panel.hidden){ panel.hidden = false; }
+  const t = st.audio.currentTime || 0;
+
+  // 現在時刻以下で最後にマークされている行を「現在の行」とみなす
+  let curIdx = -1;
+  for(let i=0;i<trollLyrics.length;i++){
+    if(typeof trollLyrics[i].time === 'number' && trollLyrics[i].time <= t) curIdx = i;
+  }
+  const anyMarked = trollLyrics.some(l => typeof l.time === 'number');
+  const loveIdx = trollFinalLoveIndex();
+
+  let html = '<div class="tk-head"><b>🎤 トロールの歌</b>「愛さえあれば」歌詞同期</div>';
+  if(!anyMarked){
+    html += '<div class="tk-empty">歌詞タイミング未設定です。「🎤 トロールの歌 歌詞タイミング設定」からマークして登録してください（最優先は曲最後の「ラブ！」の1行です）。</div>';
+  } else if(curIdx === -1){
+    html += '<div class="tk-prev">&nbsp;</div><div class="tk-empty">（まもなく歌詞開始）</div><div class="tk-next">' + (trollLyrics[0] ? escapeHtml(trollLyrics[0].text) : '') + '</div>';
+  } else if(curIdx === loveIdx){
+    // 最重要キュー本体：曲最後の「ラブ！」を歌っている最中は専用の大きな強調表示にする
+    html += '<div class="tk-prev">' + (trollLyrics[curIdx-1] ? escapeHtml(trollLyrics[curIdx-1].text) : '&nbsp;') + '</div>';
+    html += '<div class="tk-current tk-love">❤ ' + escapeHtml(trollLyrics[curIdx].text) + ' ❤</div>';
+    html += '<div class="tk-next">&nbsp;</div>';
+  } else {
+    const prev = trollLyrics[curIdx-1];
+    const cur = trollLyrics[curIdx];
+    const next = trollLyrics[curIdx+1];
+    html += '<div class="tk-prev">' + (prev ? escapeHtml(prev.text) : '&nbsp;') + '</div>';
+    html += '<div class="tk-current' + (cur.isAll ? ' tk-all' : '') + '">' + (cur.isAll ? '<span class="tk-tag">全員</span>' : '') + escapeHtml(cur.text) + '</div>';
+    html += '<div class="tk-next">' + (next ? escapeHtml(next.text) : '&nbsp;') + '</div>';
+  }
+
+  // 曲最後の「ラブ！」に関する特別演出（本課題の最重要キュー。詳細はファイル冒頭のコメント参照）
+  if(loveIdx >= 0){
+    const loveTime = trollLyrics[loveIdx].time;
+    if(typeof loveTime === 'number'){
+      const untilLove = loveTime - t;
+      if(untilLove > 0 && untilLove <= TROLL_LOVE_WARN_SEC){
+        html += '<div class="tk-love-soon">🔔 まもなく全員で「ラブ！」 — あと' + untilLove.toFixed(1) + '秒</div>';
+      }
+      if(untilLove <= 0 && untilLove > -4){
+        if(!loveFlashFired){
+          loveFlashFired = true;
+          const overlay = document.getElementById('loveFlashOverlay');
+          if(overlay){
+            overlay.classList.add('active');
+            setTimeout(() => overlay.classList.remove('active'), 1150);
+          }
+        }
+      } else if(untilLove > 1){
+        // 曲の頭出し・巻き戻し等でこの行より十分手前に戻ったら再トリガー可能にする
+        loveFlashFired = false;
+      }
+    }
+  }
+  panel.innerHTML = html;
+  syncBottomDockPadding();
+}
+
+// --- マークモード ---
+function updateTmStatus(){
+  const el = document.getElementById('tmStatus');
+  if(el){
+    const markedCount = trollLyrics.filter(l => typeof l.time === 'number').length;
+    el.textContent = `データソース: ${trollTimingSource} ／ 進捗: ${markedCount}/${trollLyrics.length}行 設定済み`;
+  }
+  const banner = document.getElementById('tmLoveBanner');
+  if(banner){
+    const loveIdx = trollFinalLoveIndex();
+    const loveTime = loveIdx >= 0 ? trollLyrics[loveIdx].time : null;
+    if(typeof loveTime === 'number'){
+      banner.className = 'tm-love-banner tm-love-done';
+      banner.textContent = `❤ 最重要キュー「ラブ！」設定済み：${fmtTimeMs(loveTime)}（${loveTime.toFixed(2)}秒）。他の行より先にこれだけでも設定できていれば、本番の最大の課題には対応できています。`;
+    } else {
+      banner.className = 'tm-love-banner';
+      banner.textContent = '❤ 最重要キュー「ラブ！」は未設定です。時間が無い場合、まずこの1行だけでも「❤ 最優先：『ラブ！』だけ先にマーク」ボタンから設定してください。';
+    }
+  }
+}
+
+function renderTrollMarkList(){
+  const list = document.getElementById('tmList');
+  if(!list) return;
+  const prevScroll = list.scrollTop;
+  list.innerHTML = '';
+  trollLyrics.forEach((line, idx) => {
+    const row = document.createElement('div');
+    row.className = 'tm-row'
+      + (line.isAll ? ' tm-all' : '')
+      + (line.isFinalLove ? ' tm-love-row' : '')
+      + (idx === tmSelectedIndex ? ' tm-selected' : '');
+    row.dataset.idx = idx;
+    row.innerHTML = `
+      <span class="tm-idx">${idx+1}</span>
+      <span class="tm-tag">全員</span>
+      <span class="tm-love">${line.isFinalLove ? '❤' : ''}</span>
+      <span class="tm-text">${escapeHtml(line.text)}</span>
+      <input type="number" step="0.01" class="tm-time-input" placeholder="秒" value="${typeof line.time==='number' ? line.time.toFixed(2) : ''}">
+      <button class="tm-btn tm-jump" title="この時刻へシーク">▶</button>
+      <button class="tm-btn tm-clear" title="このタイミングをクリア">✕</button>
+    `;
+    row.addEventListener('click', (e) => {
+      if(e.target.closest('input,button')) return;
+      tmSelectedIndex = idx;
+      renderTrollMarkList();
+    });
+    row.querySelector('.tm-time-input').addEventListener('change', (e) => {
+      const v = parseFloat(e.target.value);
+      trollLyrics[idx].time = isFinite(v) ? Math.max(0, v) : null;
+      saveTrollDraft();
+      updateTmStatus();
+    });
+    row.querySelector('.tm-jump').addEventListener('click', () => {
+      const st = state[TROLL_SONG_ID];
+      if(st && typeof trollLyrics[idx].time === 'number'){
+        st.audio.currentTime = trollLyrics[idx].time;
+      }
+    });
+    row.querySelector('.tm-clear').addEventListener('click', () => {
+      trollLyrics[idx].time = null;
+      saveTrollDraft();
+      renderTrollMarkList();
+      updateTmStatus();
+    });
+    list.appendChild(row);
+  });
+  list.scrollTop = prevScroll;
+}
+
+function markCurrentTrollLine(){
+  const st = state[TROLL_SONG_ID];
+  if(!st) return;
+  const t = st.audio.currentTime || 0;
+  trollLyrics[tmSelectedIndex].time = Math.round(t*100)/100;
+  saveTrollDraft();
+  // 次の行へ自動的に選択を進める（末尾では止まる）
+  if(tmSelectedIndex < trollLyrics.length - 1) tmSelectedIndex += 1;
+  renderTrollMarkList();
+  updateTmStatus();
+  scrollTrollRowIntoView(tmSelectedIndex);
+}
+
+function scrollTrollRowIntoView(idx){
+  const list = document.getElementById('tmList');
+  const row = list && list.querySelector(`.tm-row[data-idx="${idx}"]`);
+  if(row) row.scrollIntoView({block:'center'});
+}
+
+function updateMarkModeTime(){
+  const modal = document.getElementById('trollMarkModal');
+  if(!modal || modal.hidden) return;
+  const st = state[TROLL_SONG_ID];
+  const el = document.getElementById('tmTime');
+  if(el) el.textContent = st ? fmtTimeMs(st.audio.currentTime) : '00:00.00';
+}
+
+function activateTrollCueForMarkMode(){
+  const cue = allCues().find(c => c.id === TROLL_SONG_ID);
+  if(!cue || !loadCue(cue)) return false;
+  stopOtherExclusiveCues();
+  activeIds.add(TROLL_SONG_ID);
+  currentId = TROLL_SONG_ID;
+  refreshRowStates();
+  updateNowPlaying();
+  return true;
+}
+
+function openTrollMarkModal(){
+  if(!activateTrollCueForMarkMode()) return;
+  // 最優先は「ラブ！」なので、未設定ならまずそこを選択した状態で開く
+  const loveIdx = trollFinalLoveIndex();
+  tmSelectedIndex = (loveIdx >= 0 && typeof trollLyrics[loveIdx].time !== 'number') ? loveIdx : 0;
+  renderTrollMarkList();
+  updateTmStatus();
+  document.getElementById('trollMarkModal').hidden = false;
+  scrollTrollRowIntoView(tmSelectedIndex);
+}
+
+function closeTrollMarkModal(){
+  document.getElementById('trollMarkModal').hidden = true;
+}
+
+function jumpToLoveLineForMarking(){
+  const loveIdx = trollFinalLoveIndex();
+  if(loveIdx < 0) return;
+  tmSelectedIndex = loveIdx;
+  renderTrollMarkList();
+  scrollTrollRowIntoView(loveIdx);
+}
+
+function exportTrollLyricsJson(){
+  const payload = {
+    _readme: [
+      'このファイルは音響再生ツールのマークモードでエクスポートされたものです。',
+      '生徒用/音響ツール/トロールの歌_歌詞タイミング.json に上書き保存し、',
+      'git commit / push すれば本番データとして反映されます。',
+      '最重要キューは isFinalLove:true の行（曲最後に全員が「ラブ！」と言う瞬間）です。'
+    ],
+    songId: TROLL_SONG_ID,
+    songFile: '愛さえあれば.mp3',
+    lines: trollLyrics.map(l => {
+      const o = {index:l.index, text:l.text, isAll:l.isAll, time:l.time};
+      if(l.isFinalLove) o.isFinalLove = true;
+      return o;
+    }),
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'トロールの歌_歌詞タイミング.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+function importTrollLyricsJson(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      const normalized = normalizeTrollLines(data.lines);
+      if(!normalized || !normalized.length){
+        alert('JSONの形式が想定と異なるため読み込めませんでした。');
+        return;
+      }
+      trollLyrics = normalized;
+      trollTimingSource = `インポート（${file.name}）`;
+      tmSelectedIndex = 0;
+      saveTrollDraft();
+      renderTrollMarkList();
+      updateTmStatus();
+    }catch(e){
+      alert('JSONの読み込みに失敗しました: ' + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('trollMarkModeBtn').addEventListener('click', openTrollMarkModal);
+document.getElementById('tmCloseBtn').addEventListener('click', closeTrollMarkModal);
+document.getElementById('tmPlayPause').addEventListener('click', () => togglePlay(TROLL_SONG_ID));
+document.getElementById('tmBack').addEventListener('click', () => { currentId = TROLL_SONG_ID; skip(-5); });
+document.getElementById('tmFwd').addEventListener('click', () => { currentId = TROLL_SONG_ID; skip(5); });
+document.getElementById('tmMarkBtn').addEventListener('click', markCurrentTrollLine);
+document.getElementById('tmJumpLoveBtn').addEventListener('click', jumpToLoveLineForMarking);
+document.getElementById('tmExportBtn').addEventListener('click', exportTrollLyricsJson);
+document.getElementById('tmImportInput').addEventListener('change', (e) => {
+  const f = e.target.files[0];
+  if(f) importTrollLyricsJson(f);
+  e.target.value = '';
+});
+document.getElementById('tmReloadRepoBtn').addEventListener('click', () => {
+  if(!confirm('この端末に保存済みの下書き（未エクスポートのマーク内容）を破棄して、リポジトリ版（またはデフォルト）を読み込み直します。よろしいですか？')) return;
+  try{ localStorage.removeItem(TROLL_DRAFT_KEY); }catch(e){}
+  loadTrollLyrics();
+});
+document.getElementById('tmResetAllBtn').addEventListener('click', () => {
+  if(!confirm('全行のタイミングをクリアします。よろしいですか？')) return;
+  trollLyrics.forEach(l => l.time = null);
+  saveTrollDraft();
+  renderTrollMarkList();
+  updateTmStatus();
+});
+
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('trollMarkModal');
+  if(!modal || modal.hidden) return;
+  const tag = document.activeElement && document.activeElement.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return; // 入力中はショートカット無効化
+  if(e.key === 'm' || e.key === 'M'){
+    e.preventDefault();
+    markCurrentTrollLine();
+  } else if(e.key === 'Escape'){
+    closeTrollMarkModal();
+  }
+});
+
+// --- Service Worker登録（オフライン対応・PWA化） ---
+// 63MBという大きなファイル自身をキャッシュするため、モバイル端末（特にiOS Safari）の
+// ストレージ容量制限に引っかかりキャッシュに失敗する可能性がある。失敗してもオンライン時の
+// 通常読み込みには一切影響させないよう、対応チェック・try-catch・catch()で静かに
+// フォールバックする設計にしている。
+if('serviceWorker' in navigator){
+  // sw.js内のCACHE_NAMEを上げて再デプロイした際、既にこのページを開いている端末で
+  // 新しいService Workerが有効化されたら自動で1回だけリロードし、更新（新デザイン等）を
+  // 即座に反映させる（reloadingフラグで多重リロードを防止）。
+  let reloading = false;
+  const hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+  window.addEventListener('load', () => {
+    try{
+      navigator.serviceWorker.register('sw.js').catch(() => {
+        // 登録に失敗しても機能停止させない（通常のオンライン読み込みにフォールバック）
+      });
+    }catch(e){
+      // 古い環境・制限環境での予期しないエラーも黙って無視する
+    }
+  });
+}
+</script>

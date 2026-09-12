@@ -4,12 +4,6 @@
 // このHTML本体と各音源ファイルをそれぞれ個別にCache Storageへ保存することで、
 // 一度Wi-Fi環境で開けば以後はオフラインでもアプリのように動作するようにする。
 //
-// 【2026-09-12追加】同じフォルダ内の「トロールの歌タイミングツール.html」
-// （トロールの歌「愛さえあれば」歌詞カラオケ同期・タイミングマークモード専用の
-// 独立したツール。同日中に音響再生ツール.html本体への埋め込みから切り出した）も、
-// このService Workerのスコープ（このフォルダ配下）内にあるため同じキャッシュ戦略の
-// 対象になる。個別のsw.js登録は同ツール側にも必要（ページごとにregisterするため）。
-//
 // 【2026-08-30 19:48変更・キャッシュ戦略の全面刷新】
 // 従来はCache First戦略（キャッシュがあれば無条件にそれを返す）を採用しており、
 // コンテンツを更新するたびにCACHE_NAMEのバージョン番号を手動で上げない限り、
@@ -54,13 +48,6 @@ const CACHE_NAME = 'sound-tool-cache-v1';
 const PRECACHE_URLS = [
   './音響再生ツール.html',
   './manifest.json',
-  // トロールの歌「愛さえあれば」歌詞タイミングツール（2026-09-12追加、同日中に
-  // 音響再生ツール.html本体への埋め込みから独立ツールへ切り出し）。本体HTMLと同様
-  // Network First扱いにしている（下記isNetworkFirstRequest参照）。手動バージョン管理は不要。
-  './トロールの歌タイミングツール.html',
-  // 上記ツールが読み書きする歌詞タイミングデータ。音響係が本番前にマークモードで
-  // 実測・上書きするため、こちらもHTML本体と同様Network First扱いにしている。
-  './トロールの歌_歌詞タイミング.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',
@@ -151,9 +138,7 @@ function isNetworkFirstRequest(request) {
   try {
     if (request.mode === 'navigate') return true;
     const url = new URL(request.url);
-    return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json')
-      || url.pathname.endsWith('トロールの歌タイミングツール.html')
-      || url.pathname.endsWith('トロールの歌_歌詞タイミング.json');
+    return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json');
   } catch (e) {
     return false;
   }
