@@ -240,46 +240,20 @@
     margin:18px 0 0; color:#cfe1f2; font-size:clamp(.95rem,3.2vw,1.2rem);
     font-family:var(--serif); font-weight:500; letter-spacing:.14em;
   }
-  /* 文化祭大賞 受賞告知（2026-09-26、本番前カウントダウンから差し替え） */
-  .hero__award{
-    margin:34px auto 0; max-width:780px; position:relative;
-    padding:26px 28px 24px; border-radius:6px;
-    background:linear-gradient(180deg, rgba(6,20,38,.66), rgba(6,20,38,.5));
-    border:1px solid rgba(214,186,122,.55);
-    box-shadow:inset 0 0 0 4px rgba(6,20,38,.35), inset 0 0 0 5px rgba(214,186,122,.18),
-      inset 0 1px 0 rgba(255,255,255,.08), 0 14px 40px rgba(2,10,22,.5);
-    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    color:var(--ink);
+  .hero__count{
+    margin:36px auto 0; display:inline-flex; align-items:baseline; gap:14px;
+    padding:15px 30px; border-radius:999px;
+    background:linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.02));
+    border:1px solid rgba(190,220,250,.22);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.12), 0 10px 30px rgba(6,24,44,.4);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    color:#dfecf8;
   }
-  .hero__award-band{ margin:0 0 18px; }
-  .hero__award-eyebrow{
-    display:flex; align-items:center; justify-content:center; gap:12px;
-    margin:0 0 8px; font-family:var(--serif); font-size:.7rem; font-weight:600;
-    letter-spacing:.46em; padding-left:.46em; color:#e2c98f;
+  .hero__count .num{
+    font-family:var(--serif); font-size:2.3rem; font-weight:600; color:#f5faff; line-height:1;
+    text-shadow:0 0 18px rgba(150,215,255,.4);
   }
-  .hero__award-eyebrow::before, .hero__award-eyebrow::after{
-    content:""; height:1px; width:40px;
-    background:linear-gradient(90deg, transparent, rgba(226,201,143,.7));
-  }
-  .hero__award-eyebrow::after{ transform:scaleX(-1); }
-  .hero__award-title{
-    margin:0; font-family:var(--serif); font-weight:700; line-height:1.3;
-    font-size:clamp(1.75rem, 6.4vw, 2.7rem); letter-spacing:.14em; padding-left:.14em;
-    color:#f7efd9;
-    text-shadow:0 1px 2px rgba(0,10,25,.6), 0 0 22px rgba(226,201,143,.28);
-  }
-  .hero__award-title .nw{ white-space:nowrap; }
-  .hero__award-msg{
-    margin:0; padding-top:18px; border-top:1px solid rgba(190,220,250,.2);
-    font-family:var(--serif); font-weight:500; font-size:clamp(.88rem, 2.6vw, .95rem);
-    line-height:2; letter-spacing:.02em; color:#e6f0fa; text-align:center;
-    text-shadow:0 1px 2px rgba(0,10,25,.55);
-  }
-  .hero__award-msg .ln{ display:block; }
-  @media (max-width:520px){
-    .hero__award{ margin-top:26px; padding:20px 16px 18px; }
-    .hero__award-msg{ text-align:left; line-height:1.9; letter-spacing:.02em; }
-  }
+  .hero__count .lbl{ font-size:.78rem; letter-spacing:.16em; color:#a9c8e6; }
   .hero__cta{
     margin-top:40px; display:inline-flex; flex-direction:column; align-items:center; gap:12px;
     background:none; border:none; cursor:pointer; color:#cfe1f2; font-family:inherit;
@@ -357,16 +331,10 @@
     <p class="hero__kicker">Class 3-D · Culture Festival 2026</p>
     <h1 class="hero__title">Frozen</h1>
     <p class="hero__sub">School Preview · 2026.9.11 Fri.</p>
-    <div class="hero__award" id="award">
-      <div class="hero__award-band">
-        <p class="hero__award-eyebrow" lang="en">GRAND PRIZE</p>
-        <p class="hero__award-title"><span class="nw">文化祭大賞</span> <span class="nw">受賞</span></p>
-      </div>
-      <p class="hero__award-msg">
-        <span class="ln">あの日、教室は確かにアレンデールになった。</span>
-        <span class="ln">読み合わせで噛んだセリフも、何度もやり直した場面転換も、ぜんぶ本番のためにあった。</span>
-        <span class="ln">3年D組全員でつかんだ大賞です。ありがとう、そしておめでとう。</span>
-      </p>
+    <div class="hero__count" id="countdown" aria-live="polite">
+      <span class="lbl">Until Showtime</span>
+      <span class="num" id="count-num">—</span>
+      <span class="lbl" id="count-unit">Days</span>
     </div>
     <div>
       <button class="hero__cta" id="scroll-cta" type="button" aria-label="Scroll to resources">
@@ -377,7 +345,7 @@
   </div>
 </section>
 <div class="wrap" id="resources">
-  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-09-26 14:33</small></p>
+  <p class="lead">3年D組 文化祭公演「アナと雪の女王」関連資料。各リンクからPDFがご覧いただけます（各資料名の下に最終更新日時を記載）。<br><small>このページ自体の最終更新: 2026-09-12 08:56</small></p>
 
   <h2>全体資料</h2>
   <ul>
@@ -441,8 +409,18 @@
   (function () {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // （本番までのカウントダウンは 2026-09-26 に文化祭大賞の受賞告知へ差し替えたため削除。
-    //   旧実装は 過去版/その他/20260926/shiryo_20260926.html を参照）
+    // --- 本番までのカウントダウン（2026-09-11 学内発表） ---
+    (function () {
+      var numEl = document.getElementById('count-num');
+      var unitEl = document.getElementById('count-unit');
+      if (!numEl) return;
+      var target = new Date(2026, 8, 11, 0, 0, 0); // 月は0始まり→8=9月
+      function startOfToday() { var n = new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
+      var diffDays = Math.round((target - startOfToday()) / 86400000);
+      if (diffDays > 0) { numEl.textContent = diffDays; unitEl.textContent = 'Days'; }
+      else if (diffDays === 0) { numEl.textContent = "It's Showtime!"; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+      else { numEl.textContent = 'Thank You for Coming!'; unitEl.textContent = ''; document.getElementById('countdown').querySelector('.lbl').textContent = ''; }
+    })();
 
     // --- スクロール誘導 ---
     var cta = document.getElementById('scroll-cta');
