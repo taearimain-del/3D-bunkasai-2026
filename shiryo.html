@@ -2,6 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>資料一覧 — 3年D組「アナと雪の女王」</title>
 <style>
@@ -276,6 +277,10 @@
     text-shadow:0 1px 2px rgba(0,10,25,.55);
   }
   .hero__award-msg .ln{ display:block; }
+  .hero__award-msg .ln + .ln{ margin-top:.35em; }
+  #guestbook{ scroll-margin-top:72px; }
+  .hero__award-link{ margin:16px 0 0; text-align:center; font-size:.85rem; letter-spacing:.06em; }
+  .hero__award-link a{ color:#f7efd9; text-decoration:none; border-bottom:1px solid rgba(226,201,143,.55); padding-bottom:2px; }
   @media (max-width:520px){
     .hero__award{ margin-top:26px; padding:20px 16px 18px; }
     .hero__award-msg{ text-align:left; line-height:1.9; letter-spacing:.02em; }
@@ -363,10 +368,17 @@
         <p class="hero__award-title"><span class="nw">文化祭大賞</span> <span class="nw">受賞</span></p>
       </div>
       <p class="hero__award-msg">
-        <span class="ln">あの日、教室は確かにアレンデールになった。</span>
-        <span class="ln">読み合わせで噛んだセリフも、何度もやり直した場面転換も、ぜんぶ本番のためにあった。</span>
-        <span class="ln">3年D組全員でつかんだ大賞です。ありがとう、そしておめでとう。</span>
+        <!-- 2026-10-19 Fort様の文章に差し替え（原文どおり。「みんあ」だけ「みんな」に直した） -->
+        <span class="ln">やあ、ここにきてくれてありがとう。Fort_Dexです。</span>
+        <span class="ln">ひさしぶりにおそらくこのページを見てくれたと思う。このページもっかいみてくれるなんて嬉しいよ。</span>
+        <span class="ln">文化祭楽しかったね。正直準備とか大変だったね。だけど文化祭大賞とってすっごくうれしかったな。</span>
+        <span class="ln">だれも見られないと思ってすごいポエムってる笑。</span>
+        <span class="ln">正直こんな素晴らしい思い出は3D組のメンバーがいなかったら実現してなかった。本当にいいクラスだな。</span>
+        <span class="ln">いまこれ書いてるのが10/26/2026なんだ。残りの高校生活楽しみたいな。</span>
+        <span class="ln">彼女絶賛募集中。筋トレ頑張る。受験勉強昨日も今日も明日も頑張る。</span>
+        <span class="ln">3D組でよかった、みんなありがとう、そして楽しかった。最後の時間も楽しむ。じゃあね。</span>
       </p>
+      <p class="hero__award-link"><a href="#guestbook">ひとこと残していく ↓</a></p>
     </div>
     <div>
       <button class="hero__cta" id="scroll-cta" type="button" aria-label="Scroll to resources">
@@ -404,7 +416,6 @@
 
   <h2>ツール</h2>
   <ul>
-    <li><a class="doc" href="生徒用/音響ツール/トロールの歌タイミングツール.html?v=202609120851"><span class="name">トロールの歌 タイミングツール</span><span class="desc">「愛さえあれば」歌詞カラオケ同期表示・曲最後の「ラブ！」タイミング確認/マーク専用（新規、2026-09-12追加）</span></a></li>
     <li><a class="doc" href="生徒用/音響ツール/音響再生ツール.html?v=202608301617"><span class="name">音響再生ツール</span></a></li>
     <li><a class="doc" href="生徒用/進行シミュレーター/進行シミュレーター.html"><span class="name">進行シミュレーター</span></a></li>
     <li><a class="doc" href="生徒用/買い物リスト/買い物リスト.html"><span class="name">買い物リスト</span><span class="desc">購入チェック・備考・サイズ・購入日を全員で共有できる対話型ツール（更新: 2026-08-07 22:48）</span></a></li>
@@ -422,18 +433,19 @@
   </div>
   <p class="lead" style="margin:8px 0 0;"><a href="生徒用/html/変更点.html">→ もっと詳しい変更点はこちら</a></p>
 
-  <h2>ご質問・気になる点</h2>
+  <!-- 2026-10-19 Fort様「訪れた人がいたら残せるように」：質問欄（AI回答は終了）を、訪れた人のメッセージ欄に変更。過去のコメントと回答はそのまま表示 -->
+  <h2 id="guestbook">メッセージを残す</h2>
   <div class="note">
-    気になる点・ご質問があれば、下記に匿名でコメントを投稿できます（名前の入力は不要・即時反映されます）。<br>
-    返信は1時間ごとにAIがまとめて確認し、順次回答します。投稿直後には反映されない場合がありますので、あらかじめご了承ください。<br>
-    <span id="next-check-countdown"></span>
+    このページに来てくれた人は、ひとことどうぞ。名前の入力は不要で、匿名のまますぐに表示されます。<br>
+    個人名・連絡先など、個人情報は書かないでください。
   </div>
 
-  <div id="comments-list" class="comments-list"></div>
   <form id="comment-form" class="comment-form">
-    <textarea id="comment-input" maxlength="500" rows="3" placeholder="コメントを入力..." required></textarea>
-    <button type="submit">投稿する</button>
+    <textarea id="comment-input" maxlength="500" rows="3" placeholder="メッセージを入力" required></textarea>
+    <button type="submit">残す</button>
+    <p id="comment-status" class="comment-date" aria-live="polite"></p>
   </form>
+  <div id="comments-list" class="comments-list"></div>
 </div>
 
 <script>
@@ -691,8 +703,21 @@
     const input = document.getElementById('comment-input');
     const text = input.value.trim();
     if (!text) return;
-    push(commentsRef, { text: text.slice(0, 500), ts: Date.now() });
-    input.value = '';
+    const status = document.getElementById('comment-status');
+    const btn = e.target.querySelector('button');
+    // 連投よけ：同じ端末からは30秒に1回まで
+    let last = 0;
+    try { last = +localStorage.getItem('commentLastTs') || 0; } catch (err) {}
+    if (Date.now() - last < 30000) { status.textContent = '少し時間をおいてから、もう一度どうぞ。'; return; }
+    btn.disabled = true;
+    status.textContent = '送信中…';
+    push(commentsRef, { text: text.slice(0, 500), ts: Date.now() }).then(() => {
+      try { localStorage.setItem('commentLastTs', String(Date.now())); } catch (err) {}
+      input.value = '';
+      status.textContent = 'ありがとう。メッセージを残しました。';
+    }).catch(() => {
+      status.textContent = '送れませんでした。時間をおいてもう一度お試しください。';
+    }).finally(() => { btn.disabled = false; });
   });
 </script>
 
@@ -732,7 +757,7 @@
     const NP_LOVE_WARN_SEC = 5;
     const NP_TROLL_CUE_ID = '07';
     const NP_TROLL_JSON_PATH = '生徒用/音響ツール/トロールの歌_歌詞タイミング.json';
-    const NP_TROLL_TOOL_LINK = '生徒用/音響ツール/トロールの歌タイミングツール.html?v=202609120926';
+    // （トロールの歌タイミングツールへのリンクは、ツール削除に伴い2026-10-19に撤去）
 
     // トロールの歌タイミングツール.htmlの埋め込みデフォルトと同一内容（フェッチ失敗時のフォールバック用）
     const NP_TROLL_LYRICS_DEFAULT = [
@@ -826,8 +851,7 @@
 
     function npRenderIdle(text) {
       npLiveEl.className = 'np-idle';
-      npLiveEl.innerHTML = npEscapeHtml(text) +
-        ' <a class="tool-cta-mini" href="' + NP_TROLL_TOOL_LINK + '">（音響係向け：トロールの歌タイミングツールを開く →）</a>';
+      npLiveEl.textContent = text;
     }
 
     function npRenderSong(data, t) {

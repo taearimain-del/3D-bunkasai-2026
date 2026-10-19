@@ -4,11 +4,10 @@
 // このHTML本体と各音源ファイルをそれぞれ個別にCache Storageへ保存することで、
 // 一度Wi-Fi環境で開けば以後はオフラインでもアプリのように動作するようにする。
 //
-// 【2026-09-12追加】同じフォルダ内の「トロールの歌タイミングツール.html」
-// （トロールの歌「愛さえあれば」歌詞カラオケ同期・タイミングマークモード専用の
-// 独立したツール。同日中に音響再生ツール.html本体への埋め込みから切り出した）も、
-// このService Workerのスコープ（このフォルダ配下）内にあるため同じキャッシュ戦略の
-// 対象になる。個別のsw.js登録は同ツール側にも必要（ページごとにregisterするため）。
+// 【2026-09-12追加→2026-10-19削除】同じフォルダにあった「トロールの歌タイミングツール.html」は
+// Fort様の指示で2026-10-19に削除した（旧版は 過去版/その他/20261019/ に保存）。
+// PRECACHE_URLS・Network First対象からも外してある。歌詞タイミングJSONは shiryo.html の
+// 「現在の音響再生状況」表示が今も読むため残している。
 //
 // 【2026-08-30 19:48変更・キャッシュ戦略の全面刷新】
 // 従来はCache First戦略（キャッシュがあれば無条件にそれを返す）を採用しており、
@@ -54,15 +53,13 @@ const CACHE_NAME = 'sound-tool-cache-v1';
 const PRECACHE_URLS = [
   './音響再生ツール.html',
   './manifest.json',
-  // トロールの歌「愛さえあれば」歌詞タイミングツール（2026-09-12追加、同日中に
-  // 音響再生ツール.html本体への埋め込みから独立ツールへ切り出し）。本体HTMLと同様
-  // Network First扱いにしている（下記isNetworkFirstRequest参照）。手動バージョン管理は不要。
-  './トロールの歌タイミングツール.html',
-  // 上記ツールが読み書きする歌詞タイミングデータ。音響係が本番前にマークモードで
-  // 実測・上書きするため、こちらもHTML本体と同様Network First扱いにしている。
+  // （2026-10-19：'./トロールの歌タイミングツール.html' はファイル削除に伴い除外。
+  //   存在しないファイルをinstallのたびに取りに行って404になるのを避けるため）
+  // トロールの歌の歌詞タイミングデータ（shiryo.htmlの再生状況表示が読む）。
+  // Network First扱いにしている。
   './トロールの歌_歌詞タイミング.json',
   // 「現在の音響再生状況」ブロードキャスト共通モジュール（2026-09-12追加）。
-  // 音響再生ツール.html／トロールの歌タイミングツール.htmlの両方から読み込まれる小さな
+  // 音響再生ツール.htmlから読み込まれる小さな
   // ロジックファイルのため、HTML本体と同様Network First扱いにしている（下記参照）。
   './nowplaying-broadcast.js',
   './icons/icon-192.png',
@@ -156,7 +153,6 @@ function isNetworkFirstRequest(request) {
     if (request.mode === 'navigate') return true;
     const url = new URL(request.url);
     return url.pathname.endsWith('音響再生ツール.html') || url.pathname.endsWith('manifest.json')
-      || url.pathname.endsWith('トロールの歌タイミングツール.html')
       || url.pathname.endsWith('トロールの歌_歌詞タイミング.json')
       || url.pathname.endsWith('nowplaying-broadcast.js');
   } catch (e) {

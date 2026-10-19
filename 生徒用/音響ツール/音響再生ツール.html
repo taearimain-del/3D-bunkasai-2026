@@ -937,7 +937,7 @@ function updateNowPlaying(){
 // 下部固定バー（現在再生中）が表示している内容と同じ情報を、nowplaying-broadcast.js経由で
 // Firebase Realtime Databaseへ送る。詳細な設計・安全設計はnowplaying-broadcast.js冒頭コメント参照。
 // nowPlayingEverActiveは「このタブで一度も再生していないなら何も送らない」ためのガード
-// （もう一方のツール＝トロールの歌タイミングツールを別タブでただ開いているだけの場合に、
+// （もう一方のツール＝トロールの歌タイミングツール〔2026-10-19削除済み〕を別タブでただ開いているだけの場合に、
 // そちらが誤って「配信オフ」でこちらの配信を上書きしてしまうのを防ぐ）。
 let nowPlayingEverActive = false;
 function broadcastNowPlaying() {
